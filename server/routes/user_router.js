@@ -12,6 +12,9 @@ router.get('/',controller.index)
 router.get('/login',controller.login)
 router.get('/reg',controller.signup)
 router.post('/regpost',controller.regpost)
+router.get('/otp',controller.otp)
+router.post('/verifyotp',controller.verifyotp)
+
 
 
 

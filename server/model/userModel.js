@@ -19,7 +19,7 @@ const schema=new mongoose.Schema({
         unique:true,
     },
     phone_no:{
-        type:String,
+        type:Number,
         required:true,
         unique:true,
     },
