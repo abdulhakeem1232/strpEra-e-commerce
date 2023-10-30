@@ -1,6 +1,7 @@
 const express=require('express')
 const nocache=require('nocache')
 const path=require('path')
+const flash=require('express-flash')
 const session=require('express-session')
 // const ejs=require('ejs')
 const userRouter=require('./server/routes/user_router.js')
@@ -15,6 +16,8 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
 }));
+
+app.use(flash());
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))

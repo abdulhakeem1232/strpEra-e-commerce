@@ -11,7 +11,7 @@ const schema=new mongoose.Schema({
     },
     l_name:{
         type:String,
-        required:true
+        // required:true
     },
     email:{
         type:String,

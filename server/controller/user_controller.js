@@ -12,6 +12,7 @@ const { nameValid, emailValid, phoneValid, passwordValid, confirmpasswordValid }
 const index = async (req, res) => {
     res.render('user/index.ejs')
 }
+
 const login = async (req, res) => {
     try {
         res.render('user/login.ejs')
@@ -21,6 +22,27 @@ const login = async (req, res) => {
 
     }
 }
+
+const loginpost=async(req,res)=>{
+    try{
+        const email=req.body.email
+        const user=await userModel.findOne({email:email})
+        const passwordmatch=await bcrypt.compare(req.body.password,user.password)
+        if(passwordmatch){
+            req.session.isAuth = true;
+            res.redirect('/');
+        }
+        else{
+            req.flash('passworderror','invalid password')
+            res.redirect('/login')
+        }
+    }
+    catch{
+        req.flash('emailerror','invalid e-mail')
+        res.redirect('/login')
+    }
+}
+
 const signup = async (req, res) => {
     try {
         res.render('user/signup.ejs')
@@ -30,6 +52,37 @@ const signup = async (req, res) => {
 
     }
 }
+
+const sendmail = async (email, otp) => {
+    try {
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: EMAIL,
+                pass: PASSWORD
+            }
+        });
+
+        var mailOptions = {
+            from: 'StepEra <StepEra@gmail.com>',
+            to: email,
+            subject: 'E-Mail Verification',
+            text: 'Your OTP is:' + otp
+        };
+
+        transporter.sendMail(mailOptions);
+        console.log("E-mail sent sucessfully");
+    }
+    catch (err) {
+        console.log("error in sending mail:", err);
+    }
+}
+
+const otpgenerator = () => {
+    const otp = otpGenerator.generate(6, { digits: true, upperCaseAlphabets: false, lowerCaseAlphabets: false, specialChars: false });
+    return otp
+}
+
 const regpost = async (req, res) => {
     try {
         const fname = req.body.fname
@@ -67,29 +120,15 @@ const regpost = async (req, res) => {
         else {
             const hashedpassword = await bcrypt.hash(password, 10)
             const user = new userModel({ f_name: fname, l_name: lname, email: email, phone_no: phone, password: hashedpassword })
-            req.session.user=user
-            const otp = otpGenerator.generate(6, { digits: true, upperCaseAlphabets: false, lowerCaseAlphabets: false, specialChars: false });
-            req.session.otp=otp
-            var transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: EMAIL,
-                    pass: PASSWORD
-                }
-            });
+            req.session.user = user
 
-            var mailOptions = {
-                from: 'StepEra <StepEra@gmail.com>',
-                to: email,
-                subject: 'Sending Email using Node.js',
-                text: 'That was easy!' + otp
-            };
-
-            transporter.sendMail(mailOptions);
+            const otp = otpgenerator()
             console.log(otp);
             const currentTimestamp = Date.now();
-            const expiryTimestamp = currentTimestamp + 30 * 1000;
-            await userotp.create({email:email,otp:otp,expiry:new Date(expiryTimestamp)}) 
+            const expiryTimestamp = currentTimestamp + 60 * 1000;
+            await userotp.create({ email: email, otp: otp, expiry: new Date(expiryTimestamp) })
+
+            await sendmail(email, otp)
             res.redirect('/otp')
         }
     }
@@ -99,7 +138,7 @@ const regpost = async (req, res) => {
     }
 }
 
-const otp=async(req,res)=>{
+const otp = async (req, res) => {
     try {
         res.render('user/otp.ejs')
     }
@@ -109,42 +148,92 @@ const otp=async(req,res)=>{
     }
 
 }
-const verifyotp=async(req,res)=>{
+
+const verifyotp = async (req, res) => {
     try {
-        const enteredotp=req.body.otp
+        const enteredotp = req.body.otp
         // const generatedotp=req.session.otp
-        const user=req.session.user
-        const email=req.session.user.email
+        const user = req.session.user
+        const email = req.session.user.email
         console.log(enteredotp);
         // console.log(generatedotp);
         console.log(req.session.user);
-        const userdb= await userotp.findOne({email:email})
-        const otp=userdb.otp
-        const expiry=userdb.expiry
+        const userdb = await userotp.findOne({ email: email })
+        const otp = userdb.otp
+        const expiry = userdb.expiry
         console.log(otp);
-        if(enteredotp==otp && expiry.getTime() >= Date.now()){
-           
-           user.isVerified = true;
-           try{
-            await userModel.create(user)
-            res.redirect('/')
-           }
-           catch(error){
-            console.error(error);
+        if (enteredotp == otp && expiry.getTime() >= Date.now()) {
+
+            user.isVerified = true;
+            try {
+                await userModel.create(user)
+                res.redirect('/')
+            }
+            catch (error) {
+                console.error(error);
                 res.status(500).send('Error occurred while saving user data');
-           }
+            }
         }
-        else{
+        else {
             res.status(400).send("Wrong OTP or Time Expired");
         }
     }
-    catch (err){
+    catch (err) {
         console.log(err);
         res.status(500).send('error occured')
 
     }
 
 }
+const resendotp=async(req,res)=>{
+    try{
+    const email = req.session.user.email
+    const otp = otpgenerator()
+     console.log(otp);
+
+     const currentTimestamp = Date.now();
+     const expiryTimestamp = currentTimestamp + 60 * 1000;
+     await userotp.updateOne({ email: email },{otp:otp,expiry:new Date(expiryTimestamp)})
+
+     await sendmail(email, otp)
+
+    }
+    catch(err){
+       console.log(err);
+    }
+
+}
+const forgotpassword=async (req, res) => {
+    try {
+        res.render('user/forgot.ejs')
+    }
+    catch {
+        res.status(200).send('error occured')
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 module.exports = {
@@ -153,5 +242,8 @@ module.exports = {
     signup,
     regpost,
     otp,
-    verifyotp
+    verifyotp,
+    resendotp,
+    forgotpassword,
+    loginpost
 }
