@@ -1,8 +1,8 @@
 const express=require('express')
+const session=require('express-session')
+const flash=require('express-flash')
 const nocache=require('nocache')
 const path=require('path')
-const flash=require('express-flash')
-const session=require('express-session')
 // const ejs=require('ejs')
 const userRouter=require('./server/routes/user_router.js')
 
@@ -10,6 +10,13 @@ const userRouter=require('./server/routes/user_router.js')
 
 const app=express();
 const port=8080;
+
+app.use(function (req, res, next) {
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    next()
+});
 
 app.use(session({
     secret: 'your-secret-key', 

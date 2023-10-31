@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const otpGenerator = require('otp-generator')
 const nodemailer = require('nodemailer')
+const flash=require('express-flash')
 const userModel = require('../model/userModel.js')
 const userotp = require('../model/userotpModel.js')
 const { EMAIL, PASSWORD } = require('../../env.js')
@@ -23,7 +24,7 @@ const login = async (req, res) => {
     }
 }
 
-const loginpost=async(req,res)=>{
+const loginpost=async(req,res)=> {
     try{
         const email=req.body.email
         const user=await userModel.findOne({email:email})
@@ -33,13 +34,15 @@ const loginpost=async(req,res)=>{
             res.redirect('/');
         }
         else{
-            req.flash('passworderror','invalid password')
-            res.redirect('/login')
+            // req.flash('passworderror','invalid password')
+            // res.redirect('/login')
+            res.render("user/login.ejs",{passworderror:"Invalid-password"} )
         }
     }
     catch{
-        req.flash('emailerror','invalid e-mail')
-        res.redirect('/login')
+        // req.flash('emailerror','invalid e-mail')
+        // res.redirect('/login')
+        res.render("user/login.ejs",{emailerror:"Invalid-email"})
     }
 }
 
@@ -121,7 +124,8 @@ const regpost = async (req, res) => {
             const hashedpassword = await bcrypt.hash(password, 10)
             const user = new userModel({ f_name: fname, l_name: lname, email: email, phone_no: phone, password: hashedpassword })
             req.session.user = user
-
+            req.session.signup = true
+            req.session.forgot = false
             const otp = otpgenerator()
             console.log(otp);
             const currentTimestamp = Date.now();
@@ -154,10 +158,11 @@ const verifyotp = async (req, res) => {
         const enteredotp = req.body.otp
         // const generatedotp=req.session.otp
         const user = req.session.user
-        const email = req.session.user.email
+       
         console.log(enteredotp);
         // console.log(generatedotp);
         console.log(req.session.user);
+        const email = req.session.user.email
         const userdb = await userotp.findOne({ email: email })
         const otp = userdb.otp
         const expiry = userdb.expiry
@@ -166,8 +171,13 @@ const verifyotp = async (req, res) => {
 
             user.isVerified = true;
             try {
+                if(req.session.signup){
                 await userModel.create(user)
                 res.redirect('/')
+                }
+               else if(req.session.forgot){
+                    res.redirect('/newpassword')
+                }
             }
             catch (error) {
                 console.error(error);
@@ -213,6 +223,72 @@ const forgotpassword=async (req, res) => {
     }
 }
 
+const forgotpasswordpost=async (req, res) => {
+    try {
+        const email=req.body.email
+        const emailexist= await userModel.findOne({email:email})
+        req.session.id=emailexist._id
+        console.log(emailexist);
+        if(emailexist){
+            req.session.forgot=true
+            req.session.signup=false
+            req.session.user = { email: email };
+            const otp = otpgenerator()
+            console.log(otp);
+            const currentTimestamp = Date.now();
+            const expiryTimestamp = currentTimestamp + 60 * 1000;
+            await userotp.create({ email: email, otp: otp, expiry: new Date(expiryTimestamp) })
+
+            await sendmail(email, otp)
+            res.redirect('/otp')
+        }
+        else{
+           res.render('user/forgot.ejs',{email:"E-Mail Not Exist"})
+        }
+    }
+    catch(err) {
+        res.status(400).send('error occurred: ' + err.message);
+        console.log(err);
+
+    }
+}
+const newpassword = async (req, res) => {
+    try {
+        res.render('user/newpassword.ejs')
+    }
+    catch {
+        res.status(400).send('error occured')
+
+    }
+}
+
+const resetpassword = async (req, res) => {
+    try {
+        const password = req.body.newPassword
+        const cpassword = req.body.confirmPassword
+
+        const ispasswordValid = passwordValid(password)
+        const iscpasswordValid = confirmpasswordValid(cpassword, password)
+
+         if (!ispasswordValid) {
+            res.render('user/newpaasword', { perror: "Password should contain one uppercase,one lowercase,one number,one special charecter" })
+        }
+        else if (!iscpasswordValid) {
+            res.render('user/newpassword', { cperror: "Password and Confirm password should be match" })
+        }
+        else{
+            const hashedpassword = await bcrypt.hash(password, 10)
+            const email = req.session.user.email;
+            await userModel.updateOne({email:email},{password:hashedpassword})
+            res.redirect('/login')
+
+        }
+    }
+    catch {
+        res.status(400).send('error occured')
+
+    }
+}
 
 
 
@@ -245,5 +321,8 @@ module.exports = {
     verifyotp,
     resendotp,
     forgotpassword,
-    loginpost
+    forgotpasswordpost,
+    loginpost,
+    newpassword,
+    resetpassword
 }
