@@ -26,6 +26,16 @@ const schema=new mongoose.Schema({
     password:{
         type:String,
         required:true
+    },
+    isAdmin:{
+        type:Boolean,
+        default:false,
+        required:true
+    },
+    status:{
+        type:Boolean,
+        default:false,
+        required:true
     }
 })
 
