@@ -3,6 +3,7 @@ const session=require('express-session')
 const flash=require('express-flash')
 const nocache=require('nocache')
 const path=require('path')
+const multer=require('multer')
 // const ejs=require('ejs')
 const userRouter=require('./server/routes/user_router.js')
 const adminRouter=require('./server/routes/admin_router.js')
@@ -42,17 +43,19 @@ app.use(nocache());
 app.use('/', userRouter);
 app.use('/admin', adminRouter);
 
-// app.use(flash());
+app.use('/uploads',express.static('uploads'))
+const storage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,'/uploads')
+    },
+    filename:(req,file,cb)=>{
+        cb(null,file.originalname)
+    }
+})
 
-// app.use(express.urlencoded({ extended: true }))
-// app.use(express.static('public'))
-// app.use(express.static('public/user_assets'))
-// app.use(express.static('public/admin_assets'))
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine','ejs')
-// app.use(nocache());
-// app.use('/',userRouter)
-// app.use('/admin',adminRouter)
+const upload =multer({storage:storage})
+
+
 
 
 
