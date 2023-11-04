@@ -2,12 +2,16 @@ const express=require('express')
 const controller=require('../controller/admin_controller')
 const productcontroller=require('../controller/admincontroller/productController')
 
-const app=express();
+// const app=express();
 
 
-app.use(express.static('public/admin_assets'))
+// app.use(express.static('public/admin_assets'))
 
 const router=express.Router()
+
+router.use(express.urlencoded({extended:true}))
+const multer=require('multer')
+const upload=multer({dest:'uploads/'})
 
 router.get('/',controller.login)
 router.post('/aloginpost',controller.aloginpost)
@@ -31,6 +35,10 @@ router.get('/updatesubcat/:id',controller.updatesubcat)
 router.post('/update-subcategory/:id',controller.updatesubcategory)
 router.get('/products',productcontroller.products)
 router.get('/newproduct',productcontroller.newproduct)
+router.post('/addproduct',upload.array('images'),productcontroller.addproduct)
+router.get('/unlist/:id',productcontroller.unlist)
+router.get('/deletpro/:id',productcontroller.delet)
+router.get('/updatepro/:id',productcontroller.updatepro)
 
 
 
