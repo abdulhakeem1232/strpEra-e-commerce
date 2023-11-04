@@ -29,14 +29,14 @@ const loginpost=async(req,res)=> {
         const email=req.body.email
         const user=await userModel.findOne({email:email})
         const passwordmatch=await bcrypt.compare(req.body.password,user.password)
-        if(passwordmatch){
+        if(passwordmatch && !user.status){
             req.session.isAuth = true;
             res.redirect('/');
         }
         else{
             // req.flash('passworderror','invalid password')
             // res.redirect('/login')
-            res.render("user/login.ejs",{passworderror:"Invalid-password"} )
+            res.render("user/login.ejs",{passworderror:"Invalid-password or you are blocked"} )
         }
     }
     catch{

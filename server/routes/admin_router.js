@@ -1,5 +1,6 @@
 const express=require('express')
 const controller=require('../controller/admin_controller')
+const productcontroller=require('../controller/admincontroller/productController')
 
 const app=express();
 
@@ -28,6 +29,8 @@ router.get('/statuscat/:id',controller.catstatus)
 router.get('/deletesubcat/:id',controller.deletesubcat)
 router.get('/updatesubcat/:id',controller.updatesubcat)
 router.post('/update-subcategory/:id',controller.updatesubcategory)
+router.get('/products',productcontroller.products)
+router.get('/newproduct',productcontroller.newproduct)
 
 
 

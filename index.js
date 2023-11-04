@@ -10,7 +10,7 @@ const adminRouter=require('./server/routes/admin_router.js')
 
 
 const app=express();
-const port=5500;
+const port=5001;
 
 app.use(function (req, res, next) {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
