@@ -37,42 +37,18 @@
         <div class="main-panel">
          
             <div class="container form-container">
-                <h1 class="mb-4">Update product</h1>
+                <h1 class="mb-4">Update product Images</h1>
         
-                <form action="/admin/update-category/<%= product._id %>" method="post">
-                    <div class="mb-3">
-                        <label for="categoryName" class="form-label">Product Name:</label>
-                        <input type="text" class="form-control" id="categoryName" name="productName" value="<%= product.name %>" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="categoryName" class="form-label">Price:</label>
-                        <input type="text" class="form-control" id="categoryName" name="productprice" value="<%= product.price %>" required>
-                    </div>
-                    <div class="mb-3 d-flex">
-                        <label for="categoryName" class="form-label">Product stock:</label>
-                        <% product.stock.forEach(item=>{ %>
-                          <label for="categoryName" class="form-label ml-2"><%= item.size %></label>
-                        <input type="text" class="form-control ml-2" id="categoryName" name="product" value="<%= item.quantity %>" style="height:15px;width: 50px;" required>
-                        <% }) %>
-                    </div>
-        
-                    <div class="mb-3">
-                      <label for="description" class="form-label">Description:</label>
-                      <textarea class="form-control" id="description" name="description" rows="4" required><%= product.description%></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="description" class="form-label">Images:</label>
-                     <% product.images.forEach(item=>{ %>
+                <form action="/admin/updateimg/<%= product._id %>" method="post" enctype="multipart/form-data">
+                    <% product.images.forEach(item=>{ %>
                         <img style=" width: 100px;height: 100px;"src="/<%= item %>">
-                        
-                        <!-- <a href="/admin/deleteimg?pid=<%= product._id %>&filename=<%= item %>" class="btn btn-danger btn-xs">Delete</a> -->
-                     <% }) %>
-                      
-                    </div>
-                    <a href="/admin/editimg/<%= product._id %>" class="btn btn-danger btn-xs">Edit Images</a>
-                    <button type="submit" class="btn btn-primary">Update</button>
+                         <a href="/admin/deleteimg?pid=<%= product._id %>&filename=<%= item %>" class="btn btn-danger btn-xs">Delete</a>
+                         <% }) %>
+                         <div class="mb-3">
+                            <label for="images" class="form-label">Add New Images:</label>
+                            <input type="file" class="form-control" id="images" name="images" accept="image/*" multiple style="width: 20%;">
+                        </div>
+                    <button type="submit" class="btn btn-primary">Save Image</button>
                   </form>
             </div>
           

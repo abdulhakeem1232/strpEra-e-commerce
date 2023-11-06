@@ -39,7 +39,9 @@ router.post('/addproduct',upload.array('images'),productcontroller.addproduct)
 router.get('/unlist/:id',productcontroller.unlist)
 router.get('/deletpro/:id',productcontroller.delet)
 router.get('/updatepro/:id',productcontroller.updatepro)
+router.get('/editimg/:id',productcontroller.editimg)
 router.get('/deleteimg',productcontroller.deleteimg)
+router.post('/updateimg/:id',upload.array('images'),productcontroller.updateimg)
 
 
 

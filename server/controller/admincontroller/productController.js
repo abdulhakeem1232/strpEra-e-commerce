@@ -116,7 +116,31 @@ const updatepro = async (req, res) => {
         res.send("Error Occured")
     }
 }
-
+const editimg = async (req, res) => {
+    try {
+        const id = req.params.id
+        const product = await productModel.findOne({ _id: id });
+        console.log(product);
+        res.render('admin/editimg', { product: product })
+    } catch (err) {
+        console.log(err);
+        res.send("Error Occured")
+    }
+}
+const updateimg=async(req,res)=>{
+    try{
+     const id=req.params.id
+     const newimg=req.files.map(file => file.path)
+     const product=await productModel.findOne({_id:id})
+     product.images.push(...newimg)
+     product.save()
+     res.redirect('/admin/products')
+    }
+    catch (err) {
+        console.log(err);
+        res.send("Error while adding images")
+    }
+}
 const deleteimg=async(req,res)=>{
     try{
         const pid=req.query.pid
@@ -164,6 +188,8 @@ module.exports = {
     unlist,
     delet,
     updatepro,
-    deleteimg
+    deleteimg,
+    editimg,
+    updateimg,
 
 }
