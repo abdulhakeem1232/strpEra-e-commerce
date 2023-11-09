@@ -43,7 +43,7 @@ const newproduct = async (req, res) => {
 
 const addproduct = async (req, res) => {
     try {
-        const { productName, parentCategory, subCategory, images, s6, s7, s8, s9,price, description } = req.body
+        const { productName,parentCategory, subCategory, images, s6, s7, s8, s9,price, description } = req.body
         const newproduct = new productModel({
             name: productName,
             category: parentCategory,
@@ -109,8 +109,30 @@ const updatepro = async (req, res) => {
     try {
         const id = req.params.id
         const product = await productModel.findOne({ _id: id });
-        console.log(product);
+        // console.log(product);
         res.render('admin/updateproduct', { product: product })
+    } catch (err) {
+        console.log(err);
+        res.send("Error Occured")
+    }
+}
+const updateproduct = async (req, res) => {
+    try {
+        const id = req.params.id
+        const { productName,s6, s7, s8, s9,productprice,description } = req.body
+        const product=await productModel.findOne({_id:id})
+        product.name = productName;
+        product.price = productprice;
+        product.stock = [
+            { size: '6', quantity: s6 },
+            { size: '7', quantity: s7 },
+            { size: '8', quantity: s8 },
+            { size: '9', quantity: s9 }
+        ];
+        product.description = description;
+
+        await product.save()
+        res.redirect('/admin/products')
     } catch (err) {
         console.log(err);
         res.send("Error Occured")
@@ -119,8 +141,7 @@ const updatepro = async (req, res) => {
 const editimg = async (req, res) => {
     try {
         const id = req.params.id
-        const product = await productModel.findOne({ _id: id });
-        console.log(product);
+        const product=await productModel.findOne({_id:id})
         res.render('admin/editimg', { product: product })
     } catch (err) {
         console.log(err);
@@ -191,5 +212,6 @@ module.exports = {
     deleteimg,
     editimg,
     updateimg,
+    updateproduct,
 
 }

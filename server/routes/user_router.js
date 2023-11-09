@@ -20,6 +20,9 @@ router.post('/loginpost',controller.loginpost)
 router.post('/forgotpasswordpost',controller.forgotpasswordpost)
 router.get('/newpassword',controller.newpassword)
 router.post('/resetpassword',controller.resetpassword)
+router.get('/shop/:id',controller.shopping)
+router.get('/subshop/:pid/:sid',controller.subshopping)
+router.get('/singleproduct/:id',controller.singleproduct)
 
 
 

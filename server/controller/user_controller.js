@@ -4,8 +4,10 @@ const nodemailer = require('nodemailer')
 const flash=require('express-flash')
 const userModel = require('../model/userModel.js')
 const userotp = require('../model/userotpModel.js')
+const productModel=require('../model/productModel.js')
 const { EMAIL, PASSWORD } = require('../../env.js')
 const { nameValid, emailValid, phoneValid, passwordValid, confirmpasswordValid } = require("../../utils/validators/signupValidators.js")
+const subcategoryModel = require('../model/subcatModel.js')
 
 
 
@@ -290,6 +292,48 @@ const resetpassword = async (req, res) => {
     }
 }
 
+const shopping=async(req,res)=>{
+    try{
+        const id=req.params.id
+        const product=await productModel.find({category:id})
+        const sub_category=await subcategoryModel.find({p_category:id}) 
+        res.render('user/shop',{product:product,subcategory:sub_category})
+    }
+    catch(err){
+        console.log("Shopping Page Error:",err);
+        res.status(500).send('Internal Server Error');
+    }
+
+}
+const subshopping=async(req,res)=>{
+    try{
+        const pid=req.params.pid
+        const sid=req.params.sid
+        const product=await productModel.find({$and:[{category:pid},{sub_category:sid}]})
+        const sub_category=await subcategoryModel.find({p_category:id}) 
+        res.render('user/shop',{product:product,subcategory:sub_category})
+    }
+    catch(err){
+        console.log("Shopping Page Error:",err);
+        res.status(500).send('Internal Server Error');
+    }
+
+}
+const singleproduct=async(req,res)=>{
+    try{
+        const id=req.params.id
+        const product=await productModel.findOne({_id:id}) 
+        product.images = product.images.map(image => image.replace(/\\/g, '/'));
+        console.log('Image Path:', product.images[0]);
+        res.render('user/singleproduct',{product:product})
+    }
+    catch(err){
+        console.log("Shopping Page Error:",err);
+        res.status(500).send('Internal Server Error');
+    }
+
+}
+
 
 
 
@@ -324,5 +368,8 @@ module.exports = {
     forgotpasswordpost,
     loginpost,
     newpassword,
-    resetpassword
+    resetpassword,
+    shopping,
+    subshopping,
+    singleproduct,
 }

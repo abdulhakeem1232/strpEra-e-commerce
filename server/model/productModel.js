@@ -9,6 +9,10 @@ const schema=new mongoose.Schema({
         type:String,
         required:true,
     },
+  //   brand:{
+  //     type:String,
+  //     required:true,
+  // },
     category: {
       type: Schema.Types.ObjectId,
       ref: 'categories', 

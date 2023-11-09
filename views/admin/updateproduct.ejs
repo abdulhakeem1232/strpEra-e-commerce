@@ -39,23 +39,30 @@
             <div class="container form-container">
                 <h1 class="mb-4">Update product</h1>
         
-                <form action="/admin/update-category/<%= product._id %>" method="post">
+                <form action="/admin/update-pro/<%= product._id %>" method="post">
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Product Name:</label>
                         <input type="text" class="form-control" id="categoryName" name="productName" value="<%= product.name %>" required>
                     </div>
 
+                   
+
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Price:</label>
-                        <input type="text" class="form-control" id="categoryName" name="productprice" value="<%= product.price %>" required>
+                        <input type="text" class="form-control" id="categoryName" name="productprice" value="<%= product.price %>" min="0" required>
                     </div>
                     <div class="mb-3 d-flex">
-                        <label for="categoryName" class="form-label">Product stock:</label>
-                        <% product.stock.forEach(item=>{ %>
-                          <label for="categoryName" class="form-label ml-2"><%= item.size %></label>
-                        <input type="text" class="form-control ml-2" id="categoryName" name="product" value="<%= item.quantity %>" style="height:15px;width: 50px;" required>
-                        <% }) %>
-                    </div>
+                      <label for="subCategory" class="form-label">Stock:</label><br>
+                      <label for="subCategory" class="form-label ml-2">6:</label>
+                      <input type="number" class="form-control ml-3" id="productName" value="<%= product.stock[0].quantity %>" name="s6" min="0" required>
+                      <label for="subCategory" class="form-label ml-2">7:</label>
+                      <input type="number" class="form-control ml-3" id="productName" value="<%= product.stock[1].quantity %>" name="s7" min="0" required>
+                      <label for="subCategory" class="form-label ml-2">8:</label>
+                      <input type="number" class="form-control ml-3" id="productName" value="<%= product.stock[2].quantity %>" name="s8" min="0" required>
+                      <label for="subCategory" class="form-label ml-2">9:</label>
+                      <input type="number" class="form-control ml-3" id="productName" value="<%= product.stock[3].quantity %>" name="s9" min="0" required>
+                      
+                  </div>
         
                     <div class="mb-3">
                       <label for="description" class="form-label">Description:</label>
