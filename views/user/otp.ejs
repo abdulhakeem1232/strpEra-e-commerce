@@ -29,28 +29,24 @@
 	<link rel="stylesheet" href="css/main.css">
 </head>
 
-<body>
-    <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
-		<div class="text-center">
-			<h2>Enter OTP</h2>
-			
-			<!-- Form for Verify OTP -->
-			<form action="/verifyotp" method="post" class="mb-3">
-				<div class="input-group">
-					<input type="text" class="form-control" name="otp" placeholder="Enter OTP" aria-label="Enter OTP" id="otpInputVerify">
-					<button type="submit" class="btn btn-success">Verify OTP</button>
-				</div>
-			</form>
-			
-			<!-- Form for Resend OTP -->
-			<form action="/resendotp" method="post" class="mb-3">
-				<button type="submit" class="btn btn-primary">Resend OTP</button>
-			
-			
-			<a href="/reg" class="btn btn-danger">Cancel</a></form>
-		</div>
-	</div>
-   
+<body class="bg-light d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="container p-4 bg-white rounded shadow-lg text-center" style="width:  25vw;">
+        <h2 class="mb-4">Enter OTP</h2>
+
+        <!-- Form for Verify OTP -->
+        <form action="/verifyotp" method="post" class="mb-3">
+            <div class="form-group">
+                <input type="text" class="form-control" name="otp" placeholder="Enter OTP" id="otpInputVerify">
+            </div>
+            <button type="submit" class="btn btn-success btn-block">Verify OTP</button>
+        </form>
+
+        <!-- Form for Resend OTP and Cancel Button -->
+        <form action="/resendotp" method="post" class="mb-3">
+            <button type="submit" class="btn btn-primary btn-block">Resend OTP</button>
+        </form>
+        <a href="/reg" class="btn btn-danger btn-block">Cancel</a>
+    </div>
 
 
 <script src="/js/vendor/jquery-2.2.4.min.js"></script>

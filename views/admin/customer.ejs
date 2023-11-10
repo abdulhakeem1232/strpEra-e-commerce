@@ -68,7 +68,6 @@
                         <th>E-Mail</th>
                         <th>Phone No</th>
                         <th>Blocked</th>
-                        <th>Password</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -81,7 +80,6 @@
                         <td><%= data.phone_no %></td>
                         <td><%= data.status %></td>
                         <!-- <td><%= data.status ? 'True' : 'False' %></td> -->
-                        <td>********</td>  <!--  password hashed -->
                         <td>
                           <a href="/admin/update/<%= data.email%>">
                             <button class="btn btn-primary btn-sm" id="blockORunblock">

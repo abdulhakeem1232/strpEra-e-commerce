@@ -94,17 +94,17 @@ const unlist = async (req, res) => {
         res.send("Error Occured")
     }
 }
-const delet = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const product = await productModel.deleteOne({ _id: id })
-        res.redirect('/admin/products')
-    }
-    catch (err) {
-        console.log(err);
-        res.send("Error Occured")
-    }
-}
+// const delet = async (req, res) => {
+//     try {
+//         const id = req.params.id;
+//         const product = await productModel.deleteOne({ _id: id })
+//         res.redirect('/admin/products')
+//     }
+//     catch (err) {
+//         console.log(err);
+//         res.send("Error Occured")
+//     }
+// }
 const updatepro = async (req, res) => {
     try {
         const id = req.params.id
@@ -207,7 +207,7 @@ module.exports = {
     newproduct,
     addproduct,
     unlist,
-    delet,
+    // delet,
     updatepro,
     deleteimg,
     editimg,

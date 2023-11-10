@@ -47,8 +47,8 @@
 					<div class="col-first">
 						<h1>Shopping</h1>
 						<nav class="d-flex align-items-center">
-							<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-							<a href="category.html">Shopping</a>
+							<a href="#">Home<span class="lnr lnr-arrow-right"></span></a>
+							<a href="#">Single Product</a>
 						</nav>
 					</div>
 				</div>
@@ -62,10 +62,19 @@
 					<!-- Product Image -->
 					<div class="col-lg-6">
 						<div class="product-image">
-							<a href="/<%= product.images[0] %>" class="MagicZoom">					
-							<img src="/<%= product.images[0] %>" alt="Product Image" style="width: 300px; height: 300px; object-fit: cover;"></a>
+							<a href="/<%= product.images[0] %>" class="MagicZoom" id="Mag">					
+								<img id="mainImage" src="/<%= product.images[0] %>" alt="Product Image" style="width: 300px; height: 300px; object-fit: cover;">
+							</a>
+						</div>
+						<div class="additional-images mt-2 d-flex ">
+							<% product.images.forEach((image, index) => { %>
+								<div class="additional-image ml-2" data-image="/<%= image %>">
+									<img src="/<%= image %>" alt="Additional Product Image" style="width: 75px; height: 75px; object-fit: cover;">
+								</div>
+							<% }); %>
 						</div>
 					</div>
+					
 					<!-- Product Details -->
 					<div class="col-lg-6">
 						<div class="product-info">
@@ -85,6 +94,29 @@
 
 
         <%- include('partials/footer')%>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				var additionalImages = document.querySelectorAll('.additional-image');
+			
+				additionalImages.forEach(function (image) {
+					image.addEventListener('click', function () {
+						var newImageSrc = this.getAttribute('data-image');
+			
+						// Set the clicked image as the main product image
+						document.getElementById('mainImage').src = newImageSrc;
+			
+						// Set the zoom link to the clicked image
+						document.getElementById('Mag').setAttribute('href', newImageSrc);
+			
+						// Update MagicZoom for the new image
+						MagicZoom.update('Mag');
+					});
+				});
+			});
+			</script>
+			
+		
 
         <script src="/public/user_assets/js/vendor/jquery-2.2.4.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"

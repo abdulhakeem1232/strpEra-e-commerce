@@ -175,6 +175,7 @@ const verifyotp = async (req, res) => {
             try {
                 if(req.session.signup){
                 await userModel.create(user)
+                req.session.isAuth = true;
                 res.redirect('/')
                 }
                else if(req.session.forgot){
@@ -295,7 +296,7 @@ const resetpassword = async (req, res) => {
 const shopping=async(req,res)=>{
     try{
         const id=req.params.id
-        const product=await productModel.find({category:id})
+        const product=await productModel.find({$and:[{category:id},{status:true}]})
         const sub_category=await subcategoryModel.find({p_category:id}) 
         res.render('user/shop',{product:product,subcategory:sub_category})
     }
@@ -309,8 +310,8 @@ const subshopping=async(req,res)=>{
     try{
         const pid=req.params.pid
         const sid=req.params.sid
-        const product=await productModel.find({$and:[{category:pid},{sub_category:sid}]})
-        const sub_category=await subcategoryModel.find({p_category:id}) 
+        const product=await productModel.find({$and:[{category:pid},{sub_category:sid},{status:true}]})
+        const sub_category=await subcategoryModel.find({p_category:pid}) 
         res.render('user/shop',{product:product,subcategory:sub_category})
     }
     catch(err){
