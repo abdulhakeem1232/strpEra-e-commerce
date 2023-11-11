@@ -1,6 +1,6 @@
 const mongoose=require('mongoose')
 const Schema = mongoose.Schema;
-const { category } = require('../controller/admin_controller')
+const { category } = require('../controller/admincontroller/admin_controller')
 
 mongoose.connect('mongodb://127.0.0.1/stepEras')
 

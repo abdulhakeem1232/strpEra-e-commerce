@@ -27,7 +27,11 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-app.use(flash());
+app.use(flash({
+    sessionKeyName: 'flashMessage',
+    useViewEngine: true,
+    // ... other configuration options
+}));
 app.use(express.urlencoded({ extended: true }));
 
 // Static file serving
@@ -46,7 +50,6 @@ app.use(middleware.loadCategory)
 app.use(nocache());
 app.use('/', userRouter);
 app.use('/admin', adminRouter);
-
 app.use('/uploads', express.static('uploads'))
 
 app.listen(port, () => { console.log(`Server running on http://localhost:${port}`) })
