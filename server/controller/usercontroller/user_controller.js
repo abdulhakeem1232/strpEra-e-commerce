@@ -13,7 +13,8 @@ const subcategoryModel = require('../../model/subcatModel.js')
 
 
 const index = async (req, res) => {
-    res.render('user/index.ejs')
+    const isAuth = req.session.isAuth || false;
+    res.render('user/index.ejs',{ isAuth })
 }
 
 const login = async (req, res) => {
@@ -33,6 +34,7 @@ const loginpost=async(req,res)=> {
         const passwordmatch=await bcrypt.compare(req.body.password,user.password)
         if(passwordmatch && !user.status){
             req.session.isAuth = true;
+            req.session.userId = user._id;
             res.redirect('/');
         }
         else{
@@ -176,6 +178,7 @@ const verifyotp = async (req, res) => {
                 if(req.session.signup){
                 await userModel.create(user)
                 req.session.isAuth = true;
+                req.session.userId = user._id;
                 res.redirect('/')
                 }
                else if(req.session.forgot){
@@ -293,6 +296,11 @@ const resetpassword = async (req, res) => {
     }
 }
 
+const logout=async(req,res)=>{
+    req.session.isAuth=false;
+    req.session.destroy();
+    res.redirect('/')
+}
 
 module.exports = {
     index,
@@ -307,5 +315,6 @@ module.exports = {
     loginpost,
     newpassword,
     resetpassword,
+    logout,
     
 }

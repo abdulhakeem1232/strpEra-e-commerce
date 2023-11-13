@@ -51,5 +51,8 @@ app.use(nocache());
 app.use('/', userRouter);
 app.use('/admin', adminRouter);
 app.use('/uploads', express.static('uploads'))
+// app.get('*', (req, res) => {
+//     res.status(404).send('Page Not Found');
+// });
 
 app.listen(port, () => { console.log(`Server running on http://localhost:${port}`) })

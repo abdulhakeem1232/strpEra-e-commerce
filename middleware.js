@@ -2,6 +2,7 @@ const category=require('./server/model/categoryModel')
 
 const loadCategory=async(req,res,next)=>{
     try {
+      res.locals.isAuth = req.session.isAuth || false;
         const categories = await category.find(); 
         res.locals.categories = categories; 
         next(); 
@@ -11,7 +12,13 @@ const loadCategory=async(req,res,next)=>{
         res.status(500).send('Internal Server Error');
       }
 }
-
+const iflooged=async(req,res,next)=>{
+  if(req.session.isAuth){
+    ('/')
+  }else{
+    next()
+  }
+}
 const islogged=async(req,res,next)=>{
   if(req.session.isAuth){
     req.user=req.session.user;
@@ -20,6 +27,7 @@ const islogged=async(req,res,next)=>{
     res.redirect('/login')
   }
 }
+
 const loggedout=async(req,res,next)=>{
   if(req.session.user){
     next()
@@ -31,9 +39,10 @@ const loggedout=async(req,res,next)=>{
 
 
 
-module.exports = {
+module.exports ={
     loadCategory,
     islogged,
-    loggedout
+    loggedout,
+    iflooged
 
 }

@@ -56,41 +56,59 @@
 		</section>
 
 
-		<section class="product-details">
+		<section class="product-details mt-4">
 			<div class="container">
-				<div class="row">
-					<!-- Product Image -->
-					<div class="col-lg-6">
-						<div class="product-image">
-							<a href="/<%= product.images[0] %>" class="MagicZoom" id="Mag">					
-								<img id="mainImage" src="/<%= product.images[0] %>" alt="Product Image" style="width: 300px; height: 300px; object-fit: cover;">
-							</a>
+				<form id="productForm" action="/add-to-cart/<%= product._id %>" method="post">
+					<div class="row">
+						<!-- Product Image -->
+						<div class="col-lg-6">
+							<div class="product-image">
+								<a href="/<%= product.images[0] %>" class="MagicZoom" id="Mag">                    
+									<img id="mainImage" src="/<%= product.images[0] %>" alt="Product Image" class="img-fluid" 
+									style="width: 300px; height: 300px; object-fit: cover;">
+								</a>
+							</div>
+							<div class="additional-images mt-2 d-flex">
+								<% product.images.forEach((image, index) => { %>
+									<div class="additional-image ml-2" data-image="/<%= image %>">
+										<img src="/<%= image %>" alt="Additional Product Image" class="img-thumbnail"  
+										style="width: 75px; height: 75px; object-fit: cover;">
+									</div>
+								<% }); %>
+							</div>
 						</div>
-						<div class="additional-images mt-2 d-flex ">
-							<% product.images.forEach((image, index) => { %>
-								<div class="additional-image ml-2" data-image="/<%= image %>">
-									<img src="/<%= image %>" alt="Additional Product Image" style="width: 75px; height: 75px; object-fit: cover;">
+						
+						<!-- Product Details -->
+						<div class="col-lg-6">
+							<div class="product-info">
+								<h2><%= product.name %></h2>
+								<p class="lead">₹ <%= product.price %></p>
+								<p><%= product.description %></p>
+						
+								<!-- Product Size Selection -->
+								<div class="form-group">
+									<label for="size">Select Size:</label>
+									<select id="size" name="size" class="form-control" required>
+										<option value="" disabled selected>Select size</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+										<option value="9">9</option>
+									</select>
 								</div>
-							<% }); %>
-						</div>
-					</div>
-					
-					<!-- Product Details -->
-					<div class="col-lg-6">
-						<div class="product-info">
-							<h2><%= product.name %></h2>
-							<p>₹ <%= product.price %></p>
-							<p><%= product.description %></p>
-							<!-- Interactive Icons -->
-							<div class="interactive-icons">
-								<a href="#" class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</a>
-								<a href="#" class="add-to-wishlist"><i class="fa fa-heart"></i> Add to Wishlist</a>
+							
+								<!-- Interactive Icons -->
+								<div class="interactive-icons mt-5">
+									<button type="submit" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+									<a href="#" class="btn btn-danger ml-2"><i class="fa fa-heart"></i> Add to Wishlist</a>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				</form>
 			</div>
 		</section>
+		
 
 
         <%- include('partials/footer')%>
@@ -102,14 +120,8 @@
 				additionalImages.forEach(function (image) {
 					image.addEventListener('click', function () {
 						var newImageSrc = this.getAttribute('data-image');
-			
-						// Set the clicked image as the main product image
 						document.getElementById('mainImage').src = newImageSrc;
-			
-						// Set the zoom link to the clicked image
 						document.getElementById('Mag').setAttribute('href', newImageSrc);
-			
-						// Update MagicZoom for the new image
 						MagicZoom.update('Mag');
 					});
 				});
