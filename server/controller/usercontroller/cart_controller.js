@@ -2,7 +2,8 @@ const productModel = require('../../model/productModel');
 const cartModel = require('./../../model/cartModel')
 
 
-const addToCart = async (req, res) => {
+const addTocart = async (req, res) => {
+    console.log("hi");
     const selectedSize = req.body.size;
     console.log(selectedSize);
     const pid = req.params.pid
@@ -28,7 +29,6 @@ const addToCart = async (req, res) => {
             item: [],
             total: 0,
         })
-
 
     }
     const productExist = cart.item.findIndex(item => item.productId == pid && item.size === selectedSize)
@@ -81,10 +81,23 @@ const deletecart=async(req,res)=>{
     try {
         const userId=req.session.userId
         const pid=req.params.id
+        const size=req.params.size
         console.log('Deleting item:', { userId, pid });
-        const result=await cartModel.updateOne({userId:userId},{$pull:{item:{_id:pid}}})
+        const result=await cartModel.updateOne({userId:userId},{$pull:{item:{_id:pid,size:size}}})
         console.log('Update result:', result);
        res.redirect('/showcart')
+    }
+    catch(err) {
+        console.log(err);
+        res.status(500).send('error occured')
+
+    }
+}
+const updatecart=async(req,res)=>{
+    try{
+        const { pid, size, quantity } = req.params;
+        const updatedCart = await cartModel.updateQuantity(pid, size, quantity);
+        res.json({ success: true, updatedCart });
     }
     catch(err) {
         console.log(err);
@@ -103,7 +116,8 @@ const deletecart=async(req,res)=>{
 
 
 module.exports = {
-    addToCart,
+    addTocart,
     showcart,
-    deletecart
+    deletecart,
+    updatecart
 }

@@ -34,6 +34,11 @@
         <script src="/admin_assets/assets/js/magiczoom.js"></script>
      
 </head>
+<style>
+#size {
+    border: 2px solid red !important;
+}
+</style>
 
 <body>
 
@@ -88,7 +93,7 @@
 								<!-- Product Size Selection -->
 								<div class="form-group">
 									<label for="size">Select Size:</label>
-									<select id="size" name="size" class="form-control" required>
+									<select id="size" name="size" class="form-control"  required>
 										<option value="" disabled selected>Select size</option>
 										<option value="6">6</option>
 										<option value="7">7</option>
@@ -99,7 +104,7 @@
 							
 								<!-- Interactive Icons -->
 								<div class="interactive-icons mt-5">
-									<button type="submit" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+									<button type="button" class="btn btn-primary" onclick="addToCart()"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
 									<a href="#" class="btn btn-danger ml-2"><i class="fa fa-heart"></i> Add to Wishlist</a>
 								</div>
 							</div>
@@ -112,6 +117,25 @@
 
 
         <%- include('partials/footer')%>
+		<script>
+			function addToCart() {
+				// console.log("hi");
+				var size = document.getElementById('size');
+				var selectedSize = size.value;
+		
+				if (selectedSize == "") {
+					alert("Please select size")
+					size.style.border = "5px solid red";
+					console.log("yes");  
+					return;
+				}
+				else{
+				console.log("no"); 
+				}
+		
+				  
+			}
+		</script>
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
@@ -127,6 +151,7 @@
 				});
 			});
 			</script>
+			
 			
 		
 

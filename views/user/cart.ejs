@@ -87,6 +87,7 @@
                                                
                                             </div>
                                         </td>
+                                        <td>Size:<%= item.size %></td>
                                         <td>
                                             <h5>₹ <%= item.price %>
                                             </h5>
@@ -95,9 +96,9 @@
                                             <div class="product_count">
                                                 <input type="text" name="qty" id="sst<%= index%>" maxlength="12"
                                                     value="<%= item.quantity %>" title="Quantity:" class="input-text qty">
-                                                <button onclick="increment('<%= index %>','<%= item.price %>')" class="increase items-count" type="button"><i
+                                                <button onclick="updateQuantity('<%= item._id %>', '<%= item.size %>', '<%= index %>', '<%= item.price %>', 'increment','<%= JSON.stringify(cart) %>')" class="increase items-count" type="button"><i
                                                         class="lnr lnr-chevron-up"></i></button>
-                                                <button onclick="decrement('<%= index %>','<%= item.price %>')" class="reduced items-count" type="button"><i
+                                                <button onclick="updateQuantity('<%= item._id %>', '<%= item.size %>', '<%= index %>', '<%= item.price %>', 'dercrement','<%= JSON.stringify(cart) %>')" class="reduced items-count" type="button"><i
                                                         class="lnr lnr-chevron-down"></i></button>
                                             </div>
                                         </td>
@@ -106,7 +107,7 @@
                                                 <%= item.total %>
                                             </h5>
                                         </td>
-                                        <td><a href="/deletcart/<%= item._id %>"><img src="img/icons8-delete (1).svg" alt=""></a></td>
+                                        <td><a href="/deletcart/<%= item._id %>/<%= item.size %>"><img src="img/icons8-delete (1).svg" alt=""></a></td>
                                     </tr>
                                     <% }) %>
 
@@ -204,47 +205,43 @@
         </section>
 
         <%- include('partials/footer')%>
-        <script>
-             function updateSubtotal() {
-        // Calculate subtotal by summing up the individual totals
-        let subtotal = 0;
-        for (let i = 0; i < '<%= cart.item.length %>'; i++) {
-            subtotal += parseInt(document.getElementById('total' + i).innerText, 10) || 0;
-        }
-        // Update the subtotal in the HTML
-        document.getElementById('total').innerText = subtotal;
-    }
-            function increment(index,price) {
-                console.log(index,price);
-        let inputElement = document.getElementById('sst' +index);
-        let totalElement = document.getElementById('total' +index);
-        // let total=parseInt(totalElement.value, 10);
-        let value = parseInt(inputElement.value, 10);
-        value++;
-        inputElement.value = value;
-        total=value * price
-        totalElement.innerHTML=total;
-        updateSubtotal();
-    }
-    function decrement(index,price){
-        let inputElement = document.getElementById('sst'+index);
-        let totalElement = document.getElementById('total' +index);
-        // let total=parseInt(totalElement.value, 10);
-        let value = parseInt(inputElement.value, 10);
-        if (value > 1) {
-            value--;
-            inputElement.value = value;
+        <!-- <script>
+            console.log("hi");
+             function updateQuantity(productId, size, index, price, action,cart) {
+  const quantityInput = document.getElementById(`sst${index}`);
+  const currentQuantity = parseInt(quantityInput.value);
 
-            total=value * price
-         totalElement.innerHTML=total;
-         updateSubtotal();
+  let newQuantity;
+
+  if (action === 'increment') {
+    newQuantity = currentQuantity + 1;
+  } else if (action === 'decrement') {
+    newQuantity = currentQuantity - 1;
+  }
+
+  
+  if (newQuantity < 1 || newQuantity > cart.item[index].productId.stock[size]) {
+    return; 
+  }
+
+  
+  fetch(`/update-cart-quantity/${productId}/${size}/${newQuantity}`, {
+    method: 'POST',
+  })
+    .then(response => response.json())
+    .then(data => {
+      
+      quantityInput.value = newQuantity;
+      document.getElementById(`total${index}`).innerText = `₹ ${price * newQuantity}`;
+      
+    })
+    .catch(error => {
+      console.error('Error updating quantity:', error);
+    });
+}
+
             
-        }
-        
-        
-    }
-            
-        </script>
+        </script> -->
 
             <script src="/public/user_assets/js/vendor/jquery-2.2.4.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"

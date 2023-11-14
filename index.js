@@ -12,7 +12,7 @@ const adminRouter = require('./server/routes/admin_router.js')
 
 
 const app = express();
-const port = 8001;
+const port = 4545;
 
 app.use(function (req, res, next) {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');

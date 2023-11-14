@@ -28,9 +28,10 @@ router.get('/shop/:id', productcontroller.shopping)
 router.get('/subshop/:pid/:sid', productcontroller.subshopping)
 router.get('/singleproduct/:id', productcontroller.singleproduct)
 
-router.post('/add-to-cart/:pid',cartController.addToCart)
+router.post('/add-to-cart/:pid',cartController.addTocart)
 router.get('/showcart',middleware.islogged,cartController.showcart)
-router.get('/deletcart/:id',middleware.islogged,cartController.deletecart)
+router.get('/deletcart/:id/:size',middleware.islogged,cartController.deletecart)
+router.post('/upadate-cart-quantity/:pid/:size/:quantity',middleware.islogged,cartController.updatecart)
 
 
 
