@@ -32,6 +32,7 @@ app.use(flash({
     useViewEngine: true,
     // ... other configuration options
 }));
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Static file serving

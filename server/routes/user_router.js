@@ -2,6 +2,7 @@ const express = require('express')
 const controller = require('../controller/usercontroller/user_controller.js')
 const productcontroller=require('./../controller/usercontroller/product_controller.js')
 const cartController=require('./../controller/usercontroller/cart_controller.js')
+const checkoutController=require('../controller/usercontroller/checkout_controller.js')
 const middleware = require('./../../middleware.js')
 
 
@@ -31,7 +32,18 @@ router.get('/singleproduct/:id', productcontroller.singleproduct)
 router.post('/add-to-cart/:pid',cartController.addTocart)
 router.get('/showcart',middleware.islogged,cartController.showcart)
 router.get('/deletcart/:id/:size',middleware.islogged,cartController.deletecart)
-router.post('/upadate-cart-quantity/:pid/:size/:quantity',middleware.islogged,cartController.updatecart)
+router.post('/update-cart-quantity/:productId/:size',middleware.islogged,cartController.updatecart)
+
+router.get('/profile',middleware.islogged,controller.profile)
+router.get('/editProfile',middleware.islogged,controller.profileEdit)
+router.post('/profileUpdating',middleware.islogged,controller.profileUpdate)
+router.get('/address',middleware.islogged,controller.address)
+router.get('/addAddress',middleware.islogged,controller.newAddress)
+router.post('/addressUpdating',middleware.islogged,controller.addressUpdate)
+router.get('/changepassword',middleware.islogged,controller.changepassword)
+router.post('/passwordUpdating',middleware.islogged,controller.passwordUpdate)
+
+router.get('/checkout',middleware.islogged,checkoutController.checkout)
 
 
 

@@ -8,6 +8,7 @@ const productModel=require('../../model/productModel.js')
 const { EMAIL, PASSWORD } = require('../../../env.js')
 const { nameValid, emailValid, phoneValid, passwordValid, confirmpasswordValid } = require("../../../utils/validators/signupValidators.js")
 const subcategoryModel = require('../../model/subcatModel.js')
+const addressModel=require('./../../model/addressModel.js')
 
 
 
@@ -302,6 +303,173 @@ const logout=async(req,res)=>{
     res.redirect('/')
 }
 
+const profile=async(req,res)=>{
+    try{
+        const userId=req.session.userId
+        console.log("id",userId);
+        const data=await userModel.findOne({_id:userId})
+        console.log("data",data);
+        res.render('user/profile',{userData:data,expressFlash: req.flash('success')} )
+    }
+    catch(err){
+        res.status(500).send('error occured')
+        console.log(err);
+    }
+}
+const profileEdit=async(req,res)=>{
+    try{
+        const userId=req.session.userId
+        console.log("id",userId);
+        const data=await userModel.findOne({_id:userId})
+        console.log("data",data);
+        res.render('user/editProfile',{userData:data})
+    }
+    catch(err){
+        res.status(500).send('error occured')
+        console.log(err);
+    }
+}
+const profileUpdate=async(req,res)=>{
+    try{
+        const {fname,lname,phone_no}=req.body
+        const userId=req.session.userId
+        console.log("id",userId);
+        const data=await userModel.updateOne({_id:userId},{f_name:fname,l_name:lname,phone_no:phone_no})
+        console.log("data",data);
+        res.redirect('/profile')
+    }
+    catch(err){
+        res.status(500).send('error occured')
+        console.log(err);
+    }
+}
+
+const address=async(req,res)=>{
+    try{
+        const userId=req.session.userId
+        console.log("id",userId);
+        const data=await addressModel.findOne({userId:userId})
+        console.log("data",data);
+        res.render('user/address',{userData:data})
+    }
+    catch(err){
+        res.status(500).send('error occured')
+        console.log(err);
+    }
+}
+
+const newAddress=async(req,res)=>{
+    try{
+        res.render('user/newAddress',{expressFlash: req.flash('address') })
+    }
+    catch(err){
+        res.status(500).send('error occured')
+        console.log(err);
+    }
+}
+
+const addressUpdate = async (req, res) => {
+    try {
+        const { street, city, state, pincode } = req.body;
+        const userId = req.session.userId;
+        console.log("id", userId);
+
+        const existingUser = await addressModel.findOne({ userId: userId });
+
+        if (existingUser) {
+            // Corrected query to find existing address for the user
+            const existingAddress = await addressModel.findOne({
+                'userId': userId,
+                'address.street': street,
+                'address.city': city,
+                'address.state': state,
+                'address.pincode': pincode,
+            });
+
+            if (existingAddress) {
+                req.flash('address', 'This Address already existed');
+                return res.redirect('/addAddress');
+            }
+
+            existingUser.address.push({
+                street: street,
+                city: city,
+                state: state,
+                pincode: pincode
+            });
+
+            await existingUser.save();
+
+            return res.redirect('/address');
+        }
+
+        const newAddress = await addressModel.create({
+            userId: userId,
+            address: {
+                street: street,
+                city: city,
+                state: state,
+                pincode: pincode
+            },
+        });
+
+        res.redirect('/address');
+    } catch (err) {
+        res.status(500).send('Error occurred');
+        console.log(err);
+    }
+};
+
+
+const changepassword=async(req,res)=>{
+    try{
+        res.render('user/changePassword',{expressFlash: req.flash('pass','npass','cpass')})
+    }
+    catch(err){
+        res.status(500).send('error occured')
+        console.log(err);
+    }
+}
+
+const passwordUpdate=async(req,res)=>{
+    try{
+       const {pass,npass,cpass}=req.body
+       const userId=req.session.userId
+       const user=await userModel.findOne({_id:userId})
+       const passwordmatch=await bcrypt.compare(pass,user.password)
+       if(passwordmatch){
+        const ispasswordValid = passwordValid(npass)
+        const iscpasswordValid = confirmpasswordValid(cpass, npass)
+        
+        if(!ispasswordValid){
+            req.flash("npass", "Password should contain one uppercase,one lowercase,one number,one special charecter");
+                return res.redirect('/changepassword');
+        }
+        if(!iscpasswordValid){
+            req.flash("cpass", "New Password and Confirm Password shold be match");
+                return res.redirect('/changepassword');
+        }
+
+        const hashedpassword = await bcrypt.hash(npass, 10)
+        const newuser=await userModel.updateOne({_id:userId},{password:hashedpassword})
+        console.log("password updated");
+        req.flash("success", "Password updated successfully!");
+        return res.redirect('/profile')
+
+       }
+       else{
+        req.flash("pass", "Invalid Password");
+                return res.redirect('/changepassword');
+       }
+
+    }
+    catch(err){
+        res.status(500).send('error occured')
+        console.log(err);
+    }
+}
+
+
 module.exports = {
     index,
     login,
@@ -316,5 +484,12 @@ module.exports = {
     newpassword,
     resetpassword,
     logout,
-    
+    profile,
+    profileEdit,
+    profileUpdate,
+    address,
+    newAddress,
+    addressUpdate,
+    changepassword,
+    passwordUpdate,
 }

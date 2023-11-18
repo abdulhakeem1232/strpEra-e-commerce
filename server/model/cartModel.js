@@ -15,6 +15,10 @@ const schema=new mongoose.Schema({
         ref:'products',
         required:true,
         },
+        stock:{
+            type:String,
+            required:true,
+        },
         size:{
             type:String,
             required:true,
