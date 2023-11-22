@@ -77,24 +77,96 @@
                 <div class="col-lg-12">
                     <h3 class="text-center">Add New Address</h3>
                     <form action="/addressUpdating" method="post">
-                    <div id="user-details" class="pt-4 border rounded p-4 text-dark">
-                        <!-- User details will be displayed here using EJS tags -->
-                        <p class="user-detail h5 font-weight-bold mb-3">Street: </p><input type="text" name="street" required>
-                        <p class="user-detail h5 font-weight-bold mb-3">City: </p><input type="text" name="city" required>
-                        <p class="user-detail h5 font-weight-bold mb-3">State:</p><input type="text"name="state" required>
-                        <p class="user-detail h5 font-weight-bold">pincode:</p><input type="text" pattern="\d{6}" title="Please enter a 6-digit PIN code" name="pincode" required>
-                        <!-- Add other user details here -->
-                    </div>
-					 <% if ( expressFlash && expressFlash.length > 0 ) { %>
+						<div id="user-details" class="pt-4 border rounded p-4 text-dark">
+							<!-- User details will be displayed here using EJS tags -->
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="name" class="user-detail h5 font-weight-bold mb-3">Name:</label>
+										<input type="text" id="name" name="name" class="form-control" required>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="mobile" class="user-detail h5 font-weight-bold mb-3">Mobile No:</label>
+										<input type="tel" id="mobile" name="mobile" class="form-control" required>
+									</div>
+								</div>
+							</div>
+					
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="email" class="user-detail h5 font-weight-bold mb-3">E-mail:</label>
+										<input type="email" id="email" name="email" class="form-control" required>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="housename" class="user-detail h5 font-weight-bold mb-3">House Name:</label>
+										<input type="text" id="housename" name="housename" class="form-control" required>
+									</div>
+								</div>
+							</div>
 
-						<div class="text-danger">
-						<p><%= expressFlash %> </p>
-					  </div>
-					  <% } %>
-               
-                    
-                    <button class="btn btn-success text-light ml-4">Save</button>
-                </form>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="email" class="user-detail h5 font-weight-bold mb-3">Street:</label>
+										<input type="text" id="email" name="street" class="form-control" required>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="housename" class="user-detail h5 font-weight-bold mb-3">City:</label>
+										<input type="text" id="housename" name="city" class="form-control" required>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="email" class="user-detail h5 font-weight-bold mb-3">State:</label>
+										<input type="text" id="email" name="state" class="form-control" required>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="housename" class="user-detail h5 font-weight-bold mb-3">Country:</label>
+										<input type="text" id="housename" name="country" class="form-control" required>
+									</div>
+								</div>
+							</div>
+					
+						
+					
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="pincode" class="user-detail h5 font-weight-bold mb-3">Pincode:</label>
+										<input type="text" id="pincode" pattern="\d{6}" title="Please enter a 6-digit PIN code" name="pincode" class="form-control" required>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="saveas" class="user-detail h5 font-weight-bold mb-3">Save Name:</label>
+										<input type="text" id="saveas" name="saveas" class="form-control" placeholder="eg: Home Address">
+									</div>
+								</div>
+							</div>
+						</div>
+					
+						<% if (expressFlash && expressFlash.length > 0) { %>
+							<div class="text-danger">
+								<p><%= expressFlash %> </p>
+							</div>
+						<% } %>
+					
+						<button class="btn btn-success text-light ml-4">Save</button>
+					</form>
+					
                 </div>
             </div>
         </div>

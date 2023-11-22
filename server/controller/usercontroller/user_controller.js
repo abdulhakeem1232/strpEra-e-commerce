@@ -370,7 +370,7 @@ const newAddress=async(req,res)=>{
 
 const addressUpdate = async (req, res) => {
     try {
-        const { street, city, state, pincode } = req.body;
+        const { name,mobile,email,housename,street, city, state, country,pincode,saveas } = req.body;
         const userId = req.session.userId;
         console.log("id", userId);
 
@@ -380,10 +380,16 @@ const addressUpdate = async (req, res) => {
             // Corrected query to find existing address for the user
             const existingAddress = await addressModel.findOne({
                 'userId': userId,
+                'address.name': name,
+                'address.mobile': mobile,
+                'address.email': email,
+                'address.houseName': housename,
                 'address.street': street,
                 'address.city': city,
                 'address.state': state,
+                'address.country': country,
                 'address.pincode': pincode,
+                'address.save_as':saveas
             });
 
             if (existingAddress) {
@@ -392,10 +398,16 @@ const addressUpdate = async (req, res) => {
             }
 
             existingUser.address.push({
+                name:name,
+                mobile:mobile,
+                email:email,
+                houseName:housename,
                 street: street,
                 city: city,
                 state: state,
-                pincode: pincode
+                country:country,
+                pincode: pincode,
+                save_as:saveas
             });
 
             await existingUser.save();
@@ -406,10 +418,16 @@ const addressUpdate = async (req, res) => {
         const newAddress = await addressModel.create({
             userId: userId,
             address: {
+                name:name,
+                mobile:mobile,
+                email:email,
+                houseName:housename,
                 street: street,
                 city: city,
                 state: state,
-                pincode: pincode
+                country:country,
+                pincode: pincode,
+                save_as:saveas,
             },
         });
 
@@ -469,6 +487,103 @@ const passwordUpdate=async(req,res)=>{
     }
 }
 
+const deleteAddress=async(req,res)=>{
+    try{
+        const userId=req.session.userId;
+        const id=req.params.id;
+        const result = await addressModel.updateOne(
+            { userId: userId, 'address._id': id },
+            { $pull: { address: { _id: id } } }
+        );
+        console.log('userId:', userId);
+        console.log('addressId:', id);
+        console.log('Update result:', result);
+        res.redirect('/address');
+
+
+    }
+    catch(err){
+        res.status(500).send('error occured')
+        console.log(err);
+    }
+}
+
+const editAddress=async(req,res)=>{
+    try{
+        const userId=req.session.userId
+        const id=req.params.id
+        const address=await addressModel.findOne({userId:userId,'address._id':id})
+        console.log("deqjdq",address);
+        res.render('user/editAddress',{adress:address})
+    }
+    catch(err){
+        res.status(500).send('error occured')
+        console.log(err);
+    }
+}
+
+const addressPost=async(req,res)=>{
+    try {
+        const { name,mobile,housename,street,city,state,country,pincode,saveas } = req.body;
+        const addressId=req.params.id
+        const userId = req.session.userId;
+        console.log("id", userId);
+
+        // Check if the new address already exists for the user excluding the currently editing address
+        const isAddressExists = await addressModel.findOne({
+            'userId': userId,
+            'address': {
+                $elemMatch: {
+                    '_id': { $ne: addressId }, // Exclude the currently editing address
+                    'save_as': saveas,
+                    'name': name,
+                    'mobile': mobile,
+                    'housename':housename,
+                    'street': street,
+                    'pincode': pincode,
+                    'city': city,
+                    'state': state,
+                    'country': country,
+
+                }
+            }
+        });
+
+        if (isAddressExists) {
+            // Address with the same details already exists, handle it accordingly
+            return res.status(400).send('Address already exists');
+        }
+
+        // Update the existing address based on the addressId
+        const result = await addressModel.updateOne(
+            { 'userId': userId, 'address._id': addressId },
+            {
+                $set: {
+                    'address.$.save_as': saveas,
+                    'address.$.name': name,
+                    'address.$.mobile': mobile,
+                    'address.$.houseName': housename,
+                    'address.$.street': street,
+                    'address.$.pincode': pincode,
+                    'address.$.city': city,
+                    'address.$.state': state,
+                    'address.$.country': country,
+                    
+                }
+            }
+        );
+
+        // Check if the update was successful
+        
+            res.redirect('/address');
+    } catch (err) {
+        res.status(500).send('Error occurred');
+        console.log(err);
+    }
+
+}
+
+
 
 module.exports = {
     index,
@@ -492,4 +607,7 @@ module.exports = {
     addressUpdate,
     changepassword,
     passwordUpdate,
+    deleteAddress,
+    editAddress,
+    addressPost,
 }

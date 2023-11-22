@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+
+<head>
+    <!-- Mobile Specific Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/fav.png">
+    <!-- Author Meta -->
+    <meta name="author" content="CodePixar">
+    <!-- Meta Description -->
+    <meta name="description" content="">
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="">
+    <!-- meta character set -->
+    <meta charset="UTF-8">
+    <!-- Site Title -->
+    <title>Karma Shop</title> 
+    <!--
+		CSS
+		============================================= -->
+    <link rel="stylesheet" href="/css/linearicons.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/themify-icons.css">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/owl.carousel.css">
+    <link rel="stylesheet" href="/css/nice-select.css">
+    <link rel="stylesheet" href="/css/nouislider.min.css">
+    <link rel="stylesheet" href="/css/ion.rangeSlider.css" />
+    <link rel="stylesheet" href="/css/ion.rangeSlider.skinFlat.css" />
+    <link rel="stylesheet" href="/css/magnific-popup.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/admin_assets/assets/css/magiczoom.css">
+    <script src="/admin_assets/assets/js/magiczoom.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
+</head>
+
+<body>
+
+    <!-- Start Header Area -->
+    <%- include('partials/nav')%>
+        <!-- End Header Area -->
+        <!-- Start Banner Section -->
+        <section class="banner-area organic-breadcrumb">
+            <div class="container">
+                <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                    <div class="col-first">
+                        <h1>Shopping</h1>
+                        <nav class="d-flex align-items-center">
+                            <a href="#">Home<span class="lnr lnr-arrow-right"></span></a>
+                            <a href="#">Checkout</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        
+
+	<!--================Order Details Area =================-->
+	<section class="order_details section_gap">
+		<div class="container">
+			<h3 class="title_confirmation">Thank you. Your order has been received.</h3>
+			<div class="row order_d_inner">
+				<div class="col-lg-4">
+					<div class="details_item">
+						<h4>Order Info</h4>
+						<ul class="list">
+							<li><a href="#"><span>Order Id</span> : <%= order.orderId %></a></li>
+							<li><a href="#"><span>Date</span> : <%= order.createdAt %></a></li>
+							<li><a href="#"><span>Total</span> : <%= order.amount %></a></li>
+							<li><a href="#"><span>Payment method</span> : <%= order.payment %></a></li>
+						</ul>
+					</div>
+				</div>
+				<!-- <div class="col-lg-4">
+					<div class="details_item">
+						<h4>Billing Address</h4>
+						<ul class="list">
+							<li><a href="#"><span>Street</span> : 56/8</a></li>
+							<li><a href="#"><span>City</span> : Los Angeles</a></li>
+							<li><a href="#"><span>Country</span> : United States</a></li>
+							<li><a href="#"><span>Postcode </span> : 36952</a></li>
+						</ul>
+					</div>
+				</div> -->
+				<div class="col-lg-4">
+					<div class="details_item">
+						<h4>Shipping Address</h4>
+						<ul class="list">
+                            <li><a href="#"><span>House Name </span> : <%= order.address[0].houseName %></a></li>
+							<li><a href="#"><span>Street</span> :  <%= order.address[0].street %></a></li>
+							<li><a href="#"><span>City</span> :  <%= order.address[0].city %></a></li>
+							<li><a href="#"><span>Country</span> :  <%= order.address[0].houseName %></a></li>
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="order_details_table">
+				<h2>Invoice</h2>
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">Product</th>
+								<th scope="col">Quantity</th>
+								<th scope="col">Total</th>
+							</tr>
+						</thead>
+						<tbody>
+
+                            <% order.items.forEach(item=>{ %>
+                                <tr>
+                                    <td>
+                                        <p><%= item.productId %></p>
+                                    </td>
+                                    <td>
+                                       <p> x <%= item.quantity %></p>
+                                    </td>
+                                    <td>
+                                        <p><%= item.quantity * item.price %></p>
+                                    </td>
+                                </tr>
+                          <%  }) %>
+
+
+							
+							
+							
+							<tr>
+								<td>
+									<h4>Subtotal</h4>
+								</td>
+								<td>
+									<h5></h5>
+								</td>
+								<td>
+									<p><%= order.amount %></p>
+								</td>
+							</tr>
+							<!-- <tr>
+								<td>
+									<h4>Shipping</h4>
+								</td>
+								<td>
+									<h5></h5>
+								</td>
+								<td>
+									<p>Flat rate: $50.00</p>
+								</td>
+							</tr> -->
+							<tr>
+								<td>
+									<h4>Total</h4>
+								</td>
+								<td>
+									<h5></h5>
+								</td>
+								<td>
+									<p><%= order.amount %></p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+
+
+
+
+        <%- include('partials/footer')%>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <script src="/public/user_assets/js/vendor/jquery-2.2.4.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+                integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+                crossorigin="anonymous"></script>
+            <script src="/public/user_assets/js/vendor/bootstrap.min.js"></script>
+            <script src="/public/user_assets/js/jquery.ajaxchimp.min.js"></script>
+            <script src="/public/user_assets/js/jquery.nice-select.min.js"></script>
+            <script src="/public/user_assets/js/jquery.sticky.js"></script>
+            <script src="/public/user_assets/js/nouislider.min.js"></script>
+            <script src="/public/user_assets/js/countdown.js"></script>
+            <script src="/public/user_assets/js/jquery.magnific-popup.min.js"></script>
+            <script src="/public/user_assets/js/owl.carousel.min.js"></script>
+            <!--gmaps Js-->
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
+            <script src="/public/user_assets/js/gmaps.min.js"></script>
+            <script src="/public/user_assets/js/main.js"></script>
+
+</body>
+
+</html>

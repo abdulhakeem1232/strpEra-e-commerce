@@ -85,14 +85,26 @@
 
                     <% if (userData && userData.address) { %>
                         <div class="container">
-                            <% userData.address.forEach((address, index) => { %>
-                                <div class="card mt-3">
-                                    <h5 class="card-header">Address <%= index + 1 %></h5>
+                            <% userData.address.forEach((address) => { %>
+                                <div class="card mt-3"><div class="d-flex justify-content-between">
+                                    <h5 class="card-header">Address: <%= address.save_as %></h5>
+									<div>
+										<a href="/editAddress/<%= address._id %>">
+										<img src="img/icons8-edit.svg" alt="" style="height: 30px;width: 30px;"></a>
+										<a href="/deleteAddress/<%= address._id %>"><img src="img/icons8-delete (1).svg" alt="" style="height: 30px;width: 30px;"></a>
+									</div></div>
                                     <div class="card-body">
-                                        <h5 class="card-title">Street: <%= address.street %></h5>
+                                        <h5 class="card-title">Name: <%= address.name %></h5>
+										 <p class="card-text">Email: <%= address.email %></p>
+                                        <p class="card-text">Mobile No: <%= address.mobile %></p>
+                                        <p class="card-text">House Name: <%= address.houseName %></p>
+										<p class="card-text">Street: <%= address.street %></p>
                                         <p class="card-text">City: <%= address.city %></p>
                                         <p class="card-text">State: <%= address.state %></p>
+										<p class="card-text">Country: <%= address.country %></p>
                                         <p class="card-text">Zip Code: <%= address.pincode %></p>
+										
+                                        
                                     </div>
                                 </div>
                             <% }); %>

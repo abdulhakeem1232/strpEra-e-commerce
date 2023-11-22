@@ -42,8 +42,14 @@ router.get('/addAddress',middleware.islogged,controller.newAddress)
 router.post('/addressUpdating',middleware.islogged,controller.addressUpdate)
 router.get('/changepassword',middleware.islogged,controller.changepassword)
 router.post('/passwordUpdating',middleware.islogged,controller.passwordUpdate)
+router.get('/editAddress/:id',middleware.islogged,controller.editAddress)
+router.get('/deleteAddress/:id',middleware.islogged,controller.deleteAddress)
+router.post('/addressupdated/:id',middleware.islogged,controller.addressPost)
 
 router.get('/checkout',middleware.islogged,checkoutController.checkout)
+router.post('/order',middleware.islogged,checkoutController.order)
+router.get('/orderhistory',middleware.islogged,checkoutController.orders)
+router.get('/cancelorder/:id',middleware.islogged,checkoutController.ordercancelling)
 
 
 

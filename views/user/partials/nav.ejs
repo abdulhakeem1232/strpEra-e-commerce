@@ -106,7 +106,7 @@ font-family: 'Russo One', sans-serif;
                         </li>
                     </ul> -->
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="nav-item" style="padding-top: 10px;"><a href="/showcart" class="cart"><span class="ti-bag "></span></a></li>
+                        <li class="nav-item" style="padding-top: 10px;"><a href="/showcart" class="cart"><span class="fa fa-shopping-cart "></span></a></li>
                         <li class="nav-item" style="padding-top: 10px;">
                             <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
                         </li>
@@ -129,8 +129,8 @@ font-family: 'Russo One', sans-serif;
                             <div class="dropdown-menu" aria-labelledby="profileDropdown" id="profileDropdownContent">
                                 <% if (isAuth) { %>
                                     <a class="dropdown-item" href="/profile">My Account</a>
-                                    <a class="dropdown-item" href="/address">My Wish List</a>
-                                    <a class="dropdown-item" href="/changepassword">My Orders</a>
+                                    <a class="dropdown-item" href="/wishlist">My Wish List</a>
+                                    <a class="dropdown-item" href="/orderhistory">My Orders</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" id="loginOrLogoutButton" href="/logout">Logout</a>
                                 <% } else { %>

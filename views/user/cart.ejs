@@ -32,6 +32,18 @@
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/admin_assets/assets/css/magiczoom.css">
     <script src="/admin_assets/assets/js/magiczoom.js"></script>
+    <style>
+        .empty-cart-message {
+    font-size: 16px;
+    color: #888;
+}
+
+.empty-cart-message a {
+    color: #007bff; 
+    text-decoration: underline;
+}
+
+    </style>
 
 </head>
 
@@ -120,12 +132,14 @@
                                     <% }) %>
                                     <% } else { %>
                                         <tr>
-                                            <td colspan="6">Your cart is empty</td>
+                                            <td colspan="6" class="empty-cart-message text-center py-3">
+                                                Your cart is empty. <a href="/" class="text-primary">Explore our products</a> and add items to your cart!
+                                            </td>
                                         </tr>
                                     <% } %>
-
-
-                                        <tr class="bottom_button">
+                                    
+                                    <% if (cart.item.length > 0) { %>
+                                        <tr class="bottom_button" >
                                             <td>
                                                 <a class="gray_btn" href="#">Update Cart</a>
                                             </td>
@@ -184,6 +198,7 @@
                                                 </div>
                                             </td>
                                         </tr>
+                                        <% } %>
                             </tbody>
                         </table>
                     </div>
