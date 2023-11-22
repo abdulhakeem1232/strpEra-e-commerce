@@ -94,7 +94,23 @@ const orders=async(req,res)=>{
 const ordercancelling=async(req,res)=>{
     try{
        const id= req.params.id
-       const result=await orderModel.updateOne({_id:id},{status:"Cancelled"})
+       const update=await orderModel.updateOne({_id:id},{status:"Cancelled"})
+       const result=await orderModel.findOne({_id:id})
+       console.log("result",result);
+       const items=result.items.map(item=>({
+        productId:item.productId,
+        quantity:item.quantity,
+        size:item.size,
+        
+    }))
+
+    for(const item of items){
+        const product =await productModel.findOne({_id:item.productId})
+
+        const size=product.stock.findIndex(size=>size.size ==item.size)
+        product.stock[size].quantity +=item.quantity
+        await product.save()
+    }
        res.redirect("/orderhistory")
 
     }

@@ -2,6 +2,7 @@ const express=require('express')
 const controller=require('../controller/admincontroller/admin_controller')
 const categorycontroller=require('../controller/admincontroller/category_controller')
 const productcontroller=require('../controller/admincontroller/productController')
+const ordercontroller=require('../controller/admincontroller/orderControllre')
 
 // const app=express();
 
@@ -46,6 +47,9 @@ router.post('/update-pro/:id',productcontroller.updateproduct)
 router.get('/editimg/:id',productcontroller.editimg)
 router.get('/deleteimg',productcontroller.deleteimg)
 router.post('/updateimg/:id',upload.array('images'),productcontroller.updateimg)
+
+router.get('/order',ordercontroller.order)
+router.post('/updateOrderStatus',ordercontroller.orderstatus)
 
 
 
