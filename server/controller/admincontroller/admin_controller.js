@@ -77,9 +77,32 @@ const userupdate=async(req,res)=>{
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+
         user.status = !user.status;
         await user.save();
-        res.redirect('/admin/customer')
+        
+        console.log('User status updated:', user.status);
+        
+        if (req.session.isAuth && req.session.userId == user._id) {
+            if (user.isAdmin == false) {
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error('Error destroying session:', err);
+                } else {
+                    console.log('Session destroyed successfully');
+                    
+                }
+            });
+        }
+        }
+        else{
+            console.log('wedfcwa');
+        }
+        
+        console.log('Redirecting to /admin/customer');
+        
+        res.redirect('/admin/customer');
+        
     }
     catch(err){
         console.log(err);
@@ -140,6 +163,12 @@ const filter=async(req,res)=>{
 
 }
 
+const logout=async(req,res)=>{
+    req.session.isAuth=false;
+    req.session.destroy();
+    res.redirect('/admin')
+}
+
 
 
 module.exports = {
@@ -151,6 +180,7 @@ module.exports = {
     searchUser,
     searchview,
     filter,
+    logout,
     
 
     

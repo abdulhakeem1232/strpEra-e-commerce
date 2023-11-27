@@ -1,6 +1,7 @@
 const express = require('express')
 const session = require('express-session')
 const flash = require('express-flash')
+const Razorpay =require('razorpay')
 const nocache = require('nocache')
 const path = require('path')
 // const multer = require('multer')
@@ -8,6 +9,7 @@ const path = require('path')
 const middleware = require('./middleware.js')
 const userRouter = require('./server/routes/user_router.js')
 const adminRouter = require('./server/routes/admin_router.js')
+const {key_id,key_secret}=require('./env.js')
 
 
 
@@ -34,6 +36,8 @@ app.use(flash({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+var instance = new Razorpay({key_id:key_id, key_secret:key_secret})
 
 // Static file serving
 // app.use('/admin_assets', express.static(path.join(__dirname, 'public/admin_assets')));

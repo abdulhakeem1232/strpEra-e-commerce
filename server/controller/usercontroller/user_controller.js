@@ -134,7 +134,7 @@ const regpost = async (req, res) => {
             const otp = otpgenerator()
             console.log(otp);
             const currentTimestamp = Date.now();
-            const expiryTimestamp = currentTimestamp + 60 * 1000;
+            const expiryTimestamp = currentTimestamp + 45 * 1000;
             await userotp.create({ email: email, otp: otp, expiry: new Date(expiryTimestamp) })
 
             await sendmail(email, otp)

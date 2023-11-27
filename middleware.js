@@ -28,6 +28,31 @@ const islogged=async(req,res,next)=>{
   }
 }
 
+const isotp=async(req,res,next)=>{
+  if(req.session.signup || req.session.forgot){
+    req.user=req.session.user;
+    next()
+  }else{
+    res.redirect('/')
+  }
+}
+
+const adminifloged=async(req,res,next)=>{
+  if(req.session.isAuth){
+    ('/admin/dashboard')
+  }else{
+    next()
+  }
+}
+const adminlogged=async(req,res,next)=>{
+  if(req.session.isAuth){
+    req.user=req.session.user;
+    next()
+  }else{
+    res.redirect('/admin')
+  }
+}
+
 const loggedout=async(req,res,next)=>{
   if(req.session.user){
     next()
@@ -43,6 +68,9 @@ module.exports ={
     loadCategory,
     islogged,
     loggedout,
-    iflooged
+    iflooged,
+    adminlogged,
+    adminifloged,
+    isotp,
 
 }

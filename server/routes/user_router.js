@@ -16,7 +16,7 @@ router.get('/', controller.index)
 router.get('/login',middleware.iflooged,controller.login)
 router.get('/reg',middleware.iflooged,controller.signup)
 router.post('/regpost', controller.regpost)
-router.get('/otp', controller.otp)
+router.get('/otp',middleware.isotp, controller.otp)
 router.post('/verifyotp', controller.verifyotp)
 router.post('/resendotp', controller.resendotp)
 router.get('/forgotpassword', controller.forgotpassword)
@@ -50,6 +50,8 @@ router.get('/checkout',middleware.islogged,checkoutController.checkout)
 router.post('/order',middleware.islogged,checkoutController.order)
 router.get('/orderhistory',middleware.islogged,checkoutController.orders)
 router.get('/cancelorder/:id',middleware.islogged,checkoutController.ordercancelling)
+router.post('/razorpay',middleware.islogged,checkoutController.upi)
+
 
 
 

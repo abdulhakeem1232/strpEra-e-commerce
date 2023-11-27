@@ -3,7 +3,7 @@ const orderModel= require('../../model/orderModel')
 
 const order=async(req,res)=>{
     try{
-        const order=await orderModel.find({})
+        const order=await orderModel.find({}).sort({createdAt:-1})
         // console.log(user);
         res.render("admin/order",{order:order})
     }
@@ -27,6 +27,9 @@ const orderstatus=async(req,res)=>{
         res.send("Error Occured")
     }
 }
+
+
+
 
 
 
