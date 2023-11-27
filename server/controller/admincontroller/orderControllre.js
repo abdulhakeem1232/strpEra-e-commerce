@@ -3,7 +3,10 @@ const orderModel= require('../../model/orderModel')
 
 const order=async(req,res)=>{
     try{
-        const order=await orderModel.find({}).sort({createdAt:-1})
+        const order=await orderModel.find({}).sort({createdAt:-1}).populate({
+            path:'items.productId',
+            select:'name'
+        })
         // console.log(user);
         res.render("admin/order",{order:order})
     }

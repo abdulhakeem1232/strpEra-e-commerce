@@ -66,6 +66,8 @@
                     <tr>
                         <th>Order ID</th>
                         <th>User ID</th>
+                        <th>Products</th>
+                        <th>Delivery Address</th>
                         <th>Payment</th>
                         <th>Amount</th>
                         <th>Status</th>
@@ -79,15 +81,29 @@
                     <tr>
                         <td><%= data.orderId %></td>
                         <td><%= data.userId %></td>
+                        <td><% data.items.forEach(function(items){ %>
+                          <%= items.productId.name %>
+                          <%= items.quantity %>
+                          <br>
+                          <% }); %>
+                        </td>
+                        <td>
+                          <%= data.address[0].save_as %>
+                          ,<%= data.address[0].houseName %>,
+                          <br>
+                          <%= data.address[0].city %>
+                          ,<%= data.address[0].pincode %>
+                        </td>
+
                         <td><%= data.payment %></td>
                         <td><%= data.amount %></td>
                         
                         <td>
-                            <form action="/admin/updateOrderStatus" method="post" id="orderStatusForm">
+                            <form action="/admin/updateOrderStatus" method="post" id="orderStatusForm_<%= data._id %>">
                             <input type="hidden" name="orderId" value="<%= data._id %>">
                             
                             <label for="status"></label>
-                            <select name="status" id="status" onchange="submitForm()">
+                            <select name="status" id="status" onchange="submitForm('<%= data._id %>')">
                                 <% const statuses = ['pending', 'processing', 'shipped', 'delivered']; %>
                                 <% for (const status of statuses) { %>
                                     <option value="<%= status %>" <%= data.status === status ? 'selected' : '' %>><%= status.charAt(0).toUpperCase() + status.slice(1) %></option>
@@ -123,10 +139,11 @@
     <!-- container-scroller -->
     <!-- plugins:js -->
     <script>
-        function submitForm(){
-            document.getElementById('orderStatusForm').submit();
-        }
-    </script>
+      function submitForm(orderId) {
+          document.getElementById(`orderStatusForm_${orderId}`).submit();
+      }
+  </script>
+  
     
     <script src="/admin_assets/assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->

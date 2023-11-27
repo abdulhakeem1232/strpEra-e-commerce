@@ -77,7 +77,12 @@
                         </div>
 							<p>Amount: ₹<%= order.amount %></p>
                             <p>Status: <%= order.status %></p>
-							
+							<p>Delivery Address: <%= order.address[0].save_as %>
+                                ,<%= order.address[0].houseName %>
+                                ,<%= order.address[0].city %>
+                                ,<%= order.address[0].pincode %>
+                            
+                            </p>
 							<!-- Iterate over order items -->
 							<ul class="list-group">
 								<% order.items.forEach(item => { %>
@@ -89,7 +94,9 @@
 									</li>
 								<% }); %>
 							</ul>
+
 						</li>
+
 					<% }); %>
 				</ul>
 			<% } %>
