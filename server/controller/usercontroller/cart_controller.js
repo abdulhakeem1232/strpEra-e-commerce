@@ -123,6 +123,18 @@ const updatecart=async(req,res)=>{
         const currentQuantity = cart.item[itemIndex].quantity;
         const stockLimit = cart.item[itemIndex].stock;
         const price = cart.item[itemIndex].price;
+        const opid=cart.item[itemIndex].productId
+
+        // console.log('poid:',productId)
+        // console.log('size:',size);
+        const product= await productModel.findOne({_id:opid})
+        // console.log("produbeba",product);
+        const selectedinfo=product.stock.findIndex(stock=>stock.size==size)
+        // console.log('fweuf',selectedinfo);
+        const stockLimit2=product.stock[selectedinfo].quantity;
+        // console.log(stockLimit2,"ehqfiweh");
+
+        
         
         let updatedQuantity;
 
@@ -136,7 +148,7 @@ const updatecart=async(req,res)=>{
       return res.status(400).json({ success: false, error: 'Invalid action' });
     }
 
-    if ( updatedQuantity > stockLimit) {
+    if ( updatedQuantity > stockLimit2) {
         return res.status(400).json({ success: false, error: 'Quantity exceeds stock limits' });
     } else if (updatedQuantity == 0) {
         return res.status(400).json({ success: false, error: 'Quantity cannot be zero' });
