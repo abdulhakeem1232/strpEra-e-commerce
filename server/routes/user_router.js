@@ -50,7 +50,9 @@ router.get('/checkout',middleware.islogged,checkoutController.checkout)
 router.post('/order',middleware.islogged,checkoutController.order)
 router.get('/orderhistory',middleware.islogged,checkoutController.orders)
 router.get('/cancelorder/:id',middleware.islogged,checkoutController.ordercancelling)
-router.post('/razorpay',middleware.islogged,checkoutController.upi)
+router.post('/create/orderId',middleware.islogged,checkoutController.upi)
+
+router.get('/wishlist/:id',middleware.islogged,checkoutController.addToFav)
 
 
 

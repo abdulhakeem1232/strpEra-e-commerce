@@ -2,6 +2,7 @@ const addressModel = require('../../model/addressModel');
 const cartModel=require('../../model/cartModel');
 const orderModel = require('../../model/orderModel');
 const productModel= require('../../model/productModel')
+const favModel= require('../../model/favModel')
 const Razorpay=require('razorpay')
 const {key_id,key_secret}=require('../../../env')
 var instance = new Razorpay({key_id:key_id, key_secret:key_secret})
@@ -24,6 +25,7 @@ const checkout=async(req,res)=>{
     }
 }
 const order=async(req,res)=>{
+    console.log(27);
     try{
         const {address,paymentMethod}=req.body
         const userId=req.session.userId
@@ -140,6 +142,41 @@ instance.orders.create(options,function(err,order){
 })
 }
 
+const addToFav=async(req,res)=>{
+    try {
+        const pid = req.params.id;
+        const userId = req.session.userId;
+    
+        // Check if the product is already in the favorites
+        const fav = await favModel.findOne({ userId: userId });
+        
+        if (!fav) {
+            // If favorites document doesn't exist for the user, create a new one
+            const newFav = new favModel({
+                userId: userId,
+                item: [{ productId: pid }],
+            });
+            await newFav.save();
+            
+        } else {
+            const isProductInFavorites = fav.item.some((item) => item.productId.toString() === pid);
+    
+            if (!isProductInFavorites) {
+                
+                fav.item.push({ productId: pid });
+                await fav.save();
+               
+            } 
+        }
+        res.redirect('/fav')
+        } catch (err) {
+          console.error(err);
+          res.status(500).send('Error occurred');
+        }
+      }
+
+
+
 
 
 
@@ -149,4 +186,5 @@ module.exports={
     orders,
     ordercancelling,
     upi,
+    addToFav,
 }

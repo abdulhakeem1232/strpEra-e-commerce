@@ -68,8 +68,8 @@
                     <div class="row">
                         
                         <div class="col-lg-8">
-                            <form action="#"  id="orderForm">
-                            <!-- <form class="row contact_form" action="#" method="post" > -->
+                            <form  method="" action="#" id="orderForm">
+                           
                                
                                 <% if (address && address.address) { %>
                                     <div class="container">
@@ -168,7 +168,7 @@
                                     <label for="f-option4">I’ve read and accept the </label>
                                     <a href="#">terms & conditions*</a>
                                 </div>
-                                <button  class="primary-btn" onclick="proceedToOrder()">Proceed to Order</button>
+                                <button  onclick="proceedToOrder()"  class="primary-btn">Proceed to Order</button>
                             </form>
                             </div>
                         </div>
@@ -305,13 +305,16 @@
         
         
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>  
-        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+       
 
         <script>
+          
         async function proceedToOrder() {
+           
             console.log("wjeabfqdckuawjsdvcb");
             var selectedAddress = document.querySelector('input[name="address"]:checked');
             var selectedpayment = document.querySelector('input[name="paymentMethod"]:checked');
+            
             console.log(selectedpayment.value);
 
             console.log("uuuuuuuuuu");
@@ -352,31 +355,34 @@
 });
 
             }
-            else if(selectedpayment.value==='upi'){
+            else if(selectedpayment.value == 'upi'){
 
                 const amount = document.getElementById('total').textContent.trim();
                 console.log("upi total",total,"ppppppp");
 
                 var options = {
-    "key": 'rzp_test_FJ1rRuVkxPiUu9', // Enter the Key ID generated from the Dashboard
-    "amount":  parseFloat(amount) * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-    "currency": "INR",
-    "name": "Urban Sole",
-    "description": "Test Transaction",
-    "image": "Urban Sole",
-    "order_id": orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-    "handler": function (response){
-        alert(response.razorpay_payment_id);
-        document.getElementById('orderForm').action = '/order';
-                document.getElementById('orderForm').method = 'post'; // Replace with your actual URL
+                        "key": 'rzp_test_FJ1rRuVkxPiUu9', // Enter the Key ID generated from the Dashboard
+                        "amount":  parseFloat(amount) * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        "currency": "INR",
+                        "name": "Urban Sole",
+                        "description": "Test Transaction",
+                        "image": "Urban Sole",
+                        "order_id": orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                        "handler": function (response){
+                        alert(response.razorpay_payment_id);
+                        document.getElementById('orderForm').method = 'post'; 
+                        document.getElementById('orderForm').action = '/order';
+            //   // Replace with your actual URL
 
 // Submit the form
-document.getElementById('orderForm').submit();
+ document.getElementById('orderForm').submit();
+
     },
+   
     
     "theme": {
         "color": "orange"
-    }
+    },
 };
 var rzp1 = new Razorpay(options);
 rzp1.on('payment.failed', function (response){
@@ -388,7 +394,9 @@ rzp1.on('payment.failed', function (response){
         alert(response.error.metadata.order_id);
         alert(response.error.metadata.payment_id);
 });
-rzp1.open();
+ rzp1.open();
+
+
     e.preventDefault();
 
 
@@ -414,10 +422,10 @@ $.ajax(settings).done(function (response) {
   $("button").show();
 });
 });
-                
 
+                
             }
-            else {
+            else if(selectedpayment.value=="cashOnDelivery"){
                 console.log(selectedpayment.value,"000000");
                 document.getElementById('orderForm').action = '/order';
                 document.getElementById('orderForm').method = 'post'; // Replace with your actual URL
@@ -428,13 +436,13 @@ document.getElementById('orderForm').submit();
             }
         }
 
-        
+     
 
 
 
 
     </script>
-        
+         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
