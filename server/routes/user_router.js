@@ -53,6 +53,8 @@ router.get('/cancelorder/:id',middleware.islogged,checkoutController.ordercancel
 router.post('/create/orderId',middleware.islogged,checkoutController.upi)
 
 router.get('/wishlist/:id',middleware.islogged,checkoutController.addToFav)
+router.get('/fav',middleware.islogged,checkoutController.viewFav)
+router.get('/removefromfavorites/:id',middleware.islogged,checkoutController.removeFav)
 
 
 
