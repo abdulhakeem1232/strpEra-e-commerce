@@ -25,12 +25,14 @@ const checkout = async (req, res) => {
     }
 }
 const order = async (req, res) => {
-    console.log(27);
+   
     try {
-        const { address, paymentMethod } = req.body
+        console.log(req.body);
+        const { address,pay} = req.body
+        console.log(pay);
         const userId = req.session.userId
         const cart = await cartModel.findOne({ userId: userId })
-        // console.log(req.body);
+        
 
         // console.log(address);
         // console.log(paymentMethod);
@@ -59,7 +61,7 @@ const order = async (req, res) => {
             userId: userId,
             items: items,
             amount: cart.total,
-            payment: paymentMethod,
+            payment: pay,
             address: selectedaddress,
             createdAt: new Date(),
             updated: new Date()

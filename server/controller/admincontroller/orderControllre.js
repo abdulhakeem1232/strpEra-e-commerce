@@ -1,4 +1,5 @@
-const orderModel= require('../../model/orderModel')
+const orderModel= require('../../model/orderModel');
+const productModel = require('../../model/productModel');
 
 
 const order=async(req,res)=>{
@@ -33,6 +34,18 @@ const orderstatus=async(req,res)=>{
 
 
 
+const crop=async(req,res)=>{
+    try{
+       res.render("admin/sma")
+    }
+    catch(err){
+        console.log(err);
+        res.send("Error Occured")
+    }
+}
+
+
+
 
 
 
@@ -41,4 +54,5 @@ const orderstatus=async(req,res)=>{
 module.exports={
     order,
     orderstatus,
+    crop,
 }

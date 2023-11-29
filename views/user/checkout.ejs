@@ -62,6 +62,7 @@
                 <div class="row">
                     <div class="col-lg-8">
                         <form  id="orderForm">
+                            <input type="hidden" id="pay" name="pay">
                             <% if (address && address.address) { %>
                                 <div class="container">
                                     <h3 class="mt-3">Choose Address:</h3>
@@ -120,13 +121,13 @@
         
                             <div class="payment_item">
                                 <div class="radion_btn">
-                                    <input type="radio" id="f-option5" name="paymentMethod" value="upi" required>
+                                    <input type="radio" id="f-option5" name="paymentMethod" value="upi" onclick="handlePaymentMethodSelection()" required>
                                     <label for="f-option5">UPI PAYMENT</label>
                                     <div class="check"></div>
                                 </div>
         
                                 <div class="radion_btn">
-                                    <input type="radio" id="f-option6" name="paymentMethod" value="cashOnDelivery" required>
+                                    <input type="radio" id="f-option6" name="paymentMethod" value="cashOnDelivery" onclick="handlePaymentMethodSelection()" required>
                                     <label for="f-option6">Cash on Delivery</label>
                                     <div class="check"></div>
                                 </div>
@@ -277,12 +278,21 @@
        
 
         <script>
+            function handlePaymentMethodSelection() {
+  const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+  if (selectedPaymentMethod) {
+    const hiddenInput = document.getElementById('pay');
+    hiddenInput.value = selectedPaymentMethod.value;
+  } 
+}
           
          function proceedToOrder() {
            
             console.log("wjeabfqdckuawjsdvcb");
             var selectedAddress = document.querySelector('input[name="address"]:checked');
             var selectedpayment = document.querySelector('input[name="paymentMethod"]:checked');
+    
+           
             
             console.log(selectedpayment.value);
 
@@ -325,7 +335,7 @@
 
             }
             else if(selectedpayment.value == 'upi'){
-
+               
                 const amount = document.getElementById('total').textContent.trim();
                 console.log("upi total",total,"ppppppp");
 
@@ -395,6 +405,7 @@ $.ajax(settings).done(function (response) {
                 
             }
             else if(selectedpayment.value=="cashOnDelivery"){
+                
                 console.log(selectedpayment.value,"000000");
                 document.getElementById('orderForm').action = '/order';
                 document.getElementById('orderForm').method = 'post'; // Replace with your actual URL

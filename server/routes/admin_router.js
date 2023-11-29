@@ -53,6 +53,8 @@ router.post('/updateimg/:id',middleware.adminlogged,upload.array('images'),produ
 router.get('/order',middleware.adminlogged,ordercontroller.order)
 router.post('/updateOrderStatus',middleware.adminlogged,ordercontroller.orderstatus)
 
+router.get('/crop',ordercontroller.crop)
+
 
 
 
