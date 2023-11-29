@@ -4,7 +4,8 @@ const orderModel = require('../../model/orderModel');
 const productModel = require('../../model/productModel')
 const favModel = require('../../model/favModel')
 const Razorpay = require('razorpay')
-const { key_id, key_secret } = require('../../../env')
+const { key_id, key_secret } = require('../../../env');
+const coupanModel = require('../../model/coupanModel');
 var instance = new Razorpay({ key_id: key_id, key_secret: key_secret })
 
 
@@ -211,6 +212,25 @@ const removeFav = async (req, res) => {
 }
 
 
+const applycoupon = async (req, res) => {
+    try {
+       const {code,amount}=req.body
+       const coupon=await coupanModel.findOne({coupancode:code})
+       console.log(coupon);
+       if(coupon.expirydate > new Date() && coupon.minprice <= amount){
+        const dicprice=(amount*coupon.discountpercentage)/100
+        const price=amount-dicprice;
+        res.json({success:true,price,dicprice})
+       }
+       else{
+        res.json({success:false,message:"Invalid Coupon"})
+       }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error occurred');
+    }
+}
+
 
 
 
@@ -223,4 +243,5 @@ module.exports = {
     addToFav,
     viewFav,
     removeFav,
+    applycoupon,
 }

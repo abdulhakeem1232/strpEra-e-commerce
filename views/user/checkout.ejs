@@ -56,8 +56,15 @@
                 </div>
             </div>
         </section>
-
+        
         <section class="checkout_area section_gap">
+            <form >
+            <div class="cupon_text d-flex align-items-center">
+                <input type="text" placeholder="Coupon Code" id="code" name="code">
+                <button class="btn primary-btn btn-xs" onclick="applyCoupon(event)">Apply</button>
+                
+            </div>
+        </form>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8">
@@ -114,11 +121,11 @@
                                 <% }) %>
                             </ul>
                             <ul class="list list_2">
-                                <li><a href="#">Subtotal <span>₹ <%= data.total %></span></a></li>
+                                <li><a href="#">Subtotal <span>₹ <div id="subtotal" style="display: inline;"><%= data.total %></div></span></a></li>
+                                <li><a href="#">Discount <span style="color: green;">₹ <div id="discount" style="display: inline;">0</div></span></a></li>
                                 <li><a href="#">Total <span>₹ <div id="total" style="display: inline;"><%= data.total %></div></span></a></li>
                             </ul>
                             <h4 class="mt-3">Choose Payment Method</h4>
-        
                             <div class="payment_item">
                                 <div class="radion_btn">
                                     <input type="radio" id="f-option5" name="paymentMethod" value="upi" onclick="handlePaymentMethodSelection()" required>
@@ -416,11 +423,35 @@ document.getElementById('orderForm').submit();
             }
         }
 
-     
+    </script>
+    <script>
+        function applyCoupon(event){
+            event.preventDefault()
+            const code=document.getElementById('code').value
+            const amount = document.getElementById('subtotal').textContent.trim();
 
-
-
-
+            fetch('/apply-coupon',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({code,amount}),
+            })
+            .then(response=>response.json())
+            .then(data=>{
+                if(data.success){
+                    document.getElementById('total').innerText = `${data.price}`;
+                    document.getElementById('discount').innerText = `${data.dicprice}`;
+                }
+                else{
+                    alert(data.message)
+                } 
+            })
+            .catch(error => {
+      console.error('Error applying coupon:', error);
+      alert('An error occurred while applying the coupon. Please try again.');
+    });
+        }
     </script>
          <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
