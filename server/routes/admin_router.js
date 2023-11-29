@@ -3,6 +3,7 @@ const controller=require('../controller/admincontroller/admin_controller')
 const categorycontroller=require('../controller/admincontroller/category_controller')
 const productcontroller=require('../controller/admincontroller/productController')
 const ordercontroller=require('../controller/admincontroller/orderControllre')
+const coupancontroller=require('../controller/admincontroller/coupanController.js')
 const middleware = require('./../../middleware.js')
 
 // const app=express();
@@ -54,6 +55,10 @@ router.get('/order',middleware.adminlogged,ordercontroller.order)
 router.post('/updateOrderStatus',middleware.adminlogged,ordercontroller.orderstatus)
 
 router.get('/crop',ordercontroller.crop)
+
+router.get('/coupan',middleware.adminlogged,coupancontroller.coupan)
+router.get('/newcoupon',middleware.adminlogged,coupancontroller.newcoupon)
+router.post('/add-coupon',middleware.adminlogged,coupancontroller.addcoupon)
 
 
 
