@@ -58,13 +58,21 @@
         </section>
         
         <section class="checkout_area section_gap">
-            <form >
-            <div class="cupon_text d-flex align-items-center">
-                <input type="text" placeholder="Coupon Code" id="code" name="code">
-                <button class="btn primary-btn btn-xs" onclick="applyCoupon(event)">Apply</button>
-                
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-md-6 offset-md-3">
+                        <form>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Coupon Code" id="code" name="code">
+                                <div class="input-group-append">
+                                    <button class="btn btn-success" type="button" onclick="applyCoupon(event)">Apply</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </form>
+            
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8">
@@ -151,6 +159,9 @@
                 </div>
             </div>
         </section>
+
+       
+        
         
         
 
@@ -347,20 +358,20 @@
                 console.log("upi total",total,"ppppppp");
 
                 var options = {
-                        "key": 'rzp_test_FJ1rRuVkxPiUu9', // Enter the Key ID generated from the Dashboard
-                        "amount":  parseFloat(amount) * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        "key": 'rzp_test_FJ1rRuVkxPiUu9', 
+                        "amount":  parseFloat(amount) * 100, 
                         "currency": "INR",
                         "name": "Urban Sole",
                         "description": "Test Transaction",
-                        "image": "Urban Sole",
-                        "order_id": orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                        "image": "Urban le",
+                        "order_id": orderId, 
                         "handler": function (response){
                         alert(response.razorpay_payment_id);
                         document.getElementById('orderForm').method = 'post'; 
                         document.getElementById('orderForm').action = '/order';
-            //   // Replace with your actual URL
+         
 
-// Submit the form
+
  document.getElementById('orderForm').submit();
 
     },
@@ -377,7 +388,6 @@ rzp1.on('payment.failed', function (response){
         alert(response.error.source);
         alert(response.error.step);
         alert(response.error.reason);
-        alert(response.error.metadata.order_id);
         alert(response.error.metadata.payment_id);
 });
  rzp1.open();
@@ -444,7 +454,23 @@ document.getElementById('orderForm').submit();
                     document.getElementById('discount').innerText = `${data.dicprice}`;
                 }
                 else{
-                    alert(data.message)
+                    Swal.fire({
+//   title: 'Error!',
+  text: data.message,
+  icon: 'error',
+  confirmButtonText: 'OK',
+  customClass: {
+    title: 'text-danger',
+    popup: 'swal2-popup-custom',
+    confirmButton: 'btn btn-danger'
+  },
+  showCancelButton: false,
+  showCloseButton: true,
+  showLoaderOnConfirm: false,
+  timer:3000 
+});
+
+                    // alert(data.message)
                 } 
             })
             .catch(error => {

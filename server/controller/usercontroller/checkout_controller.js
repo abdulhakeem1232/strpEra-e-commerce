@@ -18,6 +18,21 @@ const checkout = async (req, res) => {
             path: 'item.productId',
             select: 'name'
         })
+
+        for (const cartItem of data.item || []) {
+            const pro = cartItem.productId;
+            const product=await productModel.findOne({_id:pro._id})
+            console.log("kewn11",product);
+            const size = product.stock.findIndex(s => s.size == cartItem.size);
+            console.log("kekwe22",size);
+
+    
+            if (product.stock[size].quantity < cartItem.quantity) {
+                console.log('Selected quantity exceeds available stock for productId:', product._id);
+                return res.redirect('/showcart'); 
+            }
+        }
+
         res.render('user/checkout', { data: data, address: address })
     }
     catch (err) {
@@ -217,7 +232,7 @@ const applycoupon = async (req, res) => {
        const {code,amount}=req.body
        const coupon=await coupanModel.findOne({coupancode:code})
        console.log(coupon);
-       if(coupon.expirydate > new Date() && coupon.minprice <= amount){
+       if(coupon && coupon.expirydate > new Date() && coupon.minprice <= amount){
         const dicprice=(amount*coupon.discountpercentage)/100
         const price=amount-dicprice;
         res.json({success:true,price,dicprice})

@@ -22,7 +22,7 @@ const orderstatus=async(req,res)=>{
         const {orderId,status}=req.body
         console.log("id",orderId)
         console.log("status",status);
-        const updateOrder=await orderModel.updateOne({_id:orderId},{status:status})
+        const updateOrder=await orderModel.updateOne({_id:orderId},{status:status,updated:new Date()})
         console.log(updateOrder);
         res.redirect('/admin/order')
     }

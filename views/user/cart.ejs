@@ -95,7 +95,11 @@
                                                     <p>
                                                         <%= item.productId.name %>
                                                     </p>
-
+                                                    <p>
+                                                        <% if (insufficientStock.find(stockItem => stockItem.item._id.toString() === item._id.toString())) { %>
+                                                            <span class="out-of-stock-message text-danger">Out of Stock</span>
+                                                        <% } %>
+                                                    </p>
                                                 </div>
 
                                             </div>
@@ -194,7 +198,7 @@
                                             <td>
                                                 <div class="checkout_btn_inner d-flex align-items-center">
                                                     <a class="gray_btn" href="#">Continue Shopping</a>
-                                                    <a class="primary-btn" href="/checkout">Proceed to checkout</a>
+                                                    <a class="primary-btn" href="/checkout" id="checkout">Proceed to checkout</a>
                                                 </div>
                                             </td>
                                         </tr>
