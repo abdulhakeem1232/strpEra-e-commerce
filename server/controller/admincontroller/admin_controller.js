@@ -12,7 +12,12 @@ const{passwordValid,confirmpasswordValid}=require('../../../utils/validators/sig
 
 const login = async (req,res) => {
     try {
-        res.render('admin/alogin');
+        res.render('admin/alogin', {
+            expressFlash: {
+              passworderror: req.flash('passworderror'),
+              emailerror: req.flash('emailerror')
+            }
+          });
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -35,7 +40,9 @@ const aloginpost=async(req,res)=> {
             // req.flash('passworderror','invalid password')
             // res.redirect('/login')
             console.log("get");
-            res.render("admin/alogin",{passworderror:"Invalid-password"} )
+            req.flash('passworderror','Invalid-password')
+            // res.render("admin/alogin",{passworderror:"Invalid-password"} )
+            res.redirect('/admin')
             // res.send("password")
         }
     }
@@ -43,7 +50,9 @@ const aloginpost=async(req,res)=> {
         // req.flash('emailerror','invalid e-mail')
         // res.redirect('/login')
         console.log("gettt");
-        res.render("admin/alogin",{emailerror:"Invalid-email"})
+        req.flash('emailerror','Invalid-email')
+        // res.render("admin/alogin",{emailerror:"Invalid-email"})
+        res.redirect('/admin')
         // res.send("email")
     }
 }

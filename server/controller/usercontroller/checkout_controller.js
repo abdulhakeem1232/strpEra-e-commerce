@@ -41,7 +41,6 @@ const checkout = async (req, res) => {
     }
 }
 const order = async (req, res) => {
-   
     try {
         console.log(req.body);
         const { address,pay} = req.body

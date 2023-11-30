@@ -71,15 +71,15 @@
 						<form class="row login_form" action="/loginpost" method="post" id="contactForm" novalidate="novalidate">
 							<div class="col-md-12 form-group">
 								<input type="text" class="form-control" id="email" name="email" placeholder="email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
-								<% if(locals.emailerror){%>
-									<div class="alter text-danger text-start"><%= emailerror%></div>
+								<% if(expressFlash.emailerror){%>
+									<div class="alter text-danger text-start"><%= expressFlash.emailerror%></div>
 					
 								<%}%>
 							</div>
 							<div class="col-md-12 form-group">
 								<input type="password" class="form-control" id="password" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
-								<% if(locals.passworderror){%>
-									<div class="alter text-danger text-start"><%= passworderror%></div>
+								<% if(expressFlash.passworderror){%>
+									<div class="alter text-danger text-start"><%= expressFlash.passworderror%></div>
 					
 								<%}%>
 							</div>

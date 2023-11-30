@@ -103,8 +103,8 @@
 									<form class="row login_form" action="/regpost" method="post" id="signupForm" novalidate="novalidate">
 										<div class="col-md-6 form-group">
 											<input type="text" class="form-control" id="fname" name="fname" placeholder="First Name" required>
-											<% if(locals.nameeroor){%>
-												<div class="alter text-danger text-start"><%= nameerror%></div>
+											<% if(expressFlash.nameeroor){%>
+												<div class="alter text-danger text-start"><%= expressFlash.nameerror%></div>
 								
 											<%}%>
 										</div>
@@ -113,29 +113,29 @@
 										</div>
 										<div class="col-md-12 form-group">
 											<input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
-											<% if(locals.emailerror){%>
-												<div class="alter text-danger text-start"><%= emailerror%></div>
+											<% if(expressFlash.emailerror){%>
+												<div class="alter text-danger text-start"><%= expressFlash.emailerror%></div>
 								
 											<%}%>
 										</div>
 										<div class="col-md-12 form-group">
 											<input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
-											<% if(locals.phoneerror){%>
-												<div class="alter text-danger text-start"><%= phoneerror%></div>
+											<% if(expressFlash.phoneerror){%>
+												<div class="alter text-danger text-start"><%= expressFlash.phoneerror%></div>
 								
 											<%}%>
 										</div>
 										<div class="col-md-12 form-group">
 											<input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-											<% if(locals.passworderror){%>
-												<div class="alter text-danger text-start"><%= passworderror%></div>
+											<% if(expressFlash.passworderror){%>
+												<div class="alter text-danger text-start"><%= expressFlash.passworderror%></div>
 								
 											<%}%>
 										</div>
 										<div class="col-md-12 form-group">
 											<input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
-											<% if(locals.cpassworderror){%>
-												<div class="alter text-danger text-start"><%= cpassworderror%></div>
+											<% if(expressFlash.cpassworderror){%>
+												<div class="alter text-danger text-start"><%= expressFlash.cpassworderror%></div>
 								
 											<%}%>
 										</div>

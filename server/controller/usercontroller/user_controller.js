@@ -20,7 +20,12 @@ const index = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        res.render('user/login.ejs')
+        res.render('user/login.ejs', {
+            expressFlash: {
+              passworderror: req.flash('passworderror'),
+              emailerror: req.flash('emailerror')
+            }
+          })
     }
     catch {
         res.status(200).send('error occured')
@@ -39,21 +44,29 @@ const loginpost=async(req,res)=> {
             res.redirect('/');
         }
         else{
-            // req.flash('passworderror','invalid password')
-            // res.redirect('/login')
-            res.render("user/login.ejs",{passworderror:"Invalid-password or you are blocked"} )
+            req.flash('passworderror','invalid password')
+            res.redirect('/login')
+            // res.render("user/login.ejs",{passworderror:"Invalid-password or you are blocked"} )
         }
     }
     catch{
-        // req.flash('emailerror','invalid e-mail')
-        // res.redirect('/login')
-        res.render("user/login.ejs",{emailerror:"Invalid-email"})
+        req.flash('emailerror','invalid e-mail')
+        res.redirect('/login')
+        // res.render("user/login.ejs",{emailerror:"Invalid-email"})
     }
 }
 
 const signup = async (req, res) => {
     try {
-        res.render('user/signup.ejs')
+        res.render('user/signup.ejs',{
+            expressFlash: {
+                emailerror: req.flash('emailerror'),
+                nameerror: req.flash('nameerror'),
+                phoneerror: req.flash('phoneerror'),
+                passworderror: req.flash('passworderror'),
+                cpassworderror: req.flash('cpassworderror')
+            }
+          })
     }
     catch {
         res.status(200).send('error occured')
@@ -108,22 +121,34 @@ const regpost = async (req, res) => {
 
         const emailExist = await userModel.findOne({ email: email })
         if (emailExist) {
-            res.render('user/signup', { emailerror: "E-mail already exits" })
+            // res.render('user/signup', { emailerror: "E-mail already exits" })
+            req.flash('emailerror','E-mail already Exist')
+            res.redirect('/reg')
         }
         else if (!isEmailValid) {
-            res.render('user/signup', { emailerror: "Enetr a valid E-mail" })
+            req.flash('emailerror','Enter a valid E-mail')
+            res.redirect('/reg')
+            // res.render('user/signup', { emailerror: "Enetr a valid E-mail" })
         }
         else if (!isNameValid) {
-            res.render('user/signup', { nameerror: "Enetr a valid Name" })
+            req.flash('nameerror','Enter a valid Name')
+            res.redirect('/reg')
+            // res.render('user/signup', { nameerror: "Enetr a valid Name" })
         }
         else if (!isPhoneValid) {
-            res.render('user/signup', { phoneerror: "Enetr a valid Phone Number" })
+            req.flash('phoneerror','Enter a valid Phone Number')
+            res.redirect('/reg')
+            // res.render('user/signup', { phoneerror: "Enetr a valid Phone Number" })
         }
         else if (!ispasswordValid) {
-            res.render('user/signup', { passworderror: "Password should contain one uppercase,one lowercase,one number,one special charecter" })
+            req.flash('passworderror','Password should contain one uppercase,one lowercase,one number,one special charecter')
+            res.redirect('/reg')
+            // res.render('user/signup', { passworderror: "Password should contain one uppercase,one lowercase,one number,one special charecter" })
         }
         else if (!iscpasswordValid) {
-            res.render('user/signup', { cpassworderror: "Password and Confirm password should be match" })
+            req.flash('cpassworderror','Password and Confirm password should be match')
+            res.redirect('/reg')
+            // res.render('user/signup', { cpassworderror: "Password and Confirm password should be match" })
         }
         else {
             const hashedpassword = await bcrypt.hash(password, 10)
@@ -261,7 +286,10 @@ const forgotpasswordpost=async (req, res) => {
 }
 const newpassword = async (req, res) => {
     try {
-        res.render('user/newpassword.ejs')
+        res.render('user/newpassword.ejs',{
+            perror:req.flash('perror'),
+            cperror:req.flash('cperror')
+        })
     }
     catch {
         res.status(400).send('error occured')
@@ -278,10 +306,12 @@ const resetpassword = async (req, res) => {
         const iscpasswordValid = confirmpasswordValid(cpassword, password)
 
          if (!ispasswordValid) {
-            res.render('user/newpaasword', { perror: "Password should contain one uppercase,one lowercase,one number,one special charecter" })
+            req.flash('perror','Password should contain one uppercase,one lowercase,one number,one special charecter')
+            res.redirect('/newpassword')
         }
         else if (!iscpasswordValid) {
-            res.render('user/newpassword', { cperror: "Password and Confirm password should be match" })
+         req.flash('cperror','Password and Confirm password should be match')
+            res.redirect('/newpassword')
         }
         else{
             const hashedpassword = await bcrypt.hash(password, 10)

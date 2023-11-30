@@ -32,7 +32,6 @@ app.use(session({
 app.use(flash({
     sessionKeyName: 'flashMessage',
     useViewEngine: true,
-    // ... other configuration options
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
