@@ -21,7 +21,6 @@ const schema=new mongoose.Schema({
     phone_no:{
         type:Number,
         required:true,
-        unique:true,
     },
     password:{
         type:String,
@@ -36,9 +35,12 @@ const schema=new mongoose.Schema({
         type:Boolean,
         default:false,
         required:true
+    },
+    wallet:{
+        type:Number,
+        default:0,
     }
 })
-
 
 const userModel=new mongoose.model("users",schema)
 

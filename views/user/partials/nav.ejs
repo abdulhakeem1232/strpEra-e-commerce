@@ -132,10 +132,10 @@ font-family: 'Russo One', sans-serif;
                                     <a class="dropdown-item" href="/fav">My Wish List</a>
                                     <a class="dropdown-item" href="/orderhistory">My Orders</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" id="loginOrLogoutButton" href="/logout">Logout</a>
+                                    <a class="dropdown-item" id="loginOrLogoutButton1" href="/logout">Logout</a>
                                 <% } else { %>
-                                    <a class="dropdown-item" id="loginOrLogoutButton" href="/login">Login</a>
-                                    <a class="dropdown-item" id="loginOrLogoutButton" href="/reg">Sign Up</a>
+                                    <a class="dropdown-item" id="loginOrLogoutButton2" href="/login">Login</a>
+                                    <a class="dropdown-item" id="loginOrLogoutButton3" href="/reg">Sign Up</a>
                                 <% } %>
                             </div>
                         </li> 
@@ -155,3 +155,9 @@ font-family: 'Russo One', sans-serif;
         </div>
     </div>
 </header>
+<script>
+    document.getElementById('loginOrLogoutButton1').addEventListener('click', function() {
+        
+        localStorage.removeItem('token');
+    });
+</script>

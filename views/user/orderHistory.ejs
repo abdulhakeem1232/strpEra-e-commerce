@@ -76,7 +76,7 @@
                                 <% } %>
                                 
                                 <% if (order.status == 'delivered' && new Date(order.updated.getTime() + 5 * 24 * 60 * 60 * 1000) >= new Date()) { %>
-                                    <a href=""> Return</a>
+                                    <a href="/returnorder/<%= order._id %>"> Return</a>
                                     <% } %>
                         </div>
 							<p>Amount: ₹<%= order.amount %></p>

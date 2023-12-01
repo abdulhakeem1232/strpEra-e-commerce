@@ -6,6 +6,7 @@ const favModel = require('../../model/favModel')
 const Razorpay = require('razorpay')
 const { key_id, key_secret } = require('../../../env');
 const coupanModel = require('../../model/coupanModel');
+const userModel = require('../../model/userModel');
 var instance = new Razorpay({ key_id: key_id, key_secret: key_secret })
 
 
@@ -43,7 +44,7 @@ const checkout = async (req, res) => {
 const order = async (req, res) => {
     try {
         console.log(req.body);
-        const { address,pay} = req.body
+        const { address,pay,amount} = req.body
         console.log(pay);
         const userId = req.session.userId
         const cart = await cartModel.findOne({ userId: userId })
@@ -75,7 +76,7 @@ const order = async (req, res) => {
         const order = new orderModel({
             userId: userId,
             items: items,
-            amount: cart.total,
+            amount: amount,
             payment: pay,
             address: selectedaddress,
             createdAt: new Date(),
@@ -104,7 +105,7 @@ const orders = async (req, res) => {
     try {
         const userId = req.session.userId;
         // console.log(userId);
-        const order = await orderModel.find({ userId: userId }).populate({
+        const order = await orderModel.find({ userId: userId }).sort({createdAt:-1}).populate({
             path: 'items.productId',
             select: 'name images'
         })
@@ -120,9 +121,53 @@ const orders = async (req, res) => {
 const ordercancelling = async (req, res) => {
     try {
         const id = req.params.id
-        const update = await orderModel.updateOne({ _id: id }, { status: "Cancelled" })
+        const update = await orderModel.updateOne({ _id: id }, { status: "Cancelled",updated:new Date() })
         const result = await orderModel.findOne({ _id: id })
-        //    console.log("result",result);
+       console.log("result",result);
+
+       if(result.payment=='upi'){
+        const userId=req.session.userId
+        const user=await userModel.findOne({_id:userId})
+        user.wallet +=result.amount
+        await user.save()
+       }
+
+        const items = result.items.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            size: item.size,
+
+        }))
+
+        for (const item of items) {
+            const product = await productModel.findOne({ _id: item.productId })
+
+            const size = product.stock.findIndex(size => size.size == item.size)
+            product.stock[size].quantity += item.quantity
+            await product.save()
+        }
+        res.redirect("/orderhistory")
+
+    }
+    catch (err) {
+        res.status(500).send('error occured')
+        console.log(err);
+    }
+}
+
+const orderreturning = async (req, res) => {
+    try {
+        const id = req.params.id
+        const update = await orderModel.updateOne({ _id: id }, { status: "returned",updated:new Date() })
+        const result = await orderModel.findOne({ _id: id })
+       console.log("result",result);
+
+        const userId=req.session.userId
+        const user=await userModel.findOne({_id:userId})
+        user.wallet +=result.amount
+        await user.save()
+       
+       
         const items = result.items.map(item => ({
             productId: item.productId,
             quantity: item.quantity,
@@ -258,4 +303,5 @@ module.exports = {
     viewFav,
     removeFav,
     applycoupon,
+    orderreturning,
 }

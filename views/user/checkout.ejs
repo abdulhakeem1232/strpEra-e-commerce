@@ -78,6 +78,7 @@
                     <div class="col-lg-8">
                         <form  id="orderForm">
                             <input type="hidden" id="pay" name="pay">
+                            <input type="hidden" id="amount" name="amount">
                             <% if (address && address.address) { %>
                                 <div class="container">
                                     <h3 class="mt-3">Choose Address:</h3>
@@ -284,7 +285,6 @@
                 newAddressRadio.addEventListener('change', function () {
                     newAddressForm.style.display = newAddressRadio.checked ? 'block' : 'none';
                     if (newAddressRadio.checked) {
-                        // Show the modal when "Add New Address" is selected
                         newAddressModal.show();
                     }
                 });
@@ -450,6 +450,7 @@ document.getElementById('orderForm').submit();
             .then(response=>response.json())
             .then(data=>{
                 if(data.success){
+                    document.getElementById('amount').value = `${data.price}`;
                     document.getElementById('total').innerText = `${data.price}`;
                     document.getElementById('discount').innerText = `${data.dicprice}`;
                 }

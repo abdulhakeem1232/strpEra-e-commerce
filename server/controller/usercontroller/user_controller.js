@@ -329,6 +329,7 @@ const resetpassword = async (req, res) => {
 
 const logout=async(req,res)=>{
     req.session.isAuth=false;
+    req.session.userId = null;
     req.session.destroy();
     res.redirect('/')
 }

@@ -50,16 +50,13 @@ router.get('/checkout',middleware.islogged,checkoutController.checkout)
 router.post('/order',middleware.islogged,checkoutController.order)
 router.get('/orderhistory',middleware.islogged,checkoutController.orders)
 router.get('/cancelorder/:id',middleware.islogged,checkoutController.ordercancelling)
+router.get('/returnorder/:id',middleware.islogged,checkoutController.orderreturning)
 router.post('/create/orderId',middleware.islogged,checkoutController.upi)
 
 router.get('/wishlist/:id',middleware.islogged,checkoutController.addToFav)
 router.get('/fav',middleware.islogged,checkoutController.viewFav)
 router.get('/removefromfavorites/:id',middleware.islogged,checkoutController.removeFav)
 router.post('/apply-coupon',middleware.islogged,checkoutController.applycoupon)
-
-
-
-
 
 
 

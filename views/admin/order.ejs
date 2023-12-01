@@ -37,7 +37,7 @@
          
 
           <div class="container mt-5">
-            <h1 class="mb-4 text-center text-primary">User Management</h1>
+            <h1 class="mb-4 text-center text-primary">Order Management</h1>
     
             <div class="mb-3"><div class="d-flex justify-content-between">
                 <!-- <a href="/admin/newuser" class="btn btn-success">Add New User</a> -->
@@ -104,7 +104,7 @@
                             
                             <label for="status"></label>
                             <select name="status" id="status" onchange="submitForm('<%= data._id %>')">
-                                <% const statuses = ['pending', 'processing', 'shipped', 'delivered']; %>
+                                <% const statuses = ['pending', 'processing', 'shipped', 'delivered','Cancelled','returned']; %>
                                 <% for (const status of statuses) { %>
                                     <option value="<%= status %>" <%= data.status === status ? 'selected' : '' %>><%= status.charAt(0).toUpperCase() + status.slice(1) %></option>
                                 <% } %>
