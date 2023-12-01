@@ -56,7 +56,7 @@ app.use('/', userRouter);
 app.use('/admin', adminRouter);
 app.use('/uploads', express.static('uploads'))
 app.get('*', (req, res) => {
-    res.status(404).send('Page Not Found');
+    res.render('user/404')
 });
 
 app.listen(port, () => { console.log(`Server running on http://localhost:${port}`) })

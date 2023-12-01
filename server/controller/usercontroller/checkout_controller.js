@@ -37,7 +37,7 @@ const checkout = async (req, res) => {
         res.render('user/checkout', { data: data, address: address })
     }
     catch (err) {
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -96,7 +96,7 @@ const order = async (req, res) => {
         res.render('user/confirmation', { order: orderconfirmation })
     }
     catch (err) {
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -113,7 +113,7 @@ const orders = async (req, res) => {
         res.render('user/orderHistory', { orders: order })
     }
     catch (err) {
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -150,7 +150,7 @@ const ordercancelling = async (req, res) => {
 
     }
     catch (err) {
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -186,7 +186,7 @@ const orderreturning = async (req, res) => {
 
     }
     catch (err) {
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -233,7 +233,7 @@ const addToFav = async (req, res) => {
         res.redirect('/fav')
     } catch (err) {
         console.error(err);
-        res.status(500).send('Error occurred');
+        res.redirect('/error')
     }
 }
 
@@ -247,7 +247,7 @@ const viewFav = async (req, res) => {
         res.render('user/fav', { fav: fav })
     } catch (err) {
         console.error(err);
-        res.status(500).send('Error occurred');
+        res.redirect('/error')
     }
 }
 
@@ -266,7 +266,7 @@ const removeFav = async (req, res) => {
         res.redirect('/fav')
     } catch (err) {
         console.error(err);
-        res.status(500).send('Error occurred');
+        res.redirect('/error')
     }
 }
 
@@ -286,7 +286,7 @@ const applycoupon = async (req, res) => {
        }
     } catch (err) {
         console.error(err);
-        res.status(500).send('Error occurred');
+        res.redirect('/error')
     }
 }
 

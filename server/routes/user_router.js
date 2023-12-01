@@ -63,6 +63,6 @@ router.post('/apply-coupon',middleware.islogged,checkoutController.applycoupon)
 
 
 
-
+router.get('/error',middleware.islogged,controller.error)
 
 module.exports = router

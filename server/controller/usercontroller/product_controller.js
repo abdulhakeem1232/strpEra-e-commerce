@@ -14,7 +14,7 @@ const shopping=async(req,res)=>{
     }
     catch(err){
         console.log("Shopping Page Error:",err);
-        res.status(500).send('Internal Server Error');
+        res.redirect('/error')
     }
 
 }
@@ -29,7 +29,7 @@ const subshopping=async(req,res)=>{
     }
     catch(err){
         console.log("Shopping Page Error:",err);
-        res.status(500).send('Internal Server Error');
+        res.redirect('/error')
     }
 
 }
@@ -47,7 +47,7 @@ const sortproducts=async(req,res)=>{
     }
     catch(err){
         console.log("Shopping Page Error:",err);
-        res.status(500).send('Internal Server Error');
+        res.redirect('/error')
     }
 
 }
@@ -64,7 +64,7 @@ const search=async(req,res)=>{
     }
     catch(err){
         console.log("Shopping Page Error:",err);
-        res.status(500).send('Internal Server Error');
+        res.redirect('/error')
     }
 
 }
@@ -80,7 +80,7 @@ const singleproduct=async(req,res)=>{
     }
     catch(err){
         console.log("Shopping Page Error:",err);
-        res.status(500).send('Internal Server Error');
+        res.redirect('/error')
     }
 
 }

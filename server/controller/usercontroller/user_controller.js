@@ -11,7 +11,9 @@ const subcategoryModel = require('../../model/subcatModel.js')
 const addressModel=require('./../../model/addressModel.js')
 
 
-
+const error=async(req,res)=>{
+    res.render('user/error')
+}
 
 const index = async (req, res) => {
     const isAuth = req.session.isAuth || false;
@@ -28,7 +30,7 @@ const login = async (req, res) => {
           })
     }
     catch {
-        res.status(200).send('error occured')
+        res.redirect('/error')
 
     }
 }
@@ -69,7 +71,7 @@ const signup = async (req, res) => {
           })
     }
     catch {
-        res.status(200).send('error occured')
+        res.redirect('/error')
 
     }
 }
@@ -177,7 +179,7 @@ const otp = async (req, res) => {
         res.render('user/otp.ejs')
     }
     catch {
-        res.status(200).send('error occured')
+        res.redirect('/error')
 
     }
 
@@ -222,7 +224,7 @@ const verifyotp = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        res.status(500).send('error occured')
+        res.redirect('/error')
 
     }
 
@@ -242,6 +244,7 @@ const resendotp=async(req,res)=>{
     }
     catch(err){
        console.log(err);
+       res.redirect('/error')
     }
 
 }
@@ -250,7 +253,7 @@ const forgotpassword=async (req, res) => {
         res.render('user/forgot.ejs')
     }
     catch {
-        res.status(200).send('error occured')
+        res.redirect('/error')
 
     }
 }
@@ -279,7 +282,7 @@ const forgotpasswordpost=async (req, res) => {
         }
     }
     catch(err) {
-        res.status(400).send('error occurred: ' + err.message);
+        res.redirect('/error')
         console.log(err);
 
     }
@@ -292,7 +295,7 @@ const newpassword = async (req, res) => {
         })
     }
     catch {
-        res.status(400).send('error occured')
+        res.redirect('/error')
 
     }
 }
@@ -322,7 +325,7 @@ const resetpassword = async (req, res) => {
         }
     }
     catch {
-        res.status(400).send('error occured')
+        res.redirect('/error')
 
     }
 }
@@ -343,7 +346,7 @@ const profile=async(req,res)=>{
         res.render('user/profile',{userData:data,expressFlash: req.flash('success')} )
     }
     catch(err){
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -356,7 +359,7 @@ const profileEdit=async(req,res)=>{
         res.render('user/editProfile',{userData:data})
     }
     catch(err){
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -370,7 +373,7 @@ const profileUpdate=async(req,res)=>{
         res.redirect('/profile')
     }
     catch(err){
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -384,7 +387,7 @@ const address=async(req,res)=>{
         res.render('user/address',{userData:data})
     }
     catch(err){
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -394,7 +397,7 @@ const newAddress=async(req,res)=>{
         res.render('user/newAddress',{expressFlash: req.flash('address') })
     }
     catch(err){
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -464,7 +467,7 @@ const addressUpdate = async (req, res) => {
 
         res.redirect('/address');
     } catch (err) {
-        res.status(500).send('Error occurred');
+        res.redirect('/error')
         console.log(err);
     }
 };
@@ -475,7 +478,7 @@ const changepassword=async(req,res)=>{
         res.render('user/changePassword',{expressFlash: req.flash('pass','npass','cpass')})
     }
     catch(err){
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -513,7 +516,7 @@ const passwordUpdate=async(req,res)=>{
 
     }
     catch(err){
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -534,7 +537,7 @@ const deleteAddress=async(req,res)=>{
 
     }
     catch(err){
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -548,7 +551,7 @@ const editAddress=async(req,res)=>{
         res.render('user/editAddress',{adress:address})
     }
     catch(err){
-        res.status(500).send('error occured')
+        res.redirect('/error')
         console.log(err);
     }
 }
@@ -608,7 +611,7 @@ const addressPost=async(req,res)=>{
         
             res.redirect('/address');
     } catch (err) {
-        res.status(500).send('Error occurred');
+        res.redirect('/error')
         console.log(err);
     }
 
@@ -617,6 +620,7 @@ const addressPost=async(req,res)=>{
 
 
 module.exports = {
+    error,
     index,
     login,
     signup,

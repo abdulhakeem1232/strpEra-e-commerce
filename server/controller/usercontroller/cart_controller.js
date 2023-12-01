@@ -100,7 +100,7 @@ const showcart=async(req,res)=>{
             res.render('user/cart', { cart: cart,insufficientStock });
     
     } catch (err) {
-        res.status(500).send('An error occurred');
+        res.redirect('/error')
         console.error(err);
     }
 }
@@ -121,7 +121,7 @@ const deletecart=async(req,res)=>{
     }
     catch(err) {
         console.log(err);
-        res.status(500).send('error occured')
+        res.redirect('/error')
 
     }
 }
@@ -201,7 +201,7 @@ const updatecart=async(req,res)=>{
 
     }catch (error) {
         console.error('Error updating cart quantity:', error);
-        res.status(500).json({ success: false, error: 'Internal server error' });
+        res.redirect('/error')
       }
       
 }
