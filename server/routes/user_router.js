@@ -28,6 +28,8 @@ router.post('/resetpassword', controller.resetpassword)
 router.get('/shop/:id', productcontroller.shopping)
 router.get('/subshop/:pid/:sid', productcontroller.subshopping)
 router.get('/singleproduct/:id', productcontroller.singleproduct)
+router.get('/sortproduct/:sort', productcontroller.sortproducts)
+router.post('/search', productcontroller.search)
 
 router.post('/add-to-cart/:pid',cartController.addTocart)
 router.get('/showcart',middleware.islogged,cartController.showcart)
