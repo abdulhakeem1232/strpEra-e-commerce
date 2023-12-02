@@ -43,14 +43,15 @@ const newproduct = async (req, res) => {
 
 const addproduct = async (req, res) => {
     try {
+        const processedImages=req.processedImages
         const { productName,parentCategory, subCategory, images, s6, s7, s8, s9,price, description } = req.body
         const newproduct = new productModel({
             name: productName,
             category: parentCategory,
             sub_category: subCategory,
             price: price,
-            images: req.files.map(file => file.path),
-            stock: [{
+            images: processedImages,
+            stock:[{
                 size: "6",
                 quantity: s6,
             },

@@ -5,6 +5,7 @@ const productcontroller=require('../controller/admincontroller/productController
 const ordercontroller=require('../controller/admincontroller/orderControllre')
 const coupancontroller=require('../controller/admincontroller/coupanController.js')
 const middleware = require('./../../middleware.js')
+const crop=require('../../crop.js')
 
 // const app=express();
 
@@ -42,7 +43,7 @@ router.post('/update-subcategory/:id',middleware.adminlogged,categorycontroller.
 
 router.get('/products',middleware.adminlogged,productcontroller.products)
 router.get('/newproduct',middleware.adminlogged,productcontroller.newproduct)
-router.post('/addproduct',middleware.adminlogged,upload.array('images'),productcontroller.addproduct)
+router.post('/addproduct',middleware.adminlogged,upload.array('images'),crop.processImage,productcontroller.addproduct)
 router.get('/unlist/:id',middleware.adminlogged,productcontroller.unlist)
 // router.get('/deletpro/:id',productcontroller.delet)
 router.get('/updatepro/:id',middleware.adminlogged,productcontroller.updatepro)

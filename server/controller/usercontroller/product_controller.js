@@ -64,7 +64,7 @@ const search=async(req,res)=>{
     }
     catch(err){
         console.log("Shopping Page Error:",err);
-        res.redirect('/error')
+        res.redirect('/')
     }
 
 }

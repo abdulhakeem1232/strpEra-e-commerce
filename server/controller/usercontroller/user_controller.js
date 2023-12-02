@@ -72,7 +72,6 @@ const signup = async (req, res) => {
     }
     catch {
         res.redirect('/error')
-
     }
 }
 
