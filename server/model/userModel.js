@@ -31,6 +31,9 @@ const schema=new mongoose.Schema({
         default:false,
         required:true
     },
+    session:{
+        type:String,
+    },
     status:{
         type:Boolean,
         default:false,

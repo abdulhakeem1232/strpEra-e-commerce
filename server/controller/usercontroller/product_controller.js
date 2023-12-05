@@ -74,9 +74,16 @@ const singleproduct=async(req,res)=>{
     try{
         const id=req.params.id
         const product=await productModel.findOne({_id:id}) 
+        const subId=product.sub_category
+        const subcat = await productModel.find({
+            $and: [
+              { sub_category: subId },
+              { _id: { $ne: id } }
+            ]
+          });
         product.images = product.images.map(image => image.replace(/\\/g, '/'));
         // console.log('Image Path:', product.images[0]);
-        res.render('user/singleproduct',{product:product})
+        res.render('user/singleproduct',{product:product,relatedpro:subcat})
     }
     catch(err){
         console.log("Shopping Page Error:",err);

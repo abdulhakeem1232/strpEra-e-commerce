@@ -38,19 +38,18 @@ app.use(express.urlencoded({ extended: true }));
 
 var instance = new Razorpay({key_id:key_id, key_secret:key_secret})
 
-// Static file serving
+
 // app.use('/admin_assets', express.static(path.join(__dirname, 'public/admin_assets')));
 app.use(express.static(path.join(__dirname, 'public/user_assets')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/public", express.static('./public/'));
 
-// View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+
 app.use(middleware.loadCategory)
 
-// Other middleware
 app.use(nocache());
 app.use('/', userRouter);
 app.use('/admin', adminRouter);

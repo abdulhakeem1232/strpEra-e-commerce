@@ -66,6 +66,7 @@
                                 <input type="text" class="form-control" placeholder="Coupon Code" id="code" name="code">
                                 <div class="input-group-append">
                                     <button class="btn btn-success" type="button" onclick="applyCoupon(event)">Apply</button>
+                                    <!-- <a href="/checkout" class="btn btn-danger ml-1">Clear</a> -->
                                 </div>
                             </div>
                         </form>
@@ -78,7 +79,7 @@
                     <div class="col-lg-8">
                         <form  id="orderForm">
                             <input type="hidden" id="pay" name="pay">
-                            <input type="hidden" id="amount" name="amount">
+                            <input type="hidden" id="amount" name="amount" value="<%= data.total %>">
                             <% if (address && address.address) { %>
                                 <div class="container">
                                     <h3 class="mt-3">Choose Address:</h3>
@@ -367,12 +368,11 @@
                         "order_id": orderId, 
                         "handler": function (response){
                         alert(response.razorpay_payment_id);
+                       
                         document.getElementById('orderForm').method = 'post'; 
                         document.getElementById('orderForm').action = '/order';
          
-
-
- document.getElementById('orderForm').submit();
+                         document.getElementById('orderForm').submit();
 
     },
    

@@ -83,35 +83,32 @@ const userupdate=async(req,res)=>{
         const email = req.params.email; 
         const user =await userModel.findOne({email:email}); 
     
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+       
 
         user.status = !user.status;
         await user.save();
         
         console.log('User status updated:', user.status);
         
-        if (req.session.isAuth && req.session.userId == user._id) {
-            if (user.isAdmin == false) {
-            req.session.destroy((err) => {
-                if (err) {
-                    console.error('Error destroying session:', err);
-                } else {
-                    console.log('Session destroyed successfully');
-                    
-                }
-            });
-        }
-        }
-        else{
-            console.log('wedfcwa');
-        }
-        
+        // if (req.session.isAuth && req.session.userId == user._id) {
+           
+        //         const userSessionId=user.session
+        //         console.log(req.session.id)
+        //         console.log("jjj",userSessionId);
+        //         if (userSessionId) {
+        //             req.sessionStore.destroy(userSessionId, (err) => {
+        //                 if (err) {
+        //                     console.error('Error destroying user session:', err);
+        //                 } else {
+        //                     console.log('User session destroyed successfully');
+        //                 }
+        //             });
+        //         } else {
+        //             console.log('User does not have a valid session ID');
+        //         }
+        // }
         console.log('Redirecting to /admin/customer');
-        
         res.redirect('/admin/customer');
-        
     }
     catch(err){
         console.log(err);
