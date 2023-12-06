@@ -20,7 +20,7 @@ const schema=new mongoose.Schema({
     }
 })
 
-schema.index({ expiry: 1 }, { expireAfterSeconds: 25000 });
+schema.index({ expiry: 1 }, { expireAfterSeconds: 90*1000 });
 const userotp=new mongoose.model("userotps",schema)
 
 module.exports=userotp

@@ -127,7 +127,7 @@ const ordercancelling = async (req, res) => {
         const result = await orderModel.findOne({ _id: id })
        console.log("result",result);
 
-       if(result.payment=='upi'){
+       if(result.payment=='upi'|| result.payment=='wallet'){
         const userId=req.session.userId
         const user=await userModel.findOne({_id:userId})
         user.wallet +=result.amount

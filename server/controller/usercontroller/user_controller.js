@@ -166,7 +166,7 @@ const regpost = async (req, res) => {
             const currentTimestamp = Date.now();
             const expiryTimestamp = currentTimestamp + 45 * 1000;
             await userotp.create({ email: email, otp: otp, expiry: new Date(expiryTimestamp) })
-
+            req.session.email=email;
             await sendmail(email, otp)
             res.redirect('/otp')
         }
@@ -179,7 +179,14 @@ const regpost = async (req, res) => {
 
 const otp = async (req, res) => {
     try {
-        res.render('user/otp.ejs')
+        const otp=await userotp.findOne({email:req.session.email}) 
+        req.session.otpExpiration = new Date().getTime() + 45 * 1000;
+        res.render('user/otp.ejs',{
+            expressFlash: {
+              otperror: req.flash('otperror'),
+            },
+            otp:otp
+         })
     }
     catch {
         res.redirect('/error')
@@ -209,20 +216,24 @@ const verifyotp = async (req, res) => {
                 if(req.session.signup){
                 await userModel.create(user)
                 req.session.isAuth = true;
+                req.session.signup=false
                 req.session.userId = user._id;
                 res.redirect('/')
                 }
                else if(req.session.forgot){
+                req.session.forgot=false;
                     res.redirect('/newpassword')
                 }
             }
             catch (error) {
                 console.error(error);
-                res.status(500).send('Error occurred while saving user data');
+                res.status(500).redirect('/error');
             }
         }
         else {
-            res.status(400).send("Wrong OTP or Time Expired");
+            // res.status(402).send("Wrong OTP or Time Expired");
+            req.flash('otperror','Invalid OTP or Time Expired')
+            res.redirect('/otp')
         }
     }
     catch (err) {

@@ -32,7 +32,7 @@ const aloginpost=async(req,res)=> {
         console.log(user);
         if(passwordmatch && user.isAdmin){
             console.log("getin");
-            req.session.isAuth = true;
+            req.session.adminAuth = true;
             res.redirect('/admin/dashboard');
             
         }
@@ -87,26 +87,14 @@ const userupdate=async(req,res)=>{
 
         user.status = !user.status;
         await user.save();
+        console.log('reee',req.session);
         
         console.log('User status updated:', user.status);
         
-        // if (req.session.isAuth && req.session.userId == user._id) {
+        if (req.session.isAuth && req.session.userId == user._id) {
            
-        //         const userSessionId=user.session
-        //         console.log(req.session.id)
-        //         console.log("jjj",userSessionId);
-        //         if (userSessionId) {
-        //             req.sessionStore.destroy(userSessionId, (err) => {
-        //                 if (err) {
-        //                     console.error('Error destroying user session:', err);
-        //                 } else {
-        //                     console.log('User session destroyed successfully');
-        //                 }
-        //             });
-        //         } else {
-        //             console.log('User does not have a valid session ID');
-        //         }
-        // }
+               req.session.isAuth=false
+        }
         console.log('Redirecting to /admin/customer');
         res.redirect('/admin/customer');
     }

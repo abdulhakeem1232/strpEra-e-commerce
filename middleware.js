@@ -14,6 +14,7 @@ const loadCategory=async(req,res,next)=>{
         res.status(500).send('Internal Server Error');
       }
 }
+
 const iflooged=async(req,res,next)=>{
   if(req.session.isAuth){
     ('/')
@@ -21,8 +22,10 @@ const iflooged=async(req,res,next)=>{
     next()
   }
 }
+
 const islogged = async (req, res, next) => {
-  const user = await userModel.findOne({ _id: req.session.userId });
+  const user=await userModel.findOne({_id:req.session.userId})
+  console.log("user:",user);
   if (req.session.isAuth ) {
     req.user = req.session.user;
     next();
@@ -43,14 +46,14 @@ const isotp=async(req,res,next)=>{
 }
 
 const adminifloged=async(req,res,next)=>{
-  if(req.session.isAuth){
+  if(req.session.adminAuth){
     ('/admin/dashboard')
   }else{
     next()
   }
 }
 const adminlogged=async(req,res,next)=>{
-  if(req.session.isAuth){
+  if(req.session.adminAuth){
     req.user=req.session.user;
     next()
   }else{
