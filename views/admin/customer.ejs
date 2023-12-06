@@ -81,7 +81,7 @@
                         <td><%= data.status %></td>
                         <!-- <td><%= data.status ? 'True' : 'False' %></td> -->
                         <td>
-                          <a href="/admin/update/<%= data.email%>">
+                          <a onclick="confirmBlock('<%= data.email%>')">
                             <button class="btn btn-primary btn-sm" id="blockORunblock">
                                 <%= data.status ? 'Unblock' : 'Block' %>
                             </button>
@@ -111,6 +111,31 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
+    <script>
+     
+      function confirmBlock(itemId) {
+     Swal.fire({
+         title: "Are you sure?",
+         text: "Are you sure you want to proceed?",
+         icon: "warning",
+         showCancelButton: true,  
+         confirmButtonColor: "#3085d6",
+         cancelButtonColor: "#d33",
+         confirmButtonText: "Confirm",
+         cancelButtonText: "Cancel",  
+         dangerMode: true,
+     })
+     .then((result) => {
+         if (result.isConfirmed) {
+             
+             window.location.href = "/admin/update/" + itemId;
+         } else {
+             console.log("User canceled");
+         }
+     });
+ }
+   </script>
     
     <script src="/admin_assets/assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->

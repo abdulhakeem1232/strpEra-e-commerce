@@ -7,6 +7,8 @@ const Razorpay = require('razorpay')
 const { key_id, key_secret } = require('../../../env');
 const coupanModel = require('../../model/coupanModel');
 const userModel = require('../../model/userModel');
+const walletModel = require('../../model/walletModel');
+
 var instance = new Razorpay({ key_id: key_id, key_secret: key_secret })
 
 
@@ -130,6 +132,25 @@ const ordercancelling = async (req, res) => {
         const user=await userModel.findOne({_id:userId})
         user.wallet +=result.amount
         await user.save()
+
+        //storing in wallet
+        const wallet=await walletModel.findOne({userId:userId})
+        if(!wallet){
+            const newWallet=new walletModel({
+                userId:userId,
+                history:[
+                    {transaction:"Credited",
+                    amount:result.amount,
+                    date:new Date()}
+                ]
+            })
+            await newWallet.save();
+        }else{
+            wallet.history.push({transaction:"credited",
+            amount:result.amount,
+            date:new Date()})
+            await wallet.save();
+        }
        }
 
         const items = result.items.map(item => ({
@@ -166,6 +187,24 @@ const orderreturning = async (req, res) => {
         const user=await userModel.findOne({_id:userId})
         user.wallet +=result.amount
         await user.save()
+
+        const wallet=await walletModel.findOne({userId:userId})
+        if(!wallet){
+            const newWallet=new walletModel({
+                userId:userId,
+                history:[
+                    {transaction:"Credited",
+                    amount:result.amount,
+                    date:new Date()}
+                ]
+            })
+            await newWallet.save();
+        }else{
+            wallet.history.push({transaction:"credited",
+            amount:result.amount,
+            date:new Date()})
+            await wallet.save();
+        }
        
        
         const items = result.items.map(item => ({
@@ -209,11 +248,11 @@ const addToFav = async (req, res) => {
         const pid = req.params.id;
         const userId = req.session.userId;
 
-        // Check if the product is already in the favorites
+
         const fav = await favModel.findOne({ userId: userId });
 
         if (!fav) {
-            // If favorites document doesn't exist for the user, create a new one
+            
             const newFav = new favModel({
                 userId: userId,
                 item: [{ productId: pid }],

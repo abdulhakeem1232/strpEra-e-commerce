@@ -9,6 +9,7 @@ const { EMAIL, PASSWORD } = require('../../../env.js')
 const { nameValid, emailValid, phoneValid, passwordValid, confirmpasswordValid } = require("../../../utils/validators/signupValidators.js")
 const subcategoryModel = require('../../model/subcatModel.js')
 const addressModel=require('./../../model/addressModel.js')
+const walletModel = require('../../model/walletModel.js')
 
 
 const error=async(req,res)=>{
@@ -619,6 +620,19 @@ const addressPost=async(req,res)=>{
 
 }
 
+const wallet=async(req,res)=>{
+    try{
+        const userId=req.session.userId;
+        const wallet=await walletModel.findOne({userId:userId})
+        console.log("wmdec",wallet);
+        res.render('user/wallet',{wallet:wallet})
+    }
+    catch(err){
+        res.redirect('/error')
+        console.log(err);
+    }
+}
+
 
 
 module.exports = {
@@ -647,4 +661,5 @@ module.exports = {
     deleteAddress,
     editAddress,
     addressPost,
+    wallet,
 }
