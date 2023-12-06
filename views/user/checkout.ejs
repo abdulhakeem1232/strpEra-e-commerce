@@ -148,6 +148,12 @@
                                     <label for="f-option6">Cash on Delivery</label>
                                     <div class="check"></div>
                                 </div>
+
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option7" name="paymentMethod" value="wallet" onclick="handlePaymentMethodSelection()" required>
+                                    <label for="f-option7">Wallet</label>
+                                    <div class="check"></div>
+                                </div>
                             </div>
         
                             <div class="creat_account">
@@ -305,7 +311,7 @@
   } 
 }
           
-         function proceedToOrder() {
+         async function proceedToOrder() {
            
             console.log("wjeabfqdckuawjsdvcb");
             var selectedAddress = document.querySelector('input[name="address"]:checked');
@@ -429,6 +435,49 @@ $.ajax(settings).done(function (response) {
 
 // Submit the form
 document.getElementById('orderForm').submit();
+              
+            }
+            else if(selectedpayment.value=="wallet"){
+                console.log("coooo");
+                const amount = document.getElementById('total').textContent.trim();
+                const response=await fetch(`/wallettransaction`,{
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({
+                        amount:amount
+                    })
+                });
+                const data=await response.json();
+                if(data.success){
+                console.log(selectedpayment.value,"000000");
+                document.getElementById('orderForm').action = '/order';
+                document.getElementById('orderForm').method = 'post'; 
+
+// Submit the form
+document.getElementById('orderForm').submit();
+                }
+                else{
+                        console.log("cccc");
+                        Swal.fire({
+//   title: 'Error!',
+  text: "You Don't have Enough money in Wallet",
+  icon: 'error',
+  confirmButtonText: 'OK',
+  customClass: {
+    title: 'text-danger',
+    popup: 'swal2-popup-custom',
+    confirmButton: 'btn btn-danger'
+  },
+  showCancelButton: false,
+  showCloseButton: true,
+  showLoaderOnConfirm: false,
+  timer: 3000 
+});
+                    
+                    console.log("came else but....");
+                }
               
             }
         }

@@ -146,7 +146,7 @@ const ordercancelling = async (req, res) => {
             })
             await newWallet.save();
         }else{
-            wallet.history.push({transaction:"credited",
+            wallet.history.push({transaction:"Credited",
             amount:result.amount,
             date:new Date()})
             await wallet.save();
@@ -200,7 +200,7 @@ const orderreturning = async (req, res) => {
             })
             await newWallet.save();
         }else{
-            wallet.history.push({transaction:"credited",
+            wallet.history.push({transaction:"Credited",
             amount:result.amount,
             date:new Date()})
             await wallet.save();
@@ -329,6 +329,42 @@ const applycoupon = async (req, res) => {
     }
 }
 
+const wallet = async (req, res) => {
+    try {
+       const amount=req.body.amount
+       const user=await userModel.findOne({_id:req.session.userId})
+       if(user.wallet>=amount){
+        user.wallet-=amount
+        await user.save();
+
+        const wallet=await walletModel.findOne({userId:user._id})
+        if(!wallet){
+            const newWallet=new walletModel({
+                userId:user._id,
+                history:[
+                    {transaction:"Debited",
+                    amount:amount,
+                    date:new Date()}
+                ]
+            })
+            await newWallet.save();
+        }else{
+            wallet.history.push({transaction:"Debited",
+            amount:amount,
+            date:new Date()})
+            await wallet.save();
+        }
+        res.json({success:true})
+       }
+       else{
+        res.json({success:false,message:"don't have enought money"})
+       }
+    } catch (err) {
+        console.error(err);
+        res.redirect('/error')
+    }
+}
+
 
 
 
@@ -343,4 +379,5 @@ module.exports = {
     removeFav,
     applycoupon,
     orderreturning,
+    wallet,
 }
