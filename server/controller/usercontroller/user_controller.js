@@ -634,9 +634,10 @@ const addressPost=async(req,res)=>{
 const wallet=async(req,res)=>{
     try{
         const userId=req.session.userId;
+        const user=await userModel.findOne({_id:userId})
         const wallet=await walletModel.findOne({userId:userId})
         console.log("wmdec",wallet);
-        res.render('user/wallet',{wallet:wallet})
+        res.render('user/wallet',{wallet:wallet,user:user})
     }
     catch(err){
         res.redirect('/error')

@@ -56,7 +56,7 @@
     </section>
 <div class="container mt-5 ">
     <h1 class="mb-4 text-center">Wallet History</h1>
-
+    <h4>Balance: <%= user.wallet %></h4>
     <% if(wallet && wallet.history.length > 0) { %>
         <div class="row">
             <% wallet.history.forEach((entry, index) => { %>
