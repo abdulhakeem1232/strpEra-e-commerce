@@ -152,7 +152,8 @@
     <script>
       function updateStock(select, stockJson,rowIndex) {
     const selectedSize = parseInt(select.value);
-    const stock = JSON.parse(stockJson); // Parse the JSON string into an array
+    const stock = JSON.parse(stockJson); 
+    
     const stockDiv = document.getElementById(`stock_${rowIndex}`);
     const selectedStock = stock.find(item => item.size === selectedSize);
     if (selectedStock) {

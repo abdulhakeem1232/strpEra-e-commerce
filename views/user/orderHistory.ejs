@@ -71,7 +71,7 @@
 				<ul class="list-group">
 					<% orders.forEach(order => { %>
                         
-						<li class="list-group-item mb-3" onclick="location.href='/';">
+						<li class="list-group-item mb-3" onclick="location.href='/order-tracking/<%= order._id %>';">
                             
                             <div class="d-flex justify-content-between">
 							<h5>Order ID: <%= order.orderId %></h5>
@@ -91,14 +91,14 @@
                                 ,<%= order.address[0].pincode %>
                             
                             </p>
-							<!-- Iterate over order items -->
+							
 							<ul class="list-group">
 								<% order.items.forEach(item => { %>
 									<li class="list-group-item">
                                         <img src="/<%= item.productId.images[0] %>" alt="" style="height: 100px; width: 100px;">
 										<p>Product Name: <%= item.productId.name %></p>
 										<p>Quantity: <%= item.quantity %></p>
-										<!-- Add more details as needed -->
+									
 									</li>
 								<% }); %>
 							</ul>
@@ -106,113 +106,7 @@
                     </li>
             
 						
-                        <div class="container">
-                            <div class="row">
-                                                  <div class="col-12 col-md-10 hh-grayBox mx-auto text-center pt45 pb20" style="width: 1140px;">
-                                                    <h2 style="margin-bottom: 50px;">Order Tracking</h2>
-                                                    <% if (order.status === 'pending' ) { %>
-                                                        <div class="row justify-content-between">
-                                                            <div class="order-tracking completed">
-                                                                <span class="is-complete"></span>
-                                                                <p>Ordered<br></p>
-                                                            </div>
-                                                            <div class="order-tracking ">
-                                                                <span class="is-complete"></span>
-                                                                <p>Processing<br></p>
-                                                            </div>
-                                                            <div class="order-tracking ">
-                                                                <span class="is-complete"></span>
-                                                                <p>Shipped<br></p>
-                                                            </div>
-                                                            <div class="order-tracking ">
-                                                                <span class="is-complete"></span>
-                                                                <p>Delivered<br></p>
-                                                            </div>
-                                                        </div>
-                                                        <% } else if (order.status === 'processing'  ) { %>
-                                                            <div class="row justify-content-between">
-                                                                <div class="order-tracking completed">
-                                                                    <span class="is-complete"></span>
-                                                                    <p>Ordered<br></p>
-                                                                </div>
-                                                                <div class="order-tracking completed">
-                                                                    <span class="is-complete"></span>
-                                                                    <p>Processing<br></p>
-                                                                </div>
-                                                                <div class="order-tracking ">
-                                                                    <span class="is-complete"></span>
-                                                                    <p>Shipped<br></p>
-                                                                </div>
-                                                                <div class="order-tracking ">
-                                                                    <span class="is-complete"></span>
-                                                                    <p>Delivered<br></p>
-                                                                </div>
-                                                            </div>
-                                                    <% } else if (order.status === 'shipped'  ) { %>
-                                                        <div class="row justify-content-between">
-                                                            <div class="order-tracking completed">
-                                                                <span class="is-complete"></span>
-                                                                <p>Ordered<br></p>
-                                                            </div>
-                                                            <div class="order-tracking completed">
-                                                                <span class="is-complete"></span>
-                                                                <p>Processing<br></p>
-                                                            </div>
-                                                            <div class="order-tracking completed">
-                                                                <span class="is-complete"></span>
-                                                                <p>Shipped<br></p>
-                                                            </div>
-                                                            <div class="order-tracking ">
-                                                                <span class="is-complete"></span>
-                                                                <p>Delivered<br></p>
-                                                            </div>
-                                                        </div>
-                                                    <% } else if (order.status === 'delivered' ) { %>
-                                                        <div class="row justify-content-between">
-                                                            <div class="order-tracking completed">
-                                                                <span class="is-complete"></span>
-                                                                <p>Ordered<br></p>
-                                                            </div>
-                                                            <div class="order-tracking completed">
-                                                                <span class="is-complete"></span>
-                                                                <p>Processing<br></p>
-                                                            </div>
-                                                            <div class="order-tracking completed">
-                                                                <span class="is-complete"></span>
-                                                                <p>Shipped<br></p>
-                                                            </div>
-                                                            <div class="order-tracking completed">
-                                                                <span class="is-complete"></span>
-                                                                <p>Delivered<br></p>
-                                                            </div>
-                                                        </div>
-                                                    <% }  else if (order.status =='Cancelled') { %>
-                                                        <div class="row justify-content-between">
-                                                            
-                                                            <div class="order-tracking completed cancelled" >
-                                                                <span class="is-complete"></span>
-                                                                <p>Ordered<br></p>
-                                                            </div>
-                                                            <div class="order-tracking completed cancelledd" >
-                                                                <span class="is-complete"></span>
-                                                                <p> Cancel Requested<br</p>
-                                                            </div>
-                                                            <div class="order-tracking completed cancelledd" >
-                                                                <span class="is-complete"></span>
-                                                                <p>Accepted<br</p>
-                                                            </div>
-                                                            <div class="order-tracking completed cancelledd">
-                                                                <span class="is-complete"></span>
-                                                                <p>Cancelled<br></p>
-                                                            </div>
-                                                        </div>
-                                                    <% }else { %>
-                                                        <h2>NO order Details</h2>
-                                                    <% } %>
-                                                    
-                                                  </div>
-                                              </div>
-                          </div>
+                        
                           
            
             

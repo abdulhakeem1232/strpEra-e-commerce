@@ -8,6 +8,10 @@ const { key_id, key_secret } = require('../../../env');
 const coupanModel = require('../../model/coupanModel');
 const userModel = require('../../model/userModel');
 const walletModel = require('../../model/walletModel');
+const fs=require('fs');
+const pdf=require('html-pdf')
+const path=require('path')
+const os=require('os')
 
 var instance = new Razorpay({ key_id: key_id, key_secret: key_secret })
 
@@ -365,6 +369,107 @@ const wallet = async (req, res) => {
     }
 }
 
+const ordertracking = async (req, res) => {
+    try {
+       const id=req.params.id
+       const order = await orderModel.find({ _id:id }).populate({
+        path: 'items.productId',
+        select: 'name images'
+    })
+    console.log('kkk',order,'jjjj');
+       res.render('user/ordertracking',{order:order})
+       
+    } catch (err) {
+        console.error(err);
+        res.redirect('/error')
+    }
+}
+
+const pdfmaker=async (req,res)=>{
+    const orderId=req.params.id;
+    const order=await orderModel.findOne({_id:orderId}).populate({
+        path: 'items.productId',
+        select: 'name'
+    })
+    console.log('hddhdhh',order);
+    const downloadsPath = path.join(os.homedir(), 'Downloads');
+    const pdfFilePath = path.join(downloadsPath, `order.pdf`);
+    const htmlContent = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Order Details</title>
+           <style>
+           .date{
+            margin-left:100px;
+            body{
+                text-size:35px
+            }
+           }
+           </style>
+        </head>
+        <body>
+        <center>
+        <h2>UrbanSole</h2> </center>
+        <div class='date'>
+    <h5>Order ID: ${order.orderId}</h5>
+    Date:${order.createdAt}
+    <p>Delivery Address: ${order.address[0].save_as},
+        ${order.address[0].houseName},
+        ${order.address[0].city},
+        ${order.address[0].pincode}
+    </p>
+    </div>
+    <center>
+    <table style="border-collapse: collapse;">
+        <thead>
+            <tr>
+            <th style="border: 1px solid #000; padding: 8px;">Product Name</th>
+            <th style="border: 1px solid #000; padding: 8px;">Quantity</th>
+            <th style="border: 1px solid #000; padding: 8px;">Price</th>
+            <th style="border: 1px solid #000; padding: 8px;">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${order.items.map(item => `
+                <tr>
+                    <td style="border: 1px solid #000; padding: 8px;">${item.productId.name}</td>
+                    <td style="border: 1px solid #000; padding: 8px;">${item.quantity}</td>
+                    <td style="border: 1px solid #000; padding: 8px;">${item.price}</td>
+                    <td style="border: 1px solid #000; padding: 8px;">${item.quantity * item.price}</td>
+                </tr>`).join('')}
+            <tr>
+                <td style="border: 1px solid #000; padding: 8px;"></td>
+                <td style="border: 1px solid #000; padding: 8px;"></td>
+                <td style="border: 1px solid #000; padding: 8px;">Total After Discount</td>
+                <td style="border: 1px solid #000; padding: 8px;">${order.amount}</td>
+            </tr>
+        </tbody>
+    </table>
+    </center>
+   
+</body>
+</html>
+
+    `;
+    pdf.create(htmlContent).toFile(pdfFilePath, (err, result) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+
+      
+        const file = fs.createReadStream(pdfFilePath);
+        const stat = fs.statSync(pdfFilePath);
+        res.setHeader('Content-Length', stat.size);
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=order.pdf`);
+        file.pipe(res);
+    });
+}
+
+
 
 
 
@@ -380,4 +485,6 @@ module.exports = {
     applycoupon,
     orderreturning,
     wallet,
+    ordertracking,
+    pdfmaker,
 }
