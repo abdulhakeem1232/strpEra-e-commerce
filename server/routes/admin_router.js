@@ -27,6 +27,7 @@ router.post('/searchUser',middleware.adminlogged,controller.searchUser)
 router.get('/searchview',middleware.adminlogged,controller.searchview)
 router.get('/filter/:option',middleware.adminlogged,controller.filter)
 router.get('/logout',middleware.adminlogged,controller.logout)
+router.post('/chartData',middleware.adminlogged,controller.chartData)
 
 router.get('/category',middleware.adminlogged,categorycontroller.category)
 router.get('/newcat',middleware.adminlogged,categorycontroller.newcat)
