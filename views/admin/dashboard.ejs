@@ -116,12 +116,18 @@
                     <div class="row">
                       <div class="col-sm-7">
                         <h5>Business Survey</h5>
-                        <p class="text-muted"> Show overview jan 2018 - Dec 2019 <a class="text-muted font-weight-medium pl-2" href="#"><u>See Details</u></a>
+                        <p class="text-muted">Show overview jan 2018 - Dec 2019 <a class="text-muted font-weight-medium pl-2" href="#"><u>See Details</u></a>
                         </p>
                       </div>
                       <div class="col-sm-5 text-md-right">
-                        <button type="button" class="btn btn-icon-text mb-3 mb-sm-0 btn-inverse-primary font-weight-normal">
-                          <i class="mdi mdi-email btn-icon-prepend"></i>Download Report </button>
+                        <form action="#">
+                          <input type="date" id="startDate" placeholder="Start Date" required>
+                          <input type="date" id="endDate" placeholder="End Date" required>
+                          <button type="button" class="btn btn-icon-text mb-3 mt-2 mb-sm-0 btn-inverse-primary font-weight-normal" onclick="downloadSalesReport()">
+                              <i class="mdi mdi-email btn-icon-prepend"></i>Download Report
+                          </button>
+                      </form>
+                      
                       </div>
                     </div>
                    
@@ -146,16 +152,14 @@
                       <div class="col-sm-12">
                         <div class="flot-chart-wrapper">
                           <div id="flotChart" class="flot-chart">
-
-
-                            <canvas  id="chart2"></canvas>
+                            <canvas id="chart2"></canvas>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-sm-8">
-                        <p class="text-muted mb-0"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore. <b>Learn More</b>
+                        <p class="text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore. <b>Learn More</b>
                         </p>
                       </div>
                       <div class="col-sm-4">
@@ -182,9 +186,40 @@
     <!-- plugins:js -->
     
     
+  
     
-    
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
+    <script>
+     async function downloadSalesReport(){
+
+      
+      const startDate=document.getElementById('startDate').value
+      const endDate=document.getElementById('endDate').value
+
+      const response=await fetch('/admin/downloadsales',{
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+                startDate: startDate,
+                endDate: endDate,
+            }),
+      })
+      if(response.ok){
+        const blob = await response.blob();
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'sales_report.xlsx';
+            link.click();
+      }
+      else {
+            
+            console.error('Error fetching sales report');
+        }
+    }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       function getMonthName(month) {
@@ -216,7 +251,6 @@
         data.sales.sort((a, b) => (a._id.month || a._id.year) - (b._id.month || b._id.year));
         data.order.sort((a, b) => (a._id.month || a._id.year) - (b._id.month || b._id.year));
     
-        // Check if charts exist and destroy them if they do
         if (window.stackedBar) {
           window.stackedBar.destroy();
         }

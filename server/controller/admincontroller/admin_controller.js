@@ -9,6 +9,8 @@ const userotp= require('../../model/userotpModel.js')
 const { EMAIL,PASSWORD} = require('../../../env.js')
 const{passwordValid,confirmpasswordValid}=require('../../../utils/validators/signupValidators.js')
 const orderModel = require('../../model/orderModel.js')
+const ExcelJS=require('exceljs')
+const workbook = new ExcelJS.Workbook();
 
 
 const login = async (req,res) => {
@@ -231,6 +233,61 @@ const chartData=async(req,res)=>{
 
 }
 
+const downloadsales=async(req,res)=>{
+    try {
+       const {startDate,endDate}= req.body
+
+       const salesData = await orderModel.aggregate([
+        {
+            $match: {
+                createdAt: {
+                    $gte: new Date(startDate),
+                    $lt: new Date(endDate),
+                },
+            },
+        },
+        {
+            $group: {
+                _id: null,
+                totalOrders: { $sum: 1 },
+                totalAmount: { $sum: '$amount' },
+            },
+        },
+    ]);
+
+    let workbook;
+        try {
+            workbook = await ExcelJS.readFile('SalesReport.xlsx');
+        } catch (error) {
+            workbook = new ExcelJS.Workbook();
+        }
+
+        const worksheet = workbook.getWorksheet('Sales Report') || workbook.addWorksheet('Sales Report');
+
+        worksheet.addRow(['Start Date', 'End Date', 'Total Orders', 'Total Amount']);
+        worksheet.addRow([new Date(startDate), new Date(endDate), '', '']);
+
+        salesData.forEach(entry => {
+            worksheet.addRow(['', '', entry.totalOrders, entry.totalAmount]);
+        });
+
+        // Set headers for the response
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=SalesReport.xlsx');
+
+        // Write the workbook to the response
+        await workbook.xlsx.write(res);
+
+        console.log('Sales report updated successfully.');
+    
+    }
+    catch(err){
+      console.log(err);
+      res.send("Error Occured")
+    }
+
+}
+
 
 
 const logout=async(req,res)=>{
@@ -252,6 +309,7 @@ module.exports = {
     filter,
     logout,
     chartData,
+    downloadsales,
     
 
     
