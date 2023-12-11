@@ -4,6 +4,7 @@ const categorycontroller=require('../controller/admincontroller/category_control
 const productcontroller=require('../controller/admincontroller/productController')
 const ordercontroller=require('../controller/admincontroller/orderControllre')
 const coupancontroller=require('../controller/admincontroller/coupanController.js')
+const bannerController=require('../controller/admincontroller/bannerController.js')
 const middleware = require('./../../middleware.js')
 const crop=require('../../crop.js')
 
@@ -62,6 +63,10 @@ router.get('/crop',ordercontroller.crop)
 router.get('/coupan',middleware.adminlogged,coupancontroller.coupan)
 router.get('/newcoupon',middleware.adminlogged,coupancontroller.newcoupon)
 router.post('/add-coupon',middleware.adminlogged,coupancontroller.addcoupon)
+
+router.get('/banner',middleware.adminlogged,bannerController.banner)
+router.get('/newbanner',middleware.adminlogged,bannerController.newbanner)
+router.post('/addbanner',middleware.adminlogged,upload.single('images'),bannerController.addbanner)
 
 
 

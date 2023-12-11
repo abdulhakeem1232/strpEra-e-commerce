@@ -271,11 +271,11 @@ const downloadsales=async(req,res)=>{
             worksheet.addRow(['', '', entry.totalOrders, entry.totalAmount]);
         });
 
-        // Set headers for the response
+       
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=SalesReport.xlsx');
 
-        // Write the workbook to the response
+      
         await workbook.xlsx.write(res);
 
         console.log('Sales report updated successfully.');
