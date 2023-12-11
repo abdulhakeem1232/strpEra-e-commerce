@@ -10,6 +10,8 @@ const { nameValid, emailValid, phoneValid, passwordValid, confirmpasswordValid }
 const subcategoryModel = require('../../model/subcatModel.js')
 const addressModel=require('./../../model/addressModel.js')
 const walletModel = require('../../model/walletModel.js')
+const Razorpay=require('razorpay')
+const { key_id, key_secret } = require('../../../env');
 
 
 const error=async(req,res)=>{
@@ -645,6 +647,50 @@ const wallet=async(req,res)=>{
     }
 }
 
+const instance=new Razorpay({key_id:key_id,key_secret:key_secret})
+
+const walletupi = async (req, res) => {
+    console.log("CAM");
+  console.log('body:', req.body);
+  var options = {
+      amount: 500,
+      currency: "INR",
+      receipt: "order_rcpt"
+  };
+  instance.orders.create(options, function (err, order) {
+      console.log("order1 :", order);
+      res.send({ orderId: order.id })
+    })
+}
+
+  
+  
+const walletTopup= async(req,res)=>{
+    try {
+        console.log("camehere");
+        const userId = req.session.userId;
+        const user=await userModel.findOne({_id:userId})
+        console.log('jjj',user);
+        const { razorpay_payment_id, razorpay_order_id } = req.body;
+    const Amount=parseFloat(req.body.Amount)
+    console.log(Amount);
+        const wallet = await walletModel.findOne({ userId :userId});
+    
+        console.log(user.wallet,'hhhh');
+        user.wallet += Amount;
+        wallet.history.push({transaction:"Credited",
+        amount:Amount,
+        date:new Date()});
+
+        await wallet.save();
+        await user.save();
+        res.redirect("/wallet")
+      } catch (error) {
+        console.error('Error handling Razorpay callback:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+}
+
 
 
 module.exports = {
@@ -674,4 +720,6 @@ module.exports = {
     editAddress,
     addressPost,
     wallet,
+    walletupi,
+    walletTopup,
 }

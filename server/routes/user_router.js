@@ -26,6 +26,8 @@ router.get('/singleproduct/:id',productcontroller.singleproduct)
 router.get('/sortproduct/:sort',productcontroller.sortproducts)
 router.post('/search',productcontroller.search)
 router.get('/wallet',middleware.islogged,controller.wallet)
+router.post('/walletcreate/orderId',controller.walletupi)
+router.post('/walletTopup',controller.walletTopup)
 
 router.post('/add-to-cart/:pid',cartController.addTocart)
 router.get('/showcart',middleware.islogged,cartController.showcart)

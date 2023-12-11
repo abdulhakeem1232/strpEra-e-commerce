@@ -57,6 +57,10 @@
 <div class="container mt-5 ">
     <h1 class="mb-4 text-center">Wallet History</h1>
     <h4>Balance: <%= user.wallet %></h4>
+    <form id="Form">
+        <input type="number" id="Amount" name="Amount" placeholder="Enter Amount">
+        <button onclick="RazorpayWallet(event)">Add To Wallet</button>
+      </form>
     <% if(wallet && wallet.history.length > 0) { %>
         <div class="row">
             <% wallet.history.forEach((entry, index) => { %>
@@ -84,6 +88,104 @@
 </div>
 <%- include('partials/footer')%>
 <!-- Include Bootstrap JS (optional) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>  
+<script>
+    async function  RazorpayWallet()
+	{
+    event.preventDefault()
+    console.log("ivide function");
+		let amountToPay=document.getElementById('Amount').value
+    console.log(amountToPay);
+		if(!amountToPay){
+			Swal.fire({
+    text: 'please enter an amount',
+    icon: 'error',
+  confirmButtonText: 'OK',
+  customClass: {
+    title: 'text-danger',
+    popup: 'swal2-popup-custom',
+    confirmButton: 'btn btn-danger'
+  },
+  showCancelButton: false,
+  showCloseButton: true,
+  showLoaderOnConfirm: false,
+  timer: 3000 
+});
+
+		}
+		
+		
+		
+		else {
+console.log("upi total","ppppppp");
+
+var options = {
+"key": 'rzp_test_FJ1rRuVkxPiUu9', 
+"amount":  amountToPay*100, 
+"currency": "INR",
+"name": "UrbanSole",
+"description": "Test Transaction",
+"image": "Urban Sole",
+"order_id": orderId, 
+"handler": function (response){
+alert(response.razorpay_payment_id);
+document.getElementById('Form').action = '/walletTopup';
+document.getElementById('Form').method = 'post'; 
+
+document.getElementById('Form').submit();
+
+},
+
+
+"theme": {
+"color": "orange"
+},
+};
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+});
+    rzp1.open();
+
+
+    e.preventDefault();
+
+
+                var orderId ;
+$(document).ready(function(){
+    var settings = {
+  "url": "/walletcreate/orderId",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "data": JSON.stringify({
+    "amount": amountToPay*100
+  }),
+};
+
+
+$.ajax(settings).done(function (response) {
+
+  orderId=response.orderId;
+  console.log(orderId);
+  $("button").show();
+});
+});
+
+            }
+		
+		}
+
+  </script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.9/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
