@@ -60,19 +60,29 @@
         <section class="checkout_area section_gap">
             <div class="container mt-4">
                 <div class="row">
-                    <div class="col-md-6 offset-md-3">
+                    <div class="col-md-3">
+                        <h4>Available Coupons</h4>
+                        <ul type="circle" >
+                            <% coupon.forEach(couponItem => { %>
+                                <li><%= couponItem.coupancode %> </li>
+                            <% }) %>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
                         <form>
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control" placeholder="Coupon Code" id="code" name="code">
                                 <div class="input-group-append">
                                     <button class="btn btn-success" type="button" onclick="applyCoupon(event)">Apply</button>
-                                    <a href="/checkout" class="btn btn-danger ml-1">Clear</a> 
+                                    <a href="/checkout" class="btn btn-danger ml-1">Clear</a>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
+            
+            
             
             <div class="container">
                 <div class="row">
