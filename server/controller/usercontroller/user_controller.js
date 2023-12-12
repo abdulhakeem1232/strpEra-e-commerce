@@ -10,6 +10,7 @@ const { nameValid, emailValid, phoneValid, passwordValid, confirmpasswordValid }
 const subcategoryModel = require('../../model/subcatModel.js')
 const addressModel=require('./../../model/addressModel.js')
 const walletModel = require('../../model/walletModel.js')
+const bannerModel=require('../../model/bannerModel.js')
 const Razorpay=require('razorpay')
 const { key_id, key_secret } = require('../../../env');
 
@@ -20,7 +21,8 @@ const error=async(req,res)=>{
 
 const index = async (req, res) => {
     const isAuth = req.session.isAuth || false;
-    res.render('user/index.ejs',{ isAuth })
+    const banner=await bannerModel.find({active:true})
+    res.render('user/index.ejs',{ isAuth,banner:banner })
 }
 
 const login = async (req, res) => {
