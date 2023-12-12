@@ -40,7 +40,10 @@ const checkout = async (req, res) => {
             }
         }
 
-        res.render('user/checkout', { data: data, address: address })
+        const coupon =await coupanModel.find({minprice:{$lte:data.total}})
+        console.log('jjjf',coupon);
+
+        res.render('user/checkout', { data: data, address: address,coupon:coupon })
     }
     catch (err) {
         res.redirect('/error')
