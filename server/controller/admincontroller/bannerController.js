@@ -51,6 +51,52 @@ const addbanner=async(req,res)=>{
     }
 }
 
+const unlist = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const banner = await bannerModel.findOne({ _id: id });
+        
+
+        banner.active = !banner.active;
+        await banner.save();
+    
+        res.redirect('/admin/banner')
+    }
+    catch (err) {
+        console.log(err);
+        res.send("Error Occured")
+    }
+}
+
+const updatebanner= async (req, res) => {
+    try {
+        const id = req.params.id;
+        const banner = await bannerModel.findOne({ _id: id });
+    
+        res.render('admin/updatebanner',{banner:banner})
+    }
+    catch (err) {
+        console.log(err);
+        res.send("Error Occured")
+    }
+}
+
+const updatebanners= async (req, res) => {
+    try {
+        const id = req.params.id;
+        const {title,subtitle}=req.body
+        const banner= await bannerModel.findOne({_id:id})
+        banner.title=title;
+        banner.subtitle=subtitle;
+        await banner.save();
+
+        res.redirect('/admin/banner')
+    }
+    catch (err) {
+        console.log(err);
+        res.send("Error Occured")
+    }
+}
 
 
 
@@ -58,4 +104,7 @@ module.exports={
     banner,
     newbanner,
     addbanner,
+    unlist,
+    updatebanner,
+    updatebanners,
 }

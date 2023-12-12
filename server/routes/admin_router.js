@@ -67,6 +67,9 @@ router.post('/add-coupon',middleware.adminlogged,coupancontroller.addcoupon)
 router.get('/banner',middleware.adminlogged,bannerController.banner)
 router.get('/newbanner',middleware.adminlogged,bannerController.newbanner)
 router.post('/addbanner',middleware.adminlogged,upload.single('images'),bannerController.addbanner)
+router.get('/unlistbanner/:id',middleware.adminlogged,bannerController.unlist)
+router.get('/updatebanner/:id',middleware.adminlogged,bannerController.updatebanner)
+router.post('/update-banner/:id',middleware.adminlogged,bannerController.updatebanners)
 
 
 
