@@ -22,7 +22,9 @@ const error=async(req,res)=>{
 const index = async (req, res) => {
     const isAuth = req.session.isAuth || false;
     const banner=await bannerModel.find({active:true})
-    res.render('user/index.ejs',{ isAuth,banner:banner })
+    const product=await productModel.find().sort({created:-1}).limit(12)
+    const product2=await productModel.find().sort({price:-1}).limit(12)
+    res.render('user/index.ejs',{ isAuth,banner:banner,product:product,product2:product2})
 }
 
 const login = async (req, res) => {
