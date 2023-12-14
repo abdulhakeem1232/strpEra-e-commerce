@@ -49,7 +49,6 @@ const loginpost=async(req,res)=> {
         const passwordmatch=await bcrypt.compare(req.body.password,user.password)
         if(passwordmatch && !user.status){
             user.session=req.session.id
-            console.log(user.session);
             user.save()
             req.session.isAuth = true;
             req.session.userId = user._id;
@@ -58,13 +57,11 @@ const loginpost=async(req,res)=> {
         else{
             req.flash('passworderror','invalid password Or you are Blocked')
             res.redirect('/login')
-            // res.render("user/login.ejs",{passworderror:"Invalid-password or you are blocked"} )
         }
     }
     catch{
         req.flash('emailerror','invalid e-mail')
         res.redirect('/login')
-        // res.render("user/login.ejs",{emailerror:"Invalid-email"})
     }
 }
 
@@ -132,34 +129,28 @@ const regpost = async (req, res) => {
 
         const emailExist = await userModel.findOne({ email: email })
         if (emailExist) {
-            // res.render('user/signup', { emailerror: "E-mail already exits" })
             req.flash('emailerror','E-mail already Exist')
             res.redirect('/reg')
         }
         else if (!isEmailValid) {
             req.flash('emailerror','Enter a valid E-mail')
             res.redirect('/reg')
-            // res.render('user/signup', { emailerror: "Enetr a valid E-mail" })
         }
         else if (!isNameValid) {
             req.flash('nameerror','Enter a valid Name')
             res.redirect('/reg')
-            // res.render('user/signup', { nameerror: "Enetr a valid Name" })
         }
         else if (!isPhoneValid) {
             req.flash('phoneerror','Enter a valid Phone Number')
             res.redirect('/reg')
-            // res.render('user/signup', { phoneerror: "Enetr a valid Phone Number" })
         }
         else if (!ispasswordValid) {
             req.flash('passworderror','Password should contain one uppercase,one lowercase,one number,one special charecter')
             res.redirect('/reg')
-            // res.render('user/signup', { passworderror: "Password should contain one uppercase,one lowercase,one number,one special charecter" })
         }
         else if (!iscpasswordValid) {
             req.flash('cpassworderror','Password and Confirm password should be match')
             res.redirect('/reg')
-            // res.render('user/signup', { cpassworderror: "Password and Confirm password should be match" })
         }
         else {
             const hashedpassword = await bcrypt.hash(password, 10)
@@ -204,12 +195,8 @@ const otp = async (req, res) => {
 const verifyotp = async (req, res) => {
     try {
         const enteredotp = req.body.otp
-        // const generatedotp=req.session.otp
         const user = req.session.user
-       
         console.log(enteredotp);
-        // console.log(generatedotp);
-        console.log(req.session.user);
         const email = req.session.user.email
         const userdb = await userotp.findOne({ email: email })
         const otp = userdb.otp
@@ -237,7 +224,6 @@ const verifyotp = async (req, res) => {
             }
         }
         else {
-            // res.status(402).send("Wrong OTP or Time Expired");
             req.flash('otperror','Invalid OTP or Time Expired')
             res.redirect('/otp')
         }
@@ -254,13 +240,10 @@ const resendotp=async(req,res)=>{
     const email = req.session.user.email
     const otp = otpgenerator()
      console.log(otp);
-
      const currentTimestamp = Date.now();
      const expiryTimestamp = currentTimestamp + 60 * 1000;
      await userotp.updateOne({ email: email },{otp:otp,expiry:new Date(expiryTimestamp)})
-
      await sendmail(email, otp)
-
     }
     catch(err){
        console.log(err);
@@ -324,7 +307,6 @@ const resetpassword = async (req, res) => {
     try {
         const password = req.body.newPassword
         const cpassword = req.body.confirmPassword
-
         const ispasswordValid = passwordValid(password)
         const iscpasswordValid = confirmpasswordValid(cpassword, password)
 
@@ -360,9 +342,7 @@ const logout=async(req,res)=>{
 const profile=async(req,res)=>{
     try{
         const userId=req.session.userId
-        console.log("id",userId);
         const data=await userModel.findOne({_id:userId})
-        console.log("data",data);
         res.render('user/profile',{userData:data,expressFlash: req.flash('success')} )
     }
     catch(err){
@@ -373,9 +353,7 @@ const profile=async(req,res)=>{
 const profileEdit=async(req,res)=>{
     try{
         const userId=req.session.userId
-        console.log("id",userId);
         const data=await userModel.findOne({_id:userId})
-        console.log("data",data);
         res.render('user/editProfile',{userData:data})
     }
     catch(err){
@@ -387,9 +365,7 @@ const profileUpdate=async(req,res)=>{
     try{
         const {fname,lname,phone_no}=req.body
         const userId=req.session.userId
-        console.log("id",userId);
         const data=await userModel.updateOne({_id:userId},{f_name:fname,l_name:lname,phone_no:phone_no})
-        console.log("data",data);
         res.redirect('/profile')
     }
     catch(err){
@@ -401,9 +377,7 @@ const profileUpdate=async(req,res)=>{
 const address=async(req,res)=>{
     try{
         const userId=req.session.userId
-        console.log("id",userId);
         const data=await addressModel.findOne({userId:userId})
-        console.log("data",data);
         res.render('user/address',{userData:data})
     }
     catch(err){
@@ -426,12 +400,9 @@ const addressUpdate = async (req, res) => {
     try {
         const { name,mobile,email,housename,street, city, state, country,pincode,saveas } = req.body;
         const userId = req.session.userId;
-        console.log("id", userId);
-
         const existingUser = await addressModel.findOne({ userId: userId });
 
         if (existingUser) {
-            // Corrected query to find existing address for the user
             const existingAddress = await addressModel.findOne({
                 'userId': userId,
                 'address.name': name,
@@ -567,7 +538,6 @@ const editAddress=async(req,res)=>{
         const userId=req.session.userId
         const id=req.params.id
         const address=await addressModel.findOne({userId:userId,'address._id':id})
-        console.log("deqjdq",address);
         res.render('user/editAddress',{adress:address})
     }
     catch(err){
@@ -581,14 +551,12 @@ const addressPost=async(req,res)=>{
         const { name,mobile,housename,street,city,state,country,pincode,saveas } = req.body;
         const addressId=req.params.id
         const userId = req.session.userId;
-        console.log("id", userId);
 
-        // Check if the new address already exists for the user excluding the currently editing address
         const isAddressExists = await addressModel.findOne({
             'userId': userId,
             'address': {
                 $elemMatch: {
-                    '_id': { $ne: addressId }, // Exclude the currently editing address
+                    '_id': { $ne: addressId }, 
                     'save_as': saveas,
                     'name': name,
                     'mobile': mobile,
@@ -604,11 +572,8 @@ const addressPost=async(req,res)=>{
         });
 
         if (isAddressExists) {
-            // Address with the same details already exists, handle it accordingly
             return res.status(400).send('Address already exists');
         }
-
-        // Update the existing address based on the addressId
         const result = await addressModel.updateOne(
             { 'userId': userId, 'address._id': addressId },
             {
@@ -626,8 +591,6 @@ const addressPost=async(req,res)=>{
                 }
             }
         );
-
-        // Check if the update was successful
         
             res.redirect('/address');
     } catch (err) {
@@ -642,7 +605,6 @@ const wallet=async(req,res)=>{
         const userId=req.session.userId;
         const user=await userModel.findOne({_id:userId})
         const wallet=await walletModel.findOne({userId:userId})
-        console.log("wmdec",wallet);
         res.render('user/wallet',{wallet:wallet,user:user})
     }
     catch(err){
@@ -654,15 +616,12 @@ const wallet=async(req,res)=>{
 const instance=new Razorpay({key_id:key_id,key_secret:key_secret})
 
 const walletupi = async (req, res) => {
-    console.log("CAM");
-  console.log('body:', req.body);
   var options = {
       amount: 500,
       currency: "INR",
       receipt: "order_rcpt"
   };
   instance.orders.create(options, function (err, order) {
-      console.log("order1 :", order);
       res.send({ orderId: order.id })
     })
 }
@@ -671,16 +630,11 @@ const walletupi = async (req, res) => {
   
 const walletTopup= async(req,res)=>{
     try {
-        console.log("camehere");
         const userId = req.session.userId;
         const user=await userModel.findOne({_id:userId})
-        console.log('jjj',user);
         const { razorpay_payment_id, razorpay_order_id } = req.body;
-    const Amount=parseFloat(req.body.Amount)
-    console.log(Amount);
+        const Amount=parseFloat(req.body.Amount)
         const wallet = await walletModel.findOne({ userId :userId});
-    
-        console.log(user.wallet,'hhhh');
         user.wallet += Amount;
         wallet.history.push({transaction:"Credited",
         amount:Amount,

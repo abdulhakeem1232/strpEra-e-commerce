@@ -25,13 +25,7 @@ const newproduct = async (req, res) => {
     try {
         const category = await categoryModel.find()
         const subcat = await subcatModel.find().populate('p_category');
-
         const subcatData = subcat.map(item => ({ _id: item._id, parentCategoryId: item.p_category, subcategoryName: item.name }));
-
-
-        console.log("Categories:", category);
-        console.log("Subcategories:", subcat);
-        console.log("SubcatData:", JSON.stringify(subcatData));
 
         res.render('admin/newproduct', { category: category, subcat: subcat, subcatData: JSON.stringify(subcatData) })
     }
@@ -83,11 +77,8 @@ const unlist = async (req, res) => {
     try {
         const id = req.params.id;
         const product = await productModel.findOne({ _id: id });
-        // console.log(category);
-
         product.status = !product.status;
         await product.save();
-        // console.log(category);
         res.redirect('/admin/products')
     }
     catch (err) {
@@ -110,7 +101,6 @@ const updatepro = async (req, res) => {
     try {
         const id = req.params.id
         const product = await productModel.findOne({ _id: id });
-        // console.log(product);
         res.render('admin/updateproduct', { product: product })
     } catch (err) {
         console.log(err);
@@ -182,8 +172,6 @@ const deleteimg=async(req,res)=>{
                 { _id: pid },
                 { $pull: { images: filename } } 
               );
-        
-    
         }
         catch(err){
             console.log("error deleting image:",err);

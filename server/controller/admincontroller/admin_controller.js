@@ -32,31 +32,19 @@ const aloginpost=async(req,res)=> {
         const email=req.body.email
         const user=await userModel.findOne({email:email})
         const passwordmatch=await bcrypt.compare(req.body.password,user.password)
-        console.log(user);
         if(passwordmatch && user.isAdmin){
-            console.log("getin");
             req.session.adminAuth = true;
             res.redirect('/admin/dashboard');
             
         }
         else{
-            // req.flash('passworderror','invalid password')
-            // res.redirect('/login')
-            console.log("get");
             req.flash('passworderror','Invalid-password')
-            // res.render("admin/alogin",{passworderror:"Invalid-password"} )
             res.redirect('/admin')
-            // res.send("password")
         }
     }
     catch{
-        // req.flash('emailerror','invalid e-mail')
-        // res.redirect('/login')
-        console.log("gettt");
         req.flash('emailerror','Invalid-email')
-        // res.render("admin/alogin",{emailerror:"Invalid-email"})
         res.redirect('/admin')
-        // res.send("email")
     }
 }
 
@@ -72,7 +60,6 @@ const dashboard=async(req,res)=>{
 const customer=async(req,res)=>{
     try{
         const user=await userModel.find({})
-        // console.log(user);
         res.render("admin/customer",{users:user})
     }
     catch(err){
@@ -86,19 +73,13 @@ const userupdate=async(req,res)=>{
         const email = req.params.email; 
         const user =await userModel.findOne({email:email}); 
     
-       
-
         user.status = !user.status;
         await user.save();
-        console.log('reee',req.session);
-        
-        console.log('User status updated:', user.status);
         
         if (req.session.isAuth && req.session.userId == user._id) {
            
                req.session.isAuth=false
         }
-        console.log('Redirecting to /admin/customer');
         res.redirect('/admin/customer');
     }
     catch(err){
@@ -162,7 +143,6 @@ const filter=async(req,res)=>{
 const chartData=async(req,res)=>{
     try {
         const selected=req.body.selected
-        console.log(selected);
         if(selected=='month'){
             const orderByMonth= await orderModel.aggregate([
                 {
@@ -185,8 +165,6 @@ const chartData=async(req,res)=>{
                     }
                 }
             ])
-            console.log('order2',orderByMonth);
-            console.log('sales2',salesByMonth);
             const responseData = {
                 order: orderByMonth,
                 sales: salesByMonth
@@ -216,8 +194,6 @@ const chartData=async(req,res)=>{
                     }
                 }
             ])
-            console.log('order1',orderByYear);
-            console.log('sales1',salesByYear);
             const responseData={
                 order:orderByYear,
                 sales:salesByYear,
@@ -263,23 +239,16 @@ const downloadsales=async(req,res)=>{
         }
 
         const worksheet = workbook.getWorksheet('Sales Report') || workbook.addWorksheet('Sales Report');
-
         worksheet.addRow(['Start Date', 'End Date', 'Total Orders', 'Total Amount']);
         worksheet.addRow([new Date(startDate), new Date(endDate), '', '']);
-
         salesData.forEach(entry => {
             worksheet.addRow(['', '', entry.totalOrders, entry.totalAmount]);
         });
 
-       
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=SalesReport.xlsx');
 
-      
         await workbook.xlsx.write(res);
-
-        console.log('Sales report updated successfully.');
-    
     }
     catch(err){
       console.log(err);
@@ -287,8 +256,6 @@ const downloadsales=async(req,res)=>{
     }
 
 }
-
-
 
 const logout=async(req,res)=>{
     req.session.adminAuth=false;

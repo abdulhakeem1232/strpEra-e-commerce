@@ -8,7 +8,6 @@ const order=async(req,res)=>{
             path:'items.productId',
             select:'name'
         })
-        // console.log(user);
         res.render("admin/order",{order:order})
     }
     catch(err){
@@ -20,10 +19,7 @@ const order=async(req,res)=>{
 const orderstatus=async(req,res)=>{
     try{
         const {orderId,status}=req.body
-        console.log("id",orderId)
-        console.log("status",status);
         const updateOrder=await orderModel.updateOne({_id:orderId},{status:status,updated:new Date()})
-        console.log(updateOrder);
         res.redirect('/admin/order')
     }
     catch(err){
@@ -31,8 +27,6 @@ const orderstatus=async(req,res)=>{
         res.send("Error Occured")
     }
 }
-
-
 
 const crop=async(req,res)=>{
     try{

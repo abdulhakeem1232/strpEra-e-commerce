@@ -28,8 +28,6 @@ const newbanner=async(req,res)=>{
 const addbanner=async(req,res)=>{
     try {
         const { title, subtitle } = req.body;
-
-        // Check if a file was uploaded
         if (!req.file) {
             return res.status(400).json({ error: 'No image file provided' });
         }
@@ -55,11 +53,8 @@ const unlist = async (req, res) => {
     try {
         const id = req.params.id;
         const banner = await bannerModel.findOne({ _id: id });
-        
-
         banner.active = !banner.active;
         await banner.save();
-    
         res.redirect('/admin/banner')
     }
     catch (err) {
@@ -72,7 +67,6 @@ const updatebanner= async (req, res) => {
     try {
         const id = req.params.id;
         const banner = await bannerModel.findOne({ _id: id });
-    
         res.render('admin/updatebanner',{banner:banner})
     }
     catch (err) {
@@ -89,7 +83,6 @@ const updatebanners= async (req, res) => {
         banner.title=title;
         banner.subtitle=subtitle;
         await banner.save();
-
         res.redirect('/admin/banner')
     }
     catch (err) {

@@ -37,10 +37,8 @@ const subshopping=async(req,res)=>{
 const sortproducts=async(req,res)=>{
     try{
         const sort=req.params.sort
-        console.log("fwei");
         const id=req.session.category
         const product=await productModel.find({$and:[{$or:[{category:id},{sub_category:id}]},{status:true}]}).sort({price:sort})
-        console.log("wbefbwedkc",product);
         const pid=product[0].category
         const sub_category=await subcategoryModel.find({p_category:pid}) 
         res.render('user/shop',{product:product,subcategory:sub_category})
@@ -82,7 +80,6 @@ const singleproduct=async(req,res)=>{
             ]
           });
         product.images = product.images.map(image => image.replace(/\\/g, '/'));
-        // console.log('Image Path:', product.images[0]);
         res.render('user/singleproduct',{product:product,relatedpro:subcat})
     }
     catch(err){

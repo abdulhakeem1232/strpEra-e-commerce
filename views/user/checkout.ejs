@@ -60,20 +60,18 @@
         <section class="checkout_area section_gap">
             <div class="container mt-4">
                 <div class="row">
-                    <div class="col-md-3">
-                        <h4>Available Coupons</h4>
-                        <ul type="circle" >
-                            <% coupon.forEach(couponItem => { %>
-                                <li><%= couponItem.coupancode %> </li>
-                            <% }) %>
-                        </ul>
-                    </div>
                     <div class="col-md-6">
                         <form>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Coupon Code" id="code" name="code">
+                                <!-- Add a dropdown list for coupons -->
+                                <select class="form-control" id="couponSelect" onchange="applyCoupon(event)">
+                                    <option value="" disabled selected>Select Coupon</option>
+                                    <% coupon.forEach(couponItem => { %>
+                                        <option value="<%= couponItem.coupancode %>"><%= couponItem.coupancode  %> -Discount <%=  couponItem.
+                                            discountpercentage %> %</option>
+                                    <% }) %>
+                                </select>
                                 <div class="input-group-append">
-                                    <button class="btn btn-success" type="button" onclick="applyCoupon(event)">Apply</button>
                                     <a href="/checkout" class="btn btn-danger ml-1">Clear</a>
                                 </div>
                             </div>
@@ -426,7 +424,6 @@ $(document).ready(function(){
   }),
 };
 
-//creates new orderId everytime
 $.ajax(settings).done(function (response) {
 
   orderId=response.orderId;
@@ -495,8 +492,9 @@ document.getElementById('orderForm').submit();
     </script>
     <script>
         function applyCoupon(event){
+            console.log("JJJJJj");
             event.preventDefault()
-            const code=document.getElementById('code').value
+            var code = document.getElementById("couponSelect").value;
             const amount = document.getElementById('subtotal').textContent.trim();
 
             fetch('/apply-coupon',{
@@ -514,6 +512,7 @@ document.getElementById('orderForm').submit();
                     document.getElementById('discount').innerText = `${data.dicprice}`;
                 }
                 else{
+                    console.log('jfjfj');
                     Swal.fire({
 //   title: 'Error!',
   text: data.message,
@@ -538,6 +537,7 @@ document.getElementById('orderForm').submit();
       alert('An error occurred while applying the coupon. Please try again.');
     });
         }
+
     </script>
          <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

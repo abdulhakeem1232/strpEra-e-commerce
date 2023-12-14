@@ -19,7 +19,6 @@ var instance = new Razorpay({ key_id: key_id, key_secret: key_secret })
 const checkout = async (req, res) => {
     try {
         const userId = req.session.userId;
-        // console.log(userId);
         const address = await addressModel.findOne({ userId: userId })
         const data = await cartModel.findOne({ userId: userId }).populate({
             path: 'item.productId',
@@ -29,10 +28,7 @@ const checkout = async (req, res) => {
         for (const cartItem of data.item || []) {
             const pro = cartItem.productId;
             const product=await productModel.findOne({_id:pro._id})
-            console.log("kewn11",product);
             const size = product.stock.findIndex(s => s.size == cartItem.size);
-            console.log("kekwe22",size);
-
     
             if (product.stock[size].quantity < cartItem.quantity) {
                 console.log('Selected quantity exceeds available stock for productId:', product._id);
@@ -41,8 +37,6 @@ const checkout = async (req, res) => {
         }
 
         const coupon =await coupanModel.find({minprice:{$lte:data.total}})
-        console.log('jjjf',coupon);
-
         res.render('user/checkout', { data: data, address: address,coupon:coupon })
     }
     catch (err) {
@@ -52,21 +46,11 @@ const checkout = async (req, res) => {
 }
 const order = async (req, res) => {
     try {
-        console.log(req.body);
         const { address,pay,amount} = req.body
-        console.log(pay);
         const userId = req.session.userId
         const cart = await cartModel.findOne({ userId: userId })
-        
-
-        // console.log(address);
-        // console.log(paymentMethod);
         const useraddress = await addressModel.findOne({ userId: userId })
-        // console.log("11",useraddress);
         const selectedaddress = useraddress.address[address]
-        // console.log("hi");
-        // console.log("11",useraddress);
-        // console.log("22",selectedaddress);
         const items = cart.item.map(item => ({
             productId: item.productId,
             quantity: item.quantity,
@@ -93,8 +77,6 @@ const order = async (req, res) => {
         })
         cart.item = []
         cart.total = 0
-
-
         const savedOrder = await order.save()
         await cart.save()
         const orderconfirmation = await orderModel.findOne({ orderId: savedOrder.orderId }).populate({
@@ -113,12 +95,10 @@ const order = async (req, res) => {
 const orders = async (req, res) => {
     try {
         const userId = req.session.userId;
-        // console.log(userId);
         const order = await orderModel.find({ userId: userId }).sort({createdAt:-1}).populate({
             path: 'items.productId',
             select: 'name images'
         })
-        // console.log(order);
         res.render('user/orderHistory', { orders: order })
     }
     catch (err) {
@@ -132,7 +112,6 @@ const ordercancelling = async (req, res) => {
         const id = req.params.id
         const update = await orderModel.updateOne({ _id: id }, { status: "Cancelled",updated:new Date() })
         const result = await orderModel.findOne({ _id: id })
-       console.log("result",result);
 
        if(result.payment=='upi'|| result.payment=='wallet'){
         const userId=req.session.userId
@@ -140,7 +119,6 @@ const ordercancelling = async (req, res) => {
         user.wallet +=result.amount
         await user.save()
 
-        //storing in wallet
         const wallet=await walletModel.findOne({userId:userId})
         if(!wallet){
             const newWallet=new walletModel({
@@ -188,7 +166,6 @@ const orderreturning = async (req, res) => {
         const id = req.params.id
         const update = await orderModel.updateOne({ _id: id }, { status: "returned",updated:new Date() })
         const result = await orderModel.findOne({ _id: id })
-       console.log("result",result);
 
         const userId=req.session.userId
         const user=await userModel.findOne({_id:userId})
@@ -245,7 +222,6 @@ const upi = async (req, res) => {
         receipt: "order_rcpt"
     };
     instance.orders.create(options, function (err, order) {
-        console.log("order1 :", order);
         res.send({ orderId: order.id })
     })
 }
@@ -254,8 +230,6 @@ const addToFav = async (req, res) => {
     try {
         const pid = req.params.id;
         const userId = req.session.userId;
-
-
         const fav = await favModel.findOne({ userId: userId });
 
         if (!fav) {
@@ -302,8 +276,6 @@ const removeFav = async (req, res) => {
     try {
         const userId = req.session.userId;
         const productIdToRemove = req.params.id;
-
-        console.log(productIdToRemove,"nwef");
         const result = await favModel.updateOne(
             { userId: userId },
             { $pull: { item: { productId: productIdToRemove } } }
@@ -321,7 +293,6 @@ const applycoupon = async (req, res) => {
     try {
        const {code,amount}=req.body
        const coupon=await coupanModel.findOne({coupancode:code})
-       console.log(coupon);
        if(coupon && coupon.expirydate > new Date() && coupon.minprice <= amount){
         const dicprice=(amount*coupon.discountpercentage)/100
         const price=amount-dicprice;

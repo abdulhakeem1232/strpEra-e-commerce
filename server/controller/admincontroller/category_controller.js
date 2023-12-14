@@ -5,7 +5,6 @@ const subcatModel=require('../../model/subcatModel')
 const category=async(req,res)=>{
     try{
         const category=await categoryModel.find({})
-        // console.log(user);
         res.render("admin/categories",{cat:category})
     }
     catch(err){
@@ -15,7 +14,6 @@ const category=async(req,res)=>{
 }
 const newcat=async(req,res)=>{
     try{
-        
         res.render("admin/addcatgories",{expressFlash: req.flash('ecategory') })
     }
     catch(err){
@@ -75,7 +73,6 @@ const subcategory=async(req,res)=>{
             path: 'p_category',
             select: 'name'
         });
-    //   console.log(s_category);
         res.render("admin/subcategories",{cat:s_category})
     }
     catch(err){
@@ -123,13 +120,11 @@ const catstatus=async(req,res)=>{
     try{
         const id = req.params.id; 
         const category =await subcatModel.findOne({_id:id}); 
-        // console.log(category);
         if (!category) {
             return res.status(404).json({ message: 'category not found' });
         }
         category.status = !category.status;
         await category.save();
-        // console.log(category);
         res.redirect('/admin/subcategory')
     }
     catch(err){

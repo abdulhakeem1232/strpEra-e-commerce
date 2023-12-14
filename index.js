@@ -11,6 +11,8 @@ const userRouter = require('./server/routes/user_router.js')
 const adminRouter = require('./server/routes/admin_router.js')
 const {key_id,key_secret}=require('./env.js')
 
+require('dotenv').config
+
 
 
 const app = express();

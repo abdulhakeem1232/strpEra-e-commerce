@@ -24,7 +24,6 @@ const newcoupon=async(req,res)=>{
 const addcoupon=async(req,res)=>{
     try{
       const {coupancode,minprice,percentage,expiry}=req.body
-      console.log(req.body);
       await coupanModel.insertMany({coupancode:coupancode, minprice:minprice,discountpercentage:percentage,expirydate:expiry})
       res.redirect('/admin/coupan')
     }
