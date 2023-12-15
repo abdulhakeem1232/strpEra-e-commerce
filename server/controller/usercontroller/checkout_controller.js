@@ -367,7 +367,7 @@ const pdfmaker=async (req,res)=>{
     })
     console.log('hddhdhh',order);
     const downloadsPath = path.join(os.homedir(), 'Downloads');
-    const pdfFilePath = path.join(downloadsPath, `order.pdf`);
+    const pdfFilePath = path.join(downloadsPath,`order.pdf`);
     const htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
@@ -389,7 +389,14 @@ const pdfmaker=async (req,res)=>{
         <h2>UrbanSole</h2> </center>
         <div class='date'>
     <h5>Order ID: ${order.orderId}</h5>
-    Date:${order.createdAt}
+    Date: ${new Date(order.createdAt).toLocaleString(undefined, {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    })}
     <p>Delivery Address: ${order.address[0].save_as},
         ${order.address[0].houseName},
         ${order.address[0].city},
@@ -407,7 +414,7 @@ const pdfmaker=async (req,res)=>{
             </tr>
         </thead>
         <tbody>
-            ${order.items.map(item => `
+            ${order.items.map((item,index) => `
                 <tr>
                     <td style="border: 1px solid #000; padding: 8px;">${item.productId.name}</td>
                     <td style="border: 1px solid #000; padding: 8px;">${item.quantity}</td>
@@ -438,7 +445,7 @@ const pdfmaker=async (req,res)=>{
         const stat = fs.statSync(pdfFilePath);
         res.setHeader('Content-Length', stat.size);
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename=order.pdf`);
+        res.setHeader('Content-Disposition', `attachment; filename=${order.orderId}.pdf`);
         file.pipe(res);
     });
 }

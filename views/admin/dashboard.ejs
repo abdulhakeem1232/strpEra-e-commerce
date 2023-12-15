@@ -54,13 +54,12 @@
                       <div class="card-body px-3 py-4">
                         <div class="d-flex justify-content-between align-items-start">
                           <div class="color-card">
-                            <p class="mb-0 color-card-head">Sales</p>
-                            <h2 class="text-white"> $8,753.<span class="h5">00</span>
+                            <p class="mb-0 color-card-head">Total Revenue</p>
+                            <h2 class="text-white">₹<%= revenue[0].total %>
                             </h2>
                           </div>
                           <i class="card-icon-indicator mdi mdi-basket bg-inverse-icon-warning"></i>
                         </div>
-                        <h6 class="text-white">18.33% Since last month</h6>
                       </div>
                     </div>
                   </div>
@@ -69,13 +68,12 @@
                       <div class="card-body px-3 py-4">
                         <div class="d-flex justify-content-between align-items-start">
                           <div class="color-card">
-                            <p class="mb-0 color-card-head">Margin</p>
-                            <h2 class="text-white"> $5,300.<span class="h5">00</span>
+                            <p class="mb-0 color-card-head">Products</p>
+                            <h2 class="text-white"> <%= pro %>
                             </h2>
                           </div>
                           <i class="card-icon-indicator mdi mdi-cube-outline bg-inverse-icon-danger"></i>
                         </div>
-                        <h6 class="text-white">13.21% Since last month</h6>
                       </div>
                     </div>
                   </div>
@@ -85,12 +83,11 @@
                         <div class="d-flex justify-content-between align-items-start">
                           <div class="color-card">
                             <p class="mb-0 color-card-head">Orders</p>
-                            <h2 class="text-white"> $1,753.<span class="h5">00</span>
+                            <h2 class="text-white"> <%= orders %>
                             </h2>
                           </div>
                           <i class="card-icon-indicator mdi mdi-briefcase-outline bg-inverse-icon-primary"></i>
                         </div>
-                        <h6 class="text-white">67.98% Since last month</h6>
                       </div>
                     </div>
                   </div>
@@ -99,12 +96,11 @@
                       <div class="card-body px-3 py-4">
                         <div class="d-flex justify-content-between align-items-start">
                           <div class="color-card">
-                            <p class="mb-0 color-card-head">Affiliate</p>
-                            <h2 class="text-white">2368</h2>
+                            <p class="mb-0 color-card-head">Users</p>
+                            <h2 class="text-white"><%= users %></h2>
                           </div>
                           <i class="card-icon-indicator mdi mdi-account-circle bg-inverse-icon-success"></i>
                         </div>
-                        <h6 class="text-white">20.32% Since last month</h6>
                       </div>
                     </div>
                   </div>
@@ -116,14 +112,14 @@
                     <div class="row">
                       <div class="col-sm-7">
                         <h5>Business Survey</h5>
-                        <p class="text-muted">Show overview jan 2018 - Dec 2019 <a class="text-muted font-weight-medium pl-2" href="#"><u>See Details</u></a>
+                        <p class="text-muted"><a class="text-muted font-weight-medium pl-2" href="#"><u></u></a>
                         </p>
                       </div>
                       <div class="col-sm-5 text-md-right">
-                        <form action="#">
-                          <input type="date" id="startDate" placeholder="Start Date" required>
-                          <input type="date" id="endDate" placeholder="End Date" required>
-                          <button type="button" class="btn btn-icon-text mb-3 mt-2 mb-sm-0 btn-inverse-primary font-weight-normal" onclick="downloadSalesReport()">
+                        <form action="/admin/downloadsales" method="post">
+                          <input type="date" id="startDate" placeholder="Star tDate" name="startDate" required>
+                          <input type="date" id="endDate" placeholder="End Date" name="endDate" required>
+                          <button type="submit" class="btn btn-icon-text mb-3 mt-2 mb-sm-0 btn-inverse-primary font-weight-normal">
                               <i class="mdi mdi-email btn-icon-prepend"></i>Download Report
                           </button>
                       </form>
@@ -158,14 +154,14 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-sm-8">
+                      <!-- <div class="col-sm-8">
                         <p class="text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore. <b>Learn More</b>
                         </p>
-                      </div>
+                      </div> -->
                       <div class="col-sm-4">
                         <p class="mb-0 text-muted">Sales Revenue</p>
-                        <h5 class="d-inline-block survey-value mb-0"> $2,45,500 </h5>
-                        <p class="d-inline-block text-danger mb-0"> last 8 months </p>
+                        <h5 class="d-inline-block survey-value mb-0"> ₹<%= revenue[0].total %> </h5>
+                        <p class="d-inline-block text-danger mb-0">  </p>
                       </div>
                     </div>
                   </div>
@@ -176,50 +172,14 @@
            
            
           </div>
-          <%- include('partials/footer')%>
+  
         </div>
         <!-- main-panel ends -->
       </div>
       <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
-    <!-- plugins:js -->
-    
-    
-  
-    
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-
-    <script>
-     async function downloadSalesReport(){
-
-      
-      const startDate=document.getElementById('startDate').value
-      const endDate=document.getElementById('endDate').value
-
-      const response=await fetch('/admin/downloadsales',{
-        method:'POST',
-        headers:{
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-                startDate: startDate,
-                endDate: endDate,
-            }),
-      })
-      if(response.ok){
-        const blob = await response.blob();
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = 'sales_report.xlsx';
-            link.click();
-      }
-      else {
-            
-            console.error('Error fetching sales report');
-        }
-    }
-    </script>
+    <!-- plugins:js --> 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       function getMonthName(month) {

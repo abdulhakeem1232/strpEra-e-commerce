@@ -10,6 +10,11 @@ const { EMAIL,PASSWORD} = require('../../../env.js')
 const{passwordValid,confirmpasswordValid}=require('../../../utils/validators/signupValidators.js')
 const orderModel = require('../../model/orderModel.js')
 const ExcelJS=require('exceljs')
+const productModel = require('../../model/productModel.js')
+const pdf=require('html-pdf')
+const path=require('path')
+const fs=require('fs')
+const os=require('os')
 const workbook = new ExcelJS.Workbook();
 
 
@@ -50,7 +55,21 @@ const aloginpost=async(req,res)=> {
 
 const dashboard=async(req,res)=>{
     try{
-        res.render("admin/dashboard")
+        const total=await orderModel.aggregate([
+            {
+                $group:{
+                    _id:null,
+                        total:{$sum:"$amount"}
+                    
+                }
+            }
+        ])
+
+        const users = await userModel.find().count()
+        const pro = await productModel.find().count()
+        const orders = await orderModel.find().count()
+
+        res.render("admin/dashboard",{revenue:total,users,orders,pro})
     }
     catch(err){
         console.log(err);
@@ -230,25 +249,111 @@ const downloadsales=async(req,res)=>{
             },
         },
     ]);
+    const products = await orderModel.aggregate([
+        {
+            $match: {
+                createdAt: {
+                    $gte: new Date(startDate),
+                    $lt: new Date(endDate),
+                },
+            },
+        },
+        {
+            $unwind: '$items',
+        },
+        {
+            $group: {
+                _id: '$items.productId',
+                totalSold: { $sum: '$items.quantity' },
+            },
+        },
+        {
+            $lookup: {
+                from: 'products', 
+                localField: '_id', 
+                foreignField: '_id', 
+                as: 'productDetails', 
+            },
+        },
+         {
+            $unwind: '$productDetails', 
+        },
+        {
+            $project: {
+                _id: 1,
+                totalSold: 1,
+                productName: '$productDetails.name', 
+            },
+        },
+        {
+            $sort: { totalSold: -1 },
+        },
+    ]);
+    console.log('hghg',products);
+    console.log(salesData,'ddd');
+    const downloadsPath = path.join(os.homedir(), 'Downloads');
+    const pdfFilePath = path.join(downloadsPath,`sales.pdf`);
+    const htmlContent = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Order Details</title>
+            <style>
+            body{
+                margin-left:20px
+            }
+            </style>
+        </head>
+        <body>
+       <h2 align="center"> Sales Report</h2>
+       Start Date:${startDate}<br>
+       End Date:${endDate}<br>
+       <center>
+    <table style="border-collapse: collapse;">
+        <thead>
+            <tr>
+            <th style="border: 1px solid #000; padding: 8px;">Sl N0</th>
+            <th style="border: 1px solid #000; padding: 8px;">Product Name</th>
+            <th style="border: 1px solid #000; padding: 8px;">Quantity Sold</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${products.map((item,index) => `
+                <tr>
+                    <td style="border: 1px solid #000; padding: 8px;">${index+1}</td>
+                    <td style="border: 1px solid #000; padding: 8px;">${item.productName}</td>
+                    <td style="border: 1px solid #000; padding: 8px;">${item.totalSold}</td>
+                </tr>`).join('')}
+                <tr>
+                <td style="border: 1px solid #000; padding: 8px;"></td>
+                <td style="border: 1px solid #000; padding: 8px;">Total No of Orders</td>
+                <td style="border: 1px solid #000; padding: 8px;">${salesData[0].totalOrders}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #000; padding: 8px;"></td>
+                <td style="border: 1px solid #000; padding: 8px;">Total Revunue</td>
+                <td style="border: 1px solid #000; padding: 8px;">${salesData[0].totalAmount}</td>
+            </tr>
+   
+</body>
+</html>
 
-    let workbook;
-        try {
-            workbook = await ExcelJS.readFile('SalesReport.xlsx');
-        } catch (error) {
-            workbook = new ExcelJS.Workbook();
+    `;
+    pdf.create(htmlContent).toFile(pdfFilePath, (err, result) => {
+        if (err) {
+            return res.status(500).send(err);
         }
 
-        const worksheet = workbook.getWorksheet('Sales Report') || workbook.addWorksheet('Sales Report');
-        worksheet.addRow(['Start Date', 'End Date', 'Total Orders', 'Total Amount']);
-        worksheet.addRow([new Date(startDate), new Date(endDate), '', '']);
-        salesData.forEach(entry => {
-            worksheet.addRow(['', '', entry.totalOrders, entry.totalAmount]);
-        });
-
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', 'attachment; filename=SalesReport.xlsx');
-
-        await workbook.xlsx.write(res);
+      
+        const file = fs.createReadStream(pdfFilePath);
+        const stat = fs.statSync(pdfFilePath);
+        res.setHeader('Content-Length', stat.size);
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=sales.pdf`);
+        file.pipe(res);
+    });
     }
     catch(err){
       console.log(err);
