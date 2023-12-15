@@ -11,7 +11,8 @@ const walletModel = require('../../model/walletModel');
 const fs=require('fs');
 const pdf=require('html-pdf')
 const path=require('path')
-const os=require('os')
+const os=require('os');
+const { log } = require('console');
 
 var instance = new Razorpay({ key_id: key_id, key_secret: key_secret })
 
@@ -46,7 +47,8 @@ const checkout = async (req, res) => {
 }
 const order = async (req, res) => {
     try {
-        const { address,pay,amount} = req.body
+        const { address,pay,amount,wallet} = req.body
+        console.log("jjj",wallet);
         const userId = req.session.userId
         const cart = await cartModel.findOne({ userId: userId })
         const useraddress = await addressModel.findOne({ userId: userId })
@@ -77,6 +79,17 @@ const order = async (req, res) => {
         })
         cart.item = []
         cart.total = 0
+        if(wallet>0){
+            const userWallet=await walletModel.findOne({userId:userId})
+            userWallet.history.push({transaction:"Debited",
+            amount:wallet,
+            date:new Date()})
+            await userWallet.save();
+            const user=await userModel.findOne({_id:userId})
+            user.wallet-=wallet;
+            user.save();
+
+        }
         const savedOrder = await order.save()
         await cart.save()
         const orderconfirmation = await orderModel.findOne({ orderId: savedOrder.orderId }).populate({
@@ -312,30 +325,10 @@ const wallet = async (req, res) => {
        const amount=req.body.amount
        const user=await userModel.findOne({_id:req.session.userId})
        if(user.wallet>=amount){
-        user.wallet-=amount
-        await user.save();
-
-        const wallet=await walletModel.findOne({userId:user._id})
-        if(!wallet){
-            const newWallet=new walletModel({
-                userId:user._id,
-                history:[
-                    {transaction:"Debited",
-                    amount:amount,
-                    date:new Date()}
-                ]
-            })
-            await newWallet.save();
-        }else{
-            wallet.history.push({transaction:"Debited",
-            amount:amount,
-            date:new Date()})
-            await wallet.save();
-        }
         res.json({success:true})
        }
        else{
-        res.json({success:false,message:"don't have enought money"})
+        res.json({success:false,amount:user.wallet})
        }
     } catch (err) {
         console.error(err);

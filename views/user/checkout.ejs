@@ -87,6 +87,7 @@
                     <div class="col-lg-8">
                         <form  id="orderForm">
                             <input type="hidden" id="pay" name="pay">
+                            <input type="hidden" id="wallet" name="wallet" value="0">
                             <input type="hidden" id="amount" name="amount" value="<%= data.total %>">
                             <% if (address && address.address) { %>
                                 <div class="container">
@@ -157,29 +158,25 @@
                                     <div class="check"></div>
                                 </div>
 
-                                <div class="radion_btn">
+                                <!-- <div class="radion_btn">
                                     <input type="radio" id="f-option7" name="paymentMethod" value="wallet" onclick="handlePaymentMethodSelection()" required>
                                     <label for="f-option7">Wallet</label>
                                     <div class="check"></div>
-                                </div>
+                                </div> -->
                             </div>
-        
+                            <input type="checkbox" id="f-option7" name="selector">
+                            <label for="f-option4">Use Wallet </label>
                             <div class="creat_account">
                                 <input type="checkbox" id="f-option4" name="selector">
                                 <label for="f-option4">I’ve read and accept the </label>
                                 <a href="#">terms & conditions*</a>
                             </div>
-                            <button onclick="proceedToOrder()" class="primary-btn">Proceed to Order</button>
+                            <button onclick="proceedToOrder()" class="primary-btn" id="proceed">Proceed to Order</button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
-       
-        
-        
-        
 
         <div class="modal fade" id="newAddressModal" tabindex="-1" role="dialog" aria-labelledby="newAddressModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -444,7 +441,26 @@ $.ajax(settings).done(function (response) {
 document.getElementById('orderForm').submit();
               
             }
-            else if(selectedpayment.value=="wallet"){
+           
+        }
+
+        var checkbox=document.getElementById('f-option7');
+
+        const amount = document.getElementById('total').textContent.trim();
+        checkbox.addEventListener('click',function(){
+            if(checkbox.checked){
+               wallet()
+            }
+            else{
+                document.getElementById('total').innerText = `${amount}`;
+             document.getElementById('amount').value = `${amount}`;
+             document.getElementById('wallet').value=0
+                    
+              console.log("ohhhh");  
+            }
+        })
+
+        async function wallet(){
                 console.log("coooo");
                 const amount = document.getElementById('total').textContent.trim();
                 const response=await fetch(`/wallettransaction`,{
@@ -457,37 +473,41 @@ document.getElementById('orderForm').submit();
                     })
                 });
                 const data=await response.json();
+                console.log("hhhh");
                 if(data.success){
-                console.log(selectedpayment.value,"000000");
+                console.log("000000");
+                document.getElementById('total').innerText = 0;
+                document.getElementById('f-option5').setAttribute('disabled',true)
+                document.getElementById('f-option5').removeAttribute('required')
+                document.getElementById('f-option6').setAttribute('disabled',true)
+                document.getElementById('f-option6').removeAttribute('required')
                 document.getElementById('orderForm').action = '/order';
                 document.getElementById('orderForm').method = 'post'; 
+                console.log('lll',amount);
+                document.getElementById('proceed').onclick=function(){
+                    formsubmit(amount)
+                }
 
-
-document.getElementById('orderForm').submit();
                 }
                 else{
                         console.log("cccc");
-                        Swal.fire({
-//   title: 'Error!',
-  text: "You Don't have Enough money in Wallet",
-  icon: 'error',
-  confirmButtonText: 'OK',
-  customClass: {
-    title: 'text-danger',
-    popup: 'swal2-popup-custom',
-    confirmButton: 'btn btn-danger'
-  },
-  showCancelButton: false,
-  showCloseButton: true,
-  showLoaderOnConfirm: false,
-  timer: 3000 
-});
+                        const amount1=document.getElementById('amount').value
+                        document.getElementById('total').innerText = `${amount1-data.amount}`;
+                        document.getElementById('amount').value = `${amount1-data.amount}`;
+                        document.getElementById('wallet').value=`${data.amount}`;
                     
                     console.log("came else but....");
                 }
               
-            }
+            
         }
+        function formsubmit(amount){
+            document.getElementById('pay').value='wallet'
+            console.log(amount);
+            document.getElementById('wallet').value=amount
+    console.log("chaaaa");
+     document.getElementById('orderForm').submit();
+}
 
     </script>
     <script>
