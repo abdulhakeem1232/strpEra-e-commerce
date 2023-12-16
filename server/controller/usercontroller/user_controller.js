@@ -13,6 +13,7 @@ const walletModel = require('../../model/walletModel.js')
 const bannerModel=require('../../model/bannerModel.js')
 const Razorpay=require('razorpay')
 const { key_id, key_secret } = require('../../../env');
+const uuid=require('uuid')
 
 
 const error=async(req,res)=>{
@@ -49,7 +50,7 @@ const loginpost=async(req,res)=> {
         const passwordmatch=await bcrypt.compare(req.body.password,user.password)
         if(passwordmatch && !user.status){
             user.session=req.session.id
-            user.save()
+           await user.save()
             req.session.isAuth = true;
             req.session.userId = user._id;
             res.redirect('/');
@@ -59,8 +60,9 @@ const loginpost=async(req,res)=> {
             res.redirect('/login')
         }
     }
-    catch{
+    catch(err){
         req.flash('emailerror','invalid e-mail')
+        console.log(err);
         res.redirect('/login')
     }
 }
@@ -120,6 +122,7 @@ const regpost = async (req, res) => {
         const phone = req.body.phone
         const password = req.body.password
         const cpassword = req.body.confirm_password
+        const code = req.body.code
 
         const isNameValid = nameValid(fname)
         const isEmailValid = emailValid(email)
@@ -154,16 +157,21 @@ const regpost = async (req, res) => {
         }
         else {
             const hashedpassword = await bcrypt.hash(password, 10)
-            const user = new userModel({ f_name: fname, l_name: lname, email: email, phone_no: phone, password: hashedpassword })
+            const user = new userModel({ f_name: fname, l_name: lname, email: email, phone_no: phone, password: hashedpassword,code:uuid.v4() })
             req.session.user = user
             req.session.signup = true
             req.session.forgot = false
             const otp = otpgenerator()
             console.log(otp);
             const currentTimestamp = Date.now();
-            const expiryTimestamp = currentTimestamp + 45 * 1000;
+            const expiryTimestamp = currentTimestamp + 60 * 1000;
             await userotp.create({ email: email, otp: otp, expiry: new Date(expiryTimestamp) })
             req.session.email=email;
+            const reference=await userModel.findOne({code:code.trim()})
+            console.log(reference,'0000');
+            console.log(code,'coooo');
+            req.session.reference=reference._id
+            console.log(req.session.reference,'fff');
             await sendmail(email, otp)
             res.redirect('/otp')
         }
@@ -210,6 +218,20 @@ const verifyotp = async (req, res) => {
                 await userModel.create(user)
                 req.session.isAuth = true;
                 req.session.signup=false
+                const reference=req.session.reference
+                console.log(reference,'yyyy');
+                const refer=await userModel.findOne({_id:reference})
+                if(refer){
+                refer.wallet+=100
+                console.log(refer,'dd');
+                const wallet= await walletModel.findOne({userId:refer._id})
+                console.log(wallet,'ppp');
+                wallet.history.push({transaction:"Credited",
+                amount:100,
+                date:new Date()})
+                await refer.save();
+                await wallet.save();
+                }
                 req.session.userId = user._id;
                 res.redirect('/')
                 }

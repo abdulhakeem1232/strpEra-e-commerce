@@ -22,7 +22,8 @@
     "path": "^0.12.7",
     "razorpay": "^2.9.2",
     "sharp": "^0.33.0",
-    "shortid": "^2.2.16"
+    "shortid": "^2.2.16",
+    "uuid": "^9.0.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
