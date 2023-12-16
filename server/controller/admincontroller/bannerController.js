@@ -1,5 +1,6 @@
 const bannerModel=require('../../model/bannerModel')
 const path=require('path')
+const categoryModel = require('../../model/categoryModel')
 
 
 
@@ -16,8 +17,8 @@ const banner=async(req,res)=>{
 
 const newbanner=async(req,res)=>{
     try{
-        
-        res.render("admin/newbanner")
+        const category=await categoryModel.find()
+        res.render("admin/newbanner",{category})
     }
     catch(err){
         console.log(err);
@@ -27,7 +28,7 @@ const newbanner=async(req,res)=>{
 
 const addbanner=async(req,res)=>{
     try {
-        const { title, subtitle } = req.body;
+        const { title, subtitle,type,url } = req.body;
         if (!req.file) {
             return res.status(400).json({ error: 'No image file provided' });
         }
@@ -37,6 +38,8 @@ const addbanner=async(req,res)=>{
         const newbanner = new bannerModel({
             title: title,
             subtitle: subtitle,
+            type:type,
+            url:url,
             image: imagePath,
         });
 

@@ -8,7 +8,6 @@ const processImage = async (req, res, next) => {
             throw new Error("No file uploaded");
         }
 
-        // Ensure the 'uploads' directory exists
         await fs.mkdir('uploads', { recursive: true });
 
         const uploadFiles = req.files;
@@ -20,19 +19,17 @@ const processImage = async (req, res, next) => {
                 const { width, height } = await sharp(file.path).metadata();
                 const size = Math.min(width, height);
 
+                const cropSize = Math.floor(size * 0.7); 
+                const left = Math.floor((width - cropSize) / 2);
+                const top = Math.floor((height - cropSize) / 2);
+
                 await sharp(file.path)
-                    .extract({ width: size, height: size, left: 0, top: 0 })
+                    .extract({ left, top, width: cropSize, height: cropSize })
                     .toFormat('jpeg')
                     .jpeg({ quality: 90 })
                     .toFile(outputPath);
 
                 const processedPath = outputPath;
-                console.log("Original File Name:", file.originalname);
-                console.log("Image Dimensions:", { width, height });
-                console.log("Extraction Parameters:", { width: size, height: size, left: 0, top: 0 });
-                console.log("Output Path:", outputPath);
-                console.log("Processed Path:", processedPath);
-
                 return processedPath;
             })
         );

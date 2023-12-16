@@ -42,7 +42,7 @@
 	height: auto;
 }
 
-.carousel-inner {
+.carousel-inner a{
     display: flex;
     align-items: center;
 }
@@ -266,12 +266,14 @@
 	</section>
 	<!-- End category Area -->
 
+	<!-- Start Banner Area -->
 	 <section class="features-area section_gap">
         <div class="container">
             <div id="bannerCarousel" class="carousel slide" data-ride="carousel" data-interval="2000">
                 <div class="carousel-inner">
                     <% banner.forEach((item, index) => { %>
                         <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+							<a href="<%= item.url %>">
                             <img src="/<%= item.image %>" alt="<%= item.title %>">
                             <div class="text-container">
                                 <div class="carousel-caption">
@@ -279,6 +281,7 @@
                                     <p><%= item.subtitle %></p>
                                 </div>
                             </div>
+						</a>
                         </div>
                     <% }); %>
                 </div>
@@ -311,7 +314,7 @@
 				</div>
 				<div class="row">
 					<% product.forEach(product => { %>
-						<div class="col-lg-3 col-md-6">
+						<div class="col-lg-3 col-sm-6">
 						  <div class="single-product">
 							<a href="/singleproduct/<%= product._id %>">
 							  <img class="img-fluid" src="/<%= product.images[0] %>" alt="<%= product.name %>"

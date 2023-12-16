@@ -55,6 +55,23 @@
                         <label for="productName" class="form-label">Banner Sub-Title:</label>
                         <input type="text" class="form-control" id="subtitle" name="subtitle" required>
                     </div>
+
+                    <div class="mb-3">
+                      <label for="type" class="form-label">Type:</label>
+                      <select class="form-select" id="type" name="type"  onchange="loadurl()" required>
+                        <option value="" disabled selected>Select Banner Type</option>
+                            <option value="coupon">Coupon</option>
+                            <option value="referal">Referal</option>
+                            <option value="category">category</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="type" class="form-label">Url:</label>
+                    <select class="form-select" id="url" name="url"   required>
+                      <option value="" disabled selected>Select Url</option>
+                  </select> 
+                </div>
                  
                   <div class="mb-3">
                     <label for="images" class="form-label">Images:</label>
@@ -76,6 +93,40 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
+    <script>
+      function loadurl() {
+        console.log('hfhfhfh');
+        var type = document.getElementById("type").value;
+        var url=document.getElementById('url')
+        var cat = ' <%= JSON.stringify(category) %>'.replace(/&#34;/g, '"');
+        const category = JSON.parse(cat);
+        console.log(category);
+        console.log(type);
+        url.innerHTML = '<option value="" disabled selected>Select Url</option>';
+        if(type=='coupon'){
+          console.log('8888');
+          var option = document.createElement("option");
+              option.value = '/profile'
+              option.textContent = 'Coupon';
+              url.appendChild(option);
+        }
+        if(type=='referal'){
+          var option = document.createElement("option");
+              option.value = '/profile'
+              option.textContent = 'Referal';
+              url.appendChild(option);
+        }
+        if(type=='category'){
+          console.log('kkk');
+          url.innerHTML = '<option value="" disabled selected>Select Url</option>';
+          category.forEach(function(item) {
+              var option = document.createElement("option");
+              option.value =`/shop/${item._id}`
+              option.textContent = item.name;
+              url.appendChild(option);
+          });
+        }
+      }</script>
     
     <script src="/admin_assets/assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
