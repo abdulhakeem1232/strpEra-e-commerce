@@ -47,7 +47,19 @@ const schema=new mongoose.Schema({
     created:{
       type:Date,
       default:new Date()
-    }
+    },
+    ratings:[{
+      userId:{
+        type: Schema.Types.ObjectId,
+        ref: 'users', 
+      },
+      ratings:{
+        type:Number,
+      },
+      reviews:{
+        type:String,
+      }
+    }]
 })
 
 

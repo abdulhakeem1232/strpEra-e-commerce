@@ -37,6 +37,9 @@ const schema=new mongoose.Schema({
         type:Number,
         required:true
     },
+    wallet:{
+        type:Number,
+    },
     status:{
         type:String,
         default:"pending",

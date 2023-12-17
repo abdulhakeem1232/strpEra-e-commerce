@@ -63,58 +63,66 @@
         
 
 		<div class="container mt-5">
-			<h1 class="mb-4">Order History</h1>
-	
-			<% if (orders.length === 0) { %>
-				<p>No orders found.</p>
-			<% } else { %>
-				<ul class="list-group">
-					<% orders.forEach(order => { %>
-                        
-						<li class="list-group-item mb-3" onclick="location.href='/order-tracking/<%= order._id %>';">
-                            
+            <h1 class="mb-4">Order History</h1>
+        
+            <% if (orders.length === 0) { %>
+                <p>No orders found.</p>
+            <% } else { %>
+                <ul class="list-group">
+                    <% orders.forEach(order => { %>
+                        <li class="list-group-item mb-3">
                             <div class="d-flex justify-content-between">
-							<h5>Order ID: <%= order.orderId %></h5>
-                            <% if (order.status !== 'Cancelled' && order.status !== 'delivered') { %>
-                                <a href="/cancelorder/<%= order._id %>"> Cancel</a>
-                                <% } %>
-                                
-                                <% if (order.status == 'delivered' && new Date(order.updated.getTime() + 5 * 24 * 60 * 60 * 1000) >= new Date()) { %>
-                                    <a href="/returnorder/<%= order._id %>"> Return</a>
+                                <div>
+                                    <h5>Order ID: <%= order.orderId %></h5>
+                                    <p>Amount: ₹<%= order.amount %></p>
+                                    <p>Status: <%= order.status %></p>
+                                    <p>Delivery Address: <%= order.address[0].save_as %>, <%= order.address[0].houseName %>, <%= order.address[0].city %>, <%= order.address[0].pincode %></p>
+                                </div>
+                                <div>
+                                    <% if (order.status !== 'Cancelled' && order.status !== 'delivered') { %>
+                                        <a href="/cancelorder/<%= order._id %>"> Cancel</a>
                                     <% } %>
-                        </div>
-							<p>Amount: ₹<%= order.amount %></p>
-                            <p>Status: <%= order.status %></p>
-							<p>Delivery Address: <%= order.address[0].save_as %>
-                                ,<%= order.address[0].houseName %>
-                                ,<%= order.address[0].city %>
-                                ,<%= order.address[0].pincode %>
-                            
-                            </p>
-							
-							<ul class="list-group">
-								<% order.items.forEach(item => { %>
-									<li class="list-group-item">
-                                        <img src="/<%= item.productId.images[0] %>" alt="" style="height: 100px; width: 100px;">
-										<p>Product Name: <%= item.productId.name %></p>
-										<p>Quantity: <%= item.quantity %></p>
-									
-									</li>
-								<% }); %>
-							</ul>
-                       
-                    </li>
-            
-						
-                        
-                          
-           
-            
-					<% }); %>
-               
-				</ul>
-			<% } %>
-		</div>
+        
+                                    <% if (order.status == 'delivered' && new Date(order.updated.getTime() + 5 * 24 * 60 * 60 * 1000) >= new Date()) { %>
+                                        <a href="/returnorder/<%= order._id %>"> Return</a>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-group">
+                                        <% order.items.forEach(item => { %>
+                                            <li class="list-group-item">
+                                                <img src="/<%= item.productId.images[0] %>" alt="" style="height: 100px; width: 100px;">
+                                                <p>Product Name: <%= item.productId.name %></p>
+                                                <p>Quantity: <%= item.quantity %></p>
+                                            </li>
+                                        <% }); %>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="rating_<%= order._id %>">Rating:</label>
+                                            <input type="number" class="form-control" id="rating_<%= order._id %>" name="rating_<%= order._id %>" min="1" max="5">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="review_<%= order._id %>">Review:</label>
+                                            <textarea class="form-control" id="review_<%= order._id %>" name="review_<%= order._id %>" rows="3"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <a href="/order-tracking/<%= order._id %>"> Order</a>
+                            </div>
+                        </li>
+                    <% }); %>
+                </ul>
+            <% } %>
+        </div>
+        
 	
 	
 

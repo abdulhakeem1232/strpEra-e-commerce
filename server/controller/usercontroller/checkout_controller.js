@@ -72,6 +72,7 @@ const order = async (req, res) => {
             userId: userId,
             items: items,
             amount: amount,
+            wallet:wallet,
             payment: pay,
             address: selectedaddress,
             createdAt: new Date(),

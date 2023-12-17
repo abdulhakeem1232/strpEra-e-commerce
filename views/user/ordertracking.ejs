@@ -212,9 +212,16 @@
                                                
                                             </tr>
                                         <% }); %>
+                                       
                                         <tr>
                                             <td></td><td></td>
-                                            <td  class="">Total After Discount</td>
+                                            <td  class="">From Wallet</td>
+                                            <td><%= order[0].wallet || 0 %></td>
+                                        </tr>
+                                       
+                                        <tr>
+                                            <td></td><td></td>
+                                            <td  class="">Total Amount paid after Discount & Wallet</td>
                                             <td><%= order[0].amount %></td>
                                         </tr>
                                     </tbody>
