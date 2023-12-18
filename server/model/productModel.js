@@ -53,6 +53,9 @@ const schema=new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'users', 
       },
+      orderId:{
+        type:String,
+      },
       ratings:{
         type:Number,
       },

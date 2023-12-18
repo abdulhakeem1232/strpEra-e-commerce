@@ -88,7 +88,7 @@ const order = async (req, res) => {
             await userWallet.save();
             const user=await userModel.findOne({_id:userId})
             user.wallet-=wallet;
-            user.save();
+            await user.save();
 
         }
         const savedOrder = await order.save()
@@ -111,7 +111,7 @@ const orders = async (req, res) => {
         const userId = req.session.userId;
         const order = await orderModel.find({ userId: userId }).sort({createdAt:-1}).populate({
             path: 'items.productId',
-            select: 'name images'
+            select: 'name images ratings'
         })
         res.render('user/orderHistory', { orders: order })
     }
@@ -445,6 +445,24 @@ const pdfmaker=async (req,res)=>{
 }
 
 
+const addratings = async (req, res) => {
+    try {
+        console.log('camehereeee');
+       const {orderId,productId,rating,review}=req.body
+       const product=await productModel.findOne({_id:productId})
+       product.ratings.push({userId:req.session.userId,orderId:orderId,ratings:rating,reviews:review})
+       await product.save();
+        res.redirect('/orderhistory')
+    } catch (err) {
+        console.error(err);
+        res.redirect('/error')
+    }
+}
+
+
+
+
+
 
 
 
@@ -462,4 +480,5 @@ module.exports = {
     wallet,
     ordertracking,
     pdfmaker,
+    addratings,
 }
