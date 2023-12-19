@@ -102,10 +102,23 @@
                                 <div class="col-md-6">
                                     <% if (order.status === 'delivered' || order.status === 'returned') { %>
                                         <% order.items.forEach(item => { %>
-                                            <% if (item.productId.ratings.some(rating => rating.orderId == order.orderId && rating.productId == item.productId)) { %>
-                                           <div>
-                                            hii
-                                           </div>
+                                            <% if (item.productId.ratings.some(rating => rating.orderId == order.orderId )) { %>
+                                                <div>
+                                                    <% const userRating = item.productId.ratings.find(rating =>  rating.orderId === order.orderId); %>
+                                                    
+                                                    <% if (userRating) { %>
+                                                        <p>Rating:  
+                                                            <% for (let i = 1; i <= 5; i++) { %>
+                                                                <% if (i <= userRating.ratings) { %>
+                                                                    <span class="fa fa-star selected"></span>
+                                                                <% } else { %>
+                                                                    <span class="fa fa-star"></span>
+                                                                <% } %>
+                                                            <% } %>
+                                                        </p>
+                                                        <p>Review: <%= userRating.reviews %></p>
+                                                    <% } %>
+                                                </div>
                                             <% } else { %>
                                                 <form action="/addRatings" method="post">
                                                     <div class="form-group">
