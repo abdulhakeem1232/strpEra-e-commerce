@@ -113,6 +113,11 @@ const orders = async (req, res) => {
             path: 'items.productId',
             select: 'name images ratings'
         })
+        order.forEach(order => {
+            order.items.forEach(item => {
+                console.log('Ratings for item', item.productId.name, ':', item.productId.ratings);
+            });
+        });
         res.render('user/orderHistory', { orders: order })
     }
     catch (err) {
