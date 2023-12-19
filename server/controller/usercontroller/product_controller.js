@@ -1,6 +1,7 @@
 const categoryModel = require('../../model/categoryModel')
 const productModel=require('./../../model/productModel')
 const subcategoryModel=require('./../../model/subcatModel')
+const mongoose=require('mongoose')
 
 
 
@@ -79,8 +80,27 @@ const singleproduct=async(req,res)=>{
               { _id: { $ne: id } }
             ]
           });
+          const productId = new mongoose.Types.ObjectId(id); 
+          const avgRating=await productModel.aggregate([
+            {
+                $match: {
+                    _id:productId
+                }
+            },
+            {
+                $unwind: '$ratings'
+            },
+            {
+                $group: {
+                    _id: null,
+                    avg: { $avg: '$ratings.ratings' }
+                }
+            }
+          ])
+          console.log('id',id);
+          console.log(avgRating);
         product.images = product.images.map(image => image.replace(/\\/g, '/'));
-        res.render('user/singleproduct',{product:product,relatedpro:subcat})
+        res.render('user/singleproduct',{product:product,relatedpro:subcat,avgRating})
     }
     catch(err){
         console.log("Shopping Page Error:",err);
