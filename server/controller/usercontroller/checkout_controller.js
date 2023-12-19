@@ -4,7 +4,6 @@ const orderModel = require('../../model/orderModel');
 const productModel = require('../../model/productModel')
 const favModel = require('../../model/favModel')
 const Razorpay = require('razorpay')
-const { key_id, key_secret } = require('../../../env');
 const coupanModel = require('../../model/coupanModel');
 const userModel = require('../../model/userModel');
 const walletModel = require('../../model/walletModel');
@@ -14,7 +13,7 @@ const path=require('path')
 const os=require('os');
 const { log } = require('console');
 
-var instance = new Razorpay({ key_id: key_id, key_secret: key_secret })
+var instance = new Razorpay({ key_id:process.env.key_id, key_secret: process.env.key_secret })
 
 
 const checkout = async (req, res) => {

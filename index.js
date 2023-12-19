@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const session = require('express-session')
 const flash = require('express-flash')
@@ -9,9 +10,9 @@ const path = require('path')
 const middleware = require('./middleware.js')
 const userRouter = require('./server/routes/user_router.js')
 const adminRouter = require('./server/routes/admin_router.js')
-const {key_id,key_secret}=require('./env.js')
 
-require('dotenv').config
+
+console.log('uyyuyu',process.env.EMAIL, process.env.PASSWORD);
 
 
 
@@ -38,7 +39,7 @@ app.use(flash({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-var instance = new Razorpay({key_id:key_id, key_secret:key_secret})
+// var instance = new Razorpay({key_id:process.env.key_id, key_secret:process.env.key_secret})
 
 
 // app.use('/admin_assets', express.static(path.join(__dirname, 'public/admin_assets')));

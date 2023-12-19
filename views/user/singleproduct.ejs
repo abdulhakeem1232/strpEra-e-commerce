@@ -88,8 +88,10 @@
 								<h2><%= product.name %></h2>
 								<p class="lead">₹ <%= product.price %></p>
 								<p><%= product.description %></p>
+								<% if( avgRating.length > 0 ) { %>
 								<p>Average Ratings: <%= avgRating[0].avg %>  <span class="fa fa-star" style="color: green; border: 1px solid green;"></span></p>
-								<div class="form-group">
+								<% } %>
+									<div class="form-group">
 									<label for="size">Select Size:</label>
 									<select id="size" name="size" class="form-control"  required>
 										<option value="" disabled selected>Select size</option>

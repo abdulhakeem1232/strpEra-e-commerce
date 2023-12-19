@@ -5,14 +5,12 @@ const flash=require('express-flash')
 const userModel = require('../../model/userModel.js')
 const userotp = require('../../model/userotpModel.js')
 const productModel=require('../../model/productModel.js')
-const { EMAIL, PASSWORD } = require('../../../env.js')
 const { nameValid, emailValid, phoneValid, passwordValid, confirmpasswordValid } = require("../../../utils/validators/signupValidators.js")
 const subcategoryModel = require('../../model/subcatModel.js')
 const addressModel=require('./../../model/addressModel.js')
 const walletModel = require('../../model/walletModel.js')
 const bannerModel=require('../../model/bannerModel.js')
 const Razorpay=require('razorpay')
-const { key_id, key_secret } = require('../../../env');
 const uuid=require('uuid')
 
 
@@ -89,8 +87,8 @@ const sendmail = async (email, otp) => {
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: EMAIL,
-                pass: PASSWORD
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD
             }
         });
 
@@ -101,7 +99,7 @@ const sendmail = async (email, otp) => {
             text: 'Your OTP is:' + otp
         };
 
-        transporter.sendMail(mailOptions);
+         transporter.sendMail(mailOptions);
         console.log("E-mail sent sucessfully");
     }
     catch (err) {
@@ -170,8 +168,10 @@ const regpost = async (req, res) => {
             const reference=await userModel.findOne({code:code.trim()})
             console.log(reference,'0000');
             console.log(code,'coooo');
+            if(reference){
             req.session.reference=reference._id
             console.log(req.session.reference,'fff');
+            }
             await sendmail(email, otp)
             res.redirect('/otp')
         }
@@ -635,7 +635,7 @@ const wallet=async(req,res)=>{
     }
 }
 
-const instance=new Razorpay({key_id:key_id,key_secret:key_secret})
+const instance=new Razorpay({key_id:process.env.key_id,key_secret:process.env.key_secret})
 
 const walletupi = async (req, res) => {
   var options = {
