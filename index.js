@@ -6,13 +6,9 @@ const flash = require('express-flash')
 const Razorpay =require('razorpay')
 const nocache = require('nocache')
 const path = require('path')
-// const multer = require('multer')
-// const ejs=require('ejs')
 const middleware = require('./middleware.js')
 const userRouter = require('./server/routes/user_router.js')
 const adminRouter = require('./server/routes/admin_router.js')
-
-
 
 
 const app = express();
@@ -58,9 +54,8 @@ app.get('*', (req, res) => {
 });
 
 mongoose
-  .connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGODB_URL)
   .then(() => {
-    console.log('DB Connected');
     app.listen(port, () => { console.log(`Server running on http://localhost:${port}`) })
   })
   .catch((err) => console.error('Error connecting to the database:', err));
