@@ -1,7 +1,7 @@
 const mongoose=require('mongoose')
 const Schema = mongoose.Schema;
 
-mongoose.connect('mongodb://127.0.0.1/stepEras', { useNewUrlParser: true, useUnifiedTopology: true })
+// mongoose.connect('mongodb://127.0.0.1/stepEras', { useNewUrlParser: true, useUnifiedTopology: true })
 
 const schema=new mongoose.Schema({
     name:{

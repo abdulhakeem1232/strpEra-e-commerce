@@ -2,7 +2,7 @@ const mongoose=require('mongoose')
 const shortid=require('shortid')
 const Schema = mongoose.Schema;
 
-mongoose.connect('mongodb://127.0.0.1/stepEras')
+// mongoose.connect('mongodb://127.0.0.1/stepEras')
 
 const schema=new mongoose.Schema({
     userId:{
