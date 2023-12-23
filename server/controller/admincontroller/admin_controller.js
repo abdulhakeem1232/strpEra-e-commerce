@@ -10,7 +10,7 @@ const{passwordValid,confirmpasswordValid}=require('../../../utils/validators/sig
 const orderModel = require('../../model/orderModel.js')
 const ExcelJS=require('exceljs')
 const productModel = require('../../model/productModel.js')
-const pdf=require('html-pdf')
+const puppeteer=require('puppeteer')
 const path=require('path')
 const fs=require('fs')
 const os=require('os')
@@ -290,8 +290,6 @@ const downloadsales=async(req,res)=>{
     ]);
     console.log('hghg',products);
     console.log(salesData,'ddd');
-    const downloadsPath = path.join(os.homedir(), 'Downloads');
-    const pdfFilePath = path.join(downloadsPath,`sales.pdf`);
     const htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
@@ -340,19 +338,22 @@ const downloadsales=async(req,res)=>{
 </html>
 
     `;
-    pdf.create(htmlContent).toFile(pdfFilePath, (err, result) => {
-        if (err) {
-            return res.status(500).send(err);
-        }
+    const browser=await puppeteer.launch({headless:"new"})
+    const page =await browser.newPage();
 
-      
-        const file = fs.createReadStream(pdfFilePath);
-        const stat = fs.statSync(pdfFilePath);
-        res.setHeader('Content-Length', stat.size);
+    await page.setContent(htmlContent);
+    const pdfBuffer=await page.pdf();
+    await browser.close();
+
+    const downloadsPath = path.join(os.homedir(), 'Downloads');
+    const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
+    fs.writeFileSync(pdfFilePath, pdfBuffer);
+
+
+    res.setHeader('Content-Length', pdfBuffer.length);
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename=sales.pdf`);
-        file.pipe(res);
-    });
+        res.setHeader('Content-Disposition', 'attachment; filename=sales.pdf');
+        res.status(200).end(pdfBuffer);
     }
     catch(err){
       console.log(err);

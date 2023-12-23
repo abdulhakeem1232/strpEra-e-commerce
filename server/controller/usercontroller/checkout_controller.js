@@ -8,10 +8,11 @@ const coupanModel = require('../../model/coupanModel');
 const userModel = require('../../model/userModel');
 const walletModel = require('../../model/walletModel');
 const fs=require('fs');
-const pdf=require('html-pdf')
+const puppeteer=require('puppeteer')
 const path=require('path')
 const os=require('os');
 const { log } = require('console');
+const PDFDocument=require('pdfkit')
 
 var instance = new Razorpay({ key_id:process.env.key_id, key_secret: process.env.key_secret })
 
@@ -357,16 +358,17 @@ const ordertracking = async (req, res) => {
     }
 }
 
-const pdfmaker=async (req,res)=>{
-    const orderId=req.params.id;
-    const order=await orderModel.findOne({_id:orderId}).populate({
-        path: 'items.productId',
-        select: 'name'
-    })
-    console.log('hddhdhh',order);
-    const downloadsPath = path.join(os.homedir(), 'Downloads');
-    const pdfFilePath = path.join(downloadsPath,`order.pdf`);
-    const htmlContent = `
+const pdfmaker = async (req, res) => {
+    const orderId = req.params.id;
+    const order = await orderModel.findOne({ _id: orderId }).populate({
+      path: 'items.productId',
+      select: 'name',
+    });
+  
+    console.log('hddhdhh', order);
+  
+    
+     const htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -433,22 +435,20 @@ const pdfmaker=async (req,res)=>{
 </html>
 
     `;
-    pdf.create(htmlContent).toFile(pdfFilePath, (err, result) => {
-        if (err) {
-            return res.status(500).send(err);
-        }
-
       
-        const file = fs.createReadStream(pdfFilePath);
-        const stat = fs.statSync(pdfFilePath);
-        res.setHeader('Content-Length', stat.size);
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename=${order.orderId}.pdf`);
-        file.pipe(res);
-    });
-}
+     const browser=await puppeteer.launch({headless:"new"})
+     const page =await browser.newPage();
 
+     await page.setContent(htmlContent,{waitUntil:'domcontentloaded'});
+     const pdfBuffer=await page.pdf({format:'A4'});
+     await browser.close();
 
+     res.setHeader('Content-Type', 'application/pdf');
+     res.setHeader('Content-Disposition', `attachment; filename=${order.orderId}.pdf`);
+     res.send(pdfBuffer)
+  };
+  
+  
 const addratings = async (req, res) => {
     try {
         console.log('camehereeee');
