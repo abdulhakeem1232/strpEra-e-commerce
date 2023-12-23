@@ -37,7 +37,7 @@ const subshopping=async(req,res)=>{
 
 const sortproducts=async(req,res)=>{
     try{
-        const sort=req.params.sort
+        const sort=parseInt(req.params.sort)
         const id=req.session.category
         const product=await productModel.find({$and:[{$or:[{category:id},{sub_category:id}]},{status:true}]}).sort({price:sort})
         const pid=product[0].category

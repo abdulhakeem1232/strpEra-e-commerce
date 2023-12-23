@@ -100,7 +100,7 @@ const sendmail = async (email, otp) => {
         };
 
          transporter.sendMail(mailOptions);
-        console.log("E-mail sent sucessfully");
+         console.log("E-mail sent sucessfully");
     }
     catch (err) {
         console.log("error in sending mail:", err);
