@@ -7,6 +7,7 @@ const Razorpay = require('razorpay')
 const coupanModel = require('../../model/coupanModel');
 const userModel = require('../../model/userModel');
 const walletModel = require('../../model/walletModel');
+const easyinvoice = require('easyinvoice');
 const fs=require('fs');
 const puppeteer=require('puppeteer')
 const path=require('path')
@@ -360,102 +361,66 @@ const ordertracking = async (req, res) => {
 
 const pdfmaker = async (req, res) => {
     try {
-    const orderId = req.params.id;
-    const order = await orderModel.findOne({ _id: orderId }).populate({
-      path: 'items.productId',
-      select: 'name',
-    });
-  
-    console.log('hddhdhh', order);
-  
+        const orderId = req.params.id;
+        const order = await orderModel.findOne({ _id: orderId }).populate({
+          path: 'items.productId',
+          select: 'name',
+        });
     
-     const htmlContent = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Order Details</title>
-           <style>
-           .date{
-            margin-left:100px;
-           }
-            body{
-                font-size:35px
-            
-           }
-           </style>
-        </head>
-        <body>
-        <center>
-        <h2>UrbanSole</h2> </center>
-        <div class='date'>
-    <h5>Order ID: ${order.orderId}</h5>
-    Date: ${new Date(order.createdAt).toLocaleString(undefined, {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-    })}
-    <p>Delivery Address: ${order.address[0].save_as},
-        ${order.address[0].houseName},
-        ${order.address[0].city},
-        ${order.address[0].pincode}
-    </p>
-    </div>
-    <center>
-    <table style="border-collapse: collapse;">
-        <thead>
-            <tr>
-            <th style="border: 1px solid #000; padding: 8px;">Product Name</th>
-            <th style="border: 1px solid #000; padding: 8px;">Quantity</th>
-            <th style="border: 1px solid #000; padding: 8px;">Price</th>
-            <th style="border: 1px solid #000; padding: 8px;">Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            ${order.items.map((item,index) => `
-                <tr>
-                    <td style="border: 1px solid #000; padding: 8px;">${item.productId.name}</td>
-                    <td style="border: 1px solid #000; padding: 8px;">${item.quantity}</td>
-                    <td style="border: 1px solid #000; padding: 8px;">${item.price}</td>
-                    <td style="border: 1px solid #000; padding: 8px;">${item.quantity * item.price}</td>
-                </tr>`).join('')}
-            <tr>
-                <td style="border: 1px solid #000; padding: 8px;"></td>
-                <td style="border: 1px solid #000; padding: 8px;"></td>
-                <td style="border: 1px solid #000; padding: 8px;">Total After Discount</td>
-                <td style="border: 1px solid #000; padding: 8px;">${order.amount}</td>
-            </tr>
-        </tbody>
-    </table>
-    </center>
-   
-</body>
-</html>
-
-    `;
-      
-     const browser=await puppeteer.launch({headless:true})
-     const page =await browser.newPage();
-
-     await page.setContent(htmlContent,{waitUntil:'domcontentloaded'});
-     const pdfBuffer=await page.pdf({format:'A4'});
-
-     await page.close();
-     await browser.close();
-
-     res.setHeader('Content-Type', 'application/pdf');
-     res.setHeader('Content-Disposition', `attachment; filename=${order.orderId}.pdf`);
-     res.send(pdfBuffer)
-    } catch (err) {
-        console.error(err);
-        res.send(err.stack || err)
-        // res.redirect('/error')
-    }
+    
+        const pdfBuffer = await generateInvoice(order);
+    
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=invoice-${order.orderId}.pdf`);
+        res.send(pdfBuffer);
+      } catch (error) {
+        console.error('Error generating or sending invoice:', error);
+        res.status(500).send('Internal Server Error');
+      }
   }
+
+  const generateInvoice = async (order) => {
+    try {
+      const data = {
+        documentTitle: 'Invoice',
+        currency: 'INR',
+        taxNotation: 'none',
+        marginTop: 25,
+        marginRight: 25,
+        marginLeft: 25,
+        marginBottom: 25,
+        sender: {
+          company: 'UrbanSole',
+          address: '123 Main Street, City, Country',
+          zip: '651323',
+          city: 'City',
+          country: 'Country',
+          phone: '9876543210',
+          email: 'urbansole@gmail.com',
+          website: 'www.urbansole.tech',
+        },
+        invoiceNumber: `INV-${order.orderId}`,
+        invoiceDate: new Date().toJSON(),
+        products: order.items.map(item => ({
+          quantity: item.quantity,
+          description: item.productId.name,
+          tax: 0,
+          price: item.price,
+        })),
+        bottomNotice: 'Thank you for shopping at UrbanSole!',
+        total: 0, 
+        tax: 0,
+      };
+  
+      const result = await easyinvoice.createInvoice(data);
+      const pdfBuffer = Buffer.from(result.pdf, 'base64');
+  
+      return pdfBuffer;
+    } catch (error) {
+      console.error('Error generating invoice:', error);
+      throw error;
+    }
+  };
   
   
 const addratings = async (req, res) => {
