@@ -381,7 +381,7 @@ const pdfmaker = async (req, res) => {
             margin-left:100px;
            }
             body{
-                text-size:35px
+                font-size:35px
             
            }
            </style>
@@ -452,10 +452,10 @@ const pdfmaker = async (req, res) => {
      res.send(pdfBuffer)
     } catch (err) {
         console.error(err);
-        res.send(err)
+        res.send(err.stack || err)
         // res.redirect('/error')
     }
-  };
+  }
   
   
 const addratings = async (req, res) => {
