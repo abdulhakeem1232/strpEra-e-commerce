@@ -15,7 +15,7 @@
     <!-- meta character set -->
     <meta charset="UTF-8">
     <!-- Site Title -->
-    <title>Karma Shop</title> 
+    <title>UrbanSole</title> 
     <!--
 		CSS
 		============================================= -->
@@ -89,7 +89,7 @@
                                             <div class="media">
                                                 <div class="d-flex">
                                                     <img src="/<%= item.productId.images[0] %>" alt=""
-                                                        style="height: 150px;  width: 150px;">
+                                                        style="height: 125px;  width: 125px;">
                                                 </div>
                                                 <div class="media-body">
                                                     <p>
@@ -130,7 +130,7 @@
                                                 <%= item.total %>
                                             </h5>
                                         </td>
-                                        <td><a href="/deletcart/<%= item._id %>/<%= item.size %>"><img
+                                        <td><a  onclick="confirm('/deletcart/<%= item._id %>/<%= item.size %>')"><img
                                                     src="img/icons8-delete (1).svg" alt=""></a></td>
                                     </tr>
                                     <% }) %>
@@ -195,6 +195,30 @@
 
         <%- include('partials/footer')%>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script>
+     
+            function confirm(itemId) {
+           Swal.fire({
+               title: "Are you sure?",
+               text: "Are you sure you want to proceed?",
+               icon: "warning",
+               showCancelButton: true,  
+               confirmButtonColor: "#3085d6",
+               cancelButtonColor: "#d33",
+               confirmButtonText: "Confirm",
+               cancelButtonText: "Cancel",  
+               dangerMode: true,
+           })
+           .then((result) => {
+               if (result.isConfirmed) {
+                   
+                   window.location.href = itemId;
+               } else {
+                   console.log("User canceled");
+               }
+           });
+       }
+         </script>
             <script>
 
                 async function updateQuantity(cartId, productId, size, price, index, count) {

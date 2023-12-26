@@ -359,6 +359,7 @@ const ordertracking = async (req, res) => {
 }
 
 const pdfmaker = async (req, res) => {
+    try {
     const orderId = req.params.id;
     const order = await orderModel.findOne({ _id: orderId }).populate({
       path: 'items.productId',
@@ -441,11 +442,16 @@ const pdfmaker = async (req, res) => {
 
      await page.setContent(htmlContent,{waitUntil:'domcontentloaded'});
      const pdfBuffer=await page.pdf({format:'A4'});
+     await page.close();
      await browser.close();
 
      res.setHeader('Content-Type', 'application/pdf');
      res.setHeader('Content-Disposition', `attachment; filename=${order.orderId}.pdf`);
      res.send(pdfBuffer)
+    } catch (err) {
+        console.error(err);
+        res.redirect('/error')
+    }
   };
   
   

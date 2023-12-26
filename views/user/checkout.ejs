@@ -15,7 +15,7 @@
     <!-- meta character set -->
     <meta charset="UTF-8">
     <!-- Site Title -->
-    <title>Karma Shop</title> 
+    <title>UrbanSole</title> 
     <!--
 		CSS
 		============================================= -->
@@ -86,7 +86,7 @@
                 <div class="row">
                     <div class="col-lg-8">
                         <form  id="orderForm">
-                            <input type="hidden" id="pay" name="pay">
+                            <input type="hidden" id="pay" name="pay" value="0">
                             <input type="hidden" id="wallet" name="wallet" value="0">
                             <input type="hidden" id="amount" name="amount" value="<%= data.total %>">
                             <% if (address && address.address) { %>
@@ -321,10 +321,10 @@
             console.log("wjeabfqdckuawjsdvcb");
             var selectedAddress = document.querySelector('input[name="address"]:checked');
             var selectedpayment = document.querySelector('input[name="paymentMethod"]:checked');
-    
+            var payment=document.getElementById('pay').getAttribute('value')
            
-            
-            console.log(selectedpayment.value);
+            console.log(payment,'kk');
+           
 
             console.log("uuuuuuuuuu");
             if (!selectedAddress) {
@@ -345,7 +345,7 @@
   timer: 3000 
 });
 
-} else if (!selectedpayment) {
+} else if (payment=='0') {
     console.log("777777777711");
                 Swal.fire({
 //   title: 'Error!',

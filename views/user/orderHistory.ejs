@@ -15,7 +15,7 @@
     <!-- meta character set -->
     <meta charset="UTF-8">
     <!-- Site Title -->
-    <title>Karma Shop</title> 
+    <title>UrbanSole</title> 
     <!--
 		CSS
 		============================================= -->
@@ -79,11 +79,11 @@
                                 </div>
                                 <div>
                                     <% if (order.status !== 'Cancelled' && order.status !== 'delivered') { %>
-                                        <a href="/cancelorder/<%= order._id %>"> Cancel</a>
+                                        <a onclick="confirm('/cancelorder/<%= order._id %>')"> Cancel</a>
                                     <% } %>
         
                                     <% if (order.status == 'delivered' && new Date(order.updated.getTime() + 5 * 24 * 60 * 60 * 1000) >= new Date()) { %>
-                                        <a href="/returnorder/<%= order._id %>"> Return</a>
+                                        <a onclick="confirm('/returnorder/<%= order._id %>')"> Return</a>
                                     <% } %>
                                 </div>
                             </div>
@@ -158,7 +158,32 @@
 	
 
         <%- include('partials/footer')%>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script>
+            function confirm(itemId) {
+           Swal.fire({
+               title: "Are you sure?",
+               text: "Are you sure you want to proceed?",
+               icon: "warning",
+               showCancelButton: true,  
+               confirmButtonColor: "#3085d6",
+               cancelButtonColor: "#d33",
+               confirmButtonText: "Confirm",
+               cancelButtonText: "Cancel",  
+               dangerMode: true,
+           })
+           .then((result) => {
+               if (result.isConfirmed) {
+                   
+                   window.location.href = itemId;
+               } else {
+                   console.log("User canceled");
+               }
+           });
+       }
+         </script>
+        <script>
+            
             document.addEventListener('DOMContentLoaded', function () {
                 const starContainers = document.querySelectorAll('.star-rating');
         
@@ -171,10 +196,8 @@
                             const productId = container.getAttribute('data-product-id');
                             setRating(productId, rating);
         
-                           
                             stars.forEach(s => s.classList.remove('selected'));
         
-                            
                             for (let i = 1; i <= rating; i++) {
                                 stars[i - 1].classList.add('selected');
                             }

@@ -15,7 +15,7 @@
 	<!-- meta character set -->
 	<meta charset="UTF-8">
 	<!-- Site Title -->
-	<title>Karma Shop</title>
+	<title>UrbanSole</title>
 	<!--
 		CSS
 		============================================= -->
@@ -37,7 +37,50 @@
 <style>
 #size {
     border: 2px solid red !important;
+	.size-selector {
+    display: flex;
+    gap: 10px;
 }
+
+}
+
+.size-selector {
+    display: flex;
+    gap: 10px;
+}
+
+.size-circle {
+	background-color: orange;
+	color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border: 2px solid orange;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.size-circle:hover {
+    background-color: rgba(191, 184, 184, 0.522);
+	color: orange;
+}
+
+.hidden-radio {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.hidden-radio:checked + .size-circle {
+    background-color: white;
+    color: orange;
+    border-color:  orange;
+}
+
+
 </style>
 
 <body>
@@ -75,7 +118,7 @@
 							</div>
 							<div class="additional-images mt-2 d-flex">
 								<% product.images.forEach((image, index) => { %>
-									<div class="additional-image ml-2" data-image="/<%= image %>">
+									<div class="additional-image ml-2" data-image="/<%= image %>" value="<%= index %>">
 										<img src="/<%= image %>" alt="Additional Product Image" class="img-thumbnail"  
 										style="width: 75px; height: 75px; object-fit: cover;">
 									</div>
@@ -91,16 +134,25 @@
 								<% if( avgRating.length > 0 ) { %>
 								<p>Average Ratings: <%= avgRating[0].avg %>  <span class="fa fa-star" style="color: green; border: 1px solid green;"></span></p>
 								<% } %>
-									<div class="form-group">
+								<div class="form-group">
 									<label for="size">Select Size:</label>
-									<select id="size" name="size" class="form-control"  required>
-										<option value="" disabled selected>Select size</option>
-										<option value="6">6</option>
-										<option value="7">7</option>
-										<option value="8">8</option>
-										<option value="9">9</option>
-									</select>
+									<div class="size-selector">
+										<input type="radio" id="size-6" name="size" value="6" class="hidden-radio" required>
+										<label for="size-6" class="size-circle">6</label>
+								
+										<input type="radio" id="size-7" name="size" value="7" class="hidden-radio" required>
+										<label for="size-7" class="size-circle">7</label>
+								
+										<input type="radio" id="size-8" name="size" value="8" class="hidden-radio" required>
+										<label for="size-8" class="size-circle">8</label>
+								
+										<input type="radio" id="size-9" name="size" value="9" class="hidden-radio" required>
+										<label for="size-9" class="size-circle">9</label>
+									</div>
 								</div>
+								
+								
+								
 							
 								
 								<div class="interactive-icons mt-5">
@@ -178,18 +230,29 @@
 		</script>
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<script>
-			document.addEventListener('DOMContentLoaded', function () {
-				var additionalImages = document.querySelectorAll('.additional-image');
-			
-				additionalImages.forEach(function (image) {
-					image.addEventListener('click', function () {
-						var newImageSrc = this.getAttribute('data-image');
-						document.getElementById('mainImage').src = newImageSrc;
-						document.getElementById('Mag').setAttribute('href', newImageSrc);
-						MagicZoom.update('Mag');
+				document.addEventListener('DOMContentLoaded', function () {
+					var additionalImages = document.querySelectorAll('.additional-image');
+				
+					additionalImages.forEach(function (image) {
+						image.addEventListener('click', function () {
+							var newImageSrc = this.getAttribute('data-image');
+							var index = this.getAttribute('value');
+							document.getElementById('mainImage').src = newImageSrc;
+							var magLink = document.getElementById('Mag');
+							magLink.setAttribute('href', newImageSrc);
+							console.log('Updated href:', magLink.getAttribute('href'));
+							if (typeof MagicZoom !== 'undefined' && typeof MagicZoom.stop === 'function') {
+   								 MagicZoom.stop('Mag');
+  								  document.getElementById('mainImage').src = newImageSrc;
+   								 MagicZoom.start('Mag');
+							} else {
+    								console.warn('MagicZoom not available or stop function not defined.');
+								}
+
+							
+						});
 					});
 				});
-			});
 			</script>
 			
 			

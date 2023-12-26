@@ -15,7 +15,7 @@
 	<!-- meta character set -->
 	<meta charset="UTF-8">
 	<!-- Site Title -->
-	<title>Karma Shop</title>
+	<title>UrbanSole</title>
 	<!--
 		CSS
 		============================================= -->
@@ -312,9 +312,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="row justify-content-center">
+				<div class="row justify-content-center" style="width: 100%;">
 					<% product.forEach(product => { %>
-						<div class="col-sm-6 col-lg-3 ">
+						<div class="col-sm-6 col-lg-3 mx-auto">
 						  <div class="single-product">
 							<a href="/singleproduct/<%= product._id %>">
 							  <img class="img-fluid" src="/<%= product.images[0] %>" alt="<%= product.name %>"
@@ -352,9 +352,9 @@
 		</div>
 		<!-- single product slide -->
 		<div class="single-product-slider">
-			<div class="container">
+			<div class="container ">
 				<div class="row justify-content-center">
-					<div class="col-lg-6 text-center">
+					<div class="col-lg-6 col-sm-6 text-center">
 						<div class="section-title">
 							<h1>Popular Products</h1>
 							<p> Made from high-quality materials, these shoes offer durability and breathability, 
@@ -362,13 +362,13 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
+				<div class="row  " >
 					<% product2.forEach(product => { %>
-						<div class="col-lg-3 col-md-6">
+						<div class="col-lg-3 col-md-6 col-sm-6">
 						  <div class="single-product">
 							<a href="/singleproduct/<%= product._id %>">
 							  <img class="img-fluid" src="/<%= product.images[0] %>" alt="<%= product.name %>"
-							  style="width: 175px; height: 175px; object-fit: cover;">
+							  style="width: 175px; height: 175px; object-fit: cover; ">
 							</a>
 							<div class="product-details">
 							  <h6><%= product.name %></h6>
@@ -443,8 +443,8 @@
 	<%- include('partials/footer')%>
 	<!-- End footer Area -->
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 	<script src="/public/user_assets/js/vendor/jquery-2.2.4.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
 		integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"

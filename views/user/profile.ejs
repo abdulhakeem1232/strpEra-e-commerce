@@ -15,7 +15,7 @@
 	<!-- meta character set -->
 	<meta charset="UTF-8">
 	<!-- Site Title -->
-	<title>Karma Shop</title>
+	<title>UrbanSole</title>
 	<!--
 		CSS
 		============================================= -->
@@ -27,6 +27,20 @@
 	<link rel="stylesheet" href="css/nouislider.min.css">
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/main.css">
+	<style>
+
+.user-details {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.font-sans-serif {
+  font-family: 'Open Sans', sans-serif;
+ color: rgba(0, 0, 0, 0.742);
+}
+
+	</style>
 </head>
 
 <body>
@@ -89,12 +103,14 @@
 						  </div>
 						  <% } %>
                         <!-- User details will be displayed here using EJS tags -->
-                        <p class="user-detail lead font-weight-bold">First Name: <%= userData.f_name %></p>
-						<p class="user-detail lead font-weight-bold">Last Name: <%= userData.l_name %></p>
-                        <p class="user-detail lead font-weight-bold">Email: <%= userData.email %></p>
-						<p class="user-detail lead font-weight-bold">Mobile No: <%= userData.phone_no %></p>
-						<p class="user-detail lead font-weight-bold">Wallet Amount: <%= userData.wallet %></p>
-						<p class="user-detail lead font-weight-bold">Referal Code(Invite the Friends and get ₹100): <%= userData.code %></p>
+						<div class="user-details">
+							<p class="font-sans-serif">First Name: <%= userData.f_name %></p>
+							<p class="font-sans-serif">Last Name: <%= userData.l_name %></p>
+							<p class="font-sans-serif">Email: <%= userData.email %></p>
+							<p class="font-sans-serif">Mobile No: <%= userData.phone_no %></p>
+							<p class="font-sans-serif">Wallet Amount: <%= userData.wallet %></p>
+							<p class="font-sans-serif">Referal Code(Invite Friends and get ₹100): <%= userData.code %></p>
+						  </div>
                         <!-- Add other user details here -->
                     </div>
                     <button type="submit" class="btn btn-primary">Edit Profile</button>
