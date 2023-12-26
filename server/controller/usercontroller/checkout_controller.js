@@ -379,9 +379,10 @@ const pdfmaker = async (req, res) => {
            <style>
            .date{
             margin-left:100px;
+           }
             body{
                 text-size:35px
-            }
+            
            }
            </style>
         </head>
@@ -437,11 +438,12 @@ const pdfmaker = async (req, res) => {
 
     `;
       
-     const browser=await puppeteer.launch({headless:"new"})
+     const browser=await puppeteer.launch({headless:true})
      const page =await browser.newPage();
 
      await page.setContent(htmlContent,{waitUntil:'domcontentloaded'});
      const pdfBuffer=await page.pdf({format:'A4'});
+
      await page.close();
      await browser.close();
 
