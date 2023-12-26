@@ -450,7 +450,8 @@ const pdfmaker = async (req, res) => {
      res.send(pdfBuffer)
     } catch (err) {
         console.error(err);
-        res.redirect('/error')
+        res.send(err)
+        // res.redirect('/error')
     }
   };
   
