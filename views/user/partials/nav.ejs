@@ -126,19 +126,18 @@ font-family: 'Russo One', sans-serif;
 </script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-  $(document).ready(function () {
-    $('.dropdown-toggle').on('click', function (e) {
-      if ($(window).width() < 992) {
-        e.preventDefault();
-        $(this).parent().find('.dropdown-menu').toggle();
-      }
-    });
+ $(document).on('click', '.dropdown-toggle', function (e) {
+  if ($(window).width() < 992) {
+    e.preventDefault();
+    $(this).parent().find('.dropdown-menu').toggleClass('show');
+  }
+});
 
-    $('#profileDropdown').on('click', function (e) {
-      if ($(window).width() < 992) {
-        e.preventDefault();
-        $('#profileDropdownContent').toggle();
-      }
-    });
-  });
+$(document).on('click', '#profileDropdown', function (e) {
+  if ($(window).width() < 992) {
+    e.preventDefault();
+    $('#profileDropdownContent').toggleClass('show');
+  }
+});
+
 </script>
