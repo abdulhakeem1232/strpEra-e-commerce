@@ -73,13 +73,12 @@ Copyright &copy;2023 All rights reserved this Website for UrbanSole
 const loginOrLogoutButton = document.getElementById("loginOrLogoutButton");
 
     if (req.session.isAuth) {
-        // If the user is logged in, set the button text to "Logout"
         loginOrLogoutButton.textContent = "Logout";
-        loginOrLogoutButton.href = "/logout"; // Set the logout endpoint
+        loginOrLogoutButton.href = "/logout"; 
     } else {
-        // If the user is not logged in, set the button text to "Login"
+        
         loginOrLogoutButton.textContent = "Login";
-        loginOrLogoutButton.href = "/login"; // Set the login endpoint
+        loginOrLogoutButton.href = "/login"; 
     }
     </script>
     <!-- Add these in the head section -->
