@@ -124,3 +124,21 @@ font-family: 'Russo One', sans-serif;
         localStorage.removeItem('token');
     });
 </script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('.dropdown-toggle').on('click', function (e) {
+      if ($(window).width() < 992) {
+        e.preventDefault();
+        $(this).parent().find('.dropdown-menu').toggle();
+      }
+    });
+
+    $('#profileDropdown').on('click', function (e) {
+      if ($(window).width() < 992) {
+        e.preventDefault();
+        $('#profileDropdownContent').toggle();
+      }
+    });
+  });
+</script>

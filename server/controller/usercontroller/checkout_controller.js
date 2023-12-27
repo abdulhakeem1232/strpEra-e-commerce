@@ -374,58 +374,56 @@ const pdfmaker = async (req, res) => {
         res.setHeader('Content-Disposition', `attachment; filename=invoice-${order.orderId}.pdf`);
         res.send(pdfBuffer);
       } catch (error) {
-        console.error('Error generating or sending invoice:', error);
-        res.status(500).send('Internal Server Error');
+        console.error(error);
+        res.redirect('/error')
       }
   }
 
   const generateInvoice = async (order) => {
     try {
-      const data = {
-        documentTitle: 'Invoice',
-        currency: 'INR',
-        taxNotation: 'none',
-        marginTop: 25,
-        marginRight: 25,
-        marginLeft: 25,
-        marginBottom: 25,
-        sender: {
-          company: 'UrbanSole',
-          address: '123 Main Street, City, Country',
-          zip: '651323',
-          city: 'City',
-          country: 'Country',
-          phone: '9876543210',
-          email: 'urbansole@gmail.com',
-          website: 'www.urbansole.tech',
-        },
-        invoiceNumber: `INV-${order.orderId}`,
-        invoiceDate: new Date().toJSON(),
-        products: order.items.map(item => ({
-          quantity: item.quantity,
-          description: item.productId.name,
-          tax: 0,
-          price: item.price,
-        })),
-        bottomNotice: 'Thank you for shopping at UrbanSole!',
-        total: 0, 
-        tax: 0,
-      };
+        let totalAmount=order.amount;
+        const data = {
+            documentTitle: 'Invoice',
+            currency: 'INR',
+            marginTop: 25,
+            marginRight: 25,
+            marginLeft: 25,
+            marginBottom: 25,
+            sender: {
+              company: 'UrbanSole',
+              address: '123 Main Street, Banglore, India',
+              zip: '651323',
+              city: 'Banglore',
+              country: 'INDIA',
+              phone: '9876543210',
+              email: 'urbansole@gmail.com',
+              website: 'www.urbansole.tech',
+            },
+            invoiceNumber: `INV-${order.orderId}`,
+            invoiceDate: new Date().toJSON(),
+            products: order.items.map(item => ({
+              quantity: item.quantity,
+              description: item.productId.name,
+              price: item.price,
+            })),
+            total: `₹${totalAmount.toFixed(2)}`, 
+            tax: 0,
+            bottomNotice: 'Thank you for shopping at UrbanSole!',
+          };
   
       const result = await easyinvoice.createInvoice(data);
       const pdfBuffer = Buffer.from(result.pdf, 'base64');
   
       return pdfBuffer;
     } catch (error) {
-      console.error('Error generating invoice:', error);
-      throw error;
+        console.error(error);
+        res.redirect('/error')
     }
   };
   
   
 const addratings = async (req, res) => {
     try {
-        console.log('camehereeee');
        const {orderId,productId,rating,review}=req.body
        const product=await productModel.findOne({_id:productId})
        product.ratings.push({userId:req.session.userId,orderId:orderId,ratings:rating,reviews:review})
@@ -436,10 +434,6 @@ const addratings = async (req, res) => {
         res.redirect('/error')
     }
 }
-
-
-
-
 
 
 

@@ -14,7 +14,6 @@ const puppeteer=require('puppeteer')
 const path=require('path')
 const fs=require('fs')
 const os=require('os')
-const workbook = new ExcelJS.Workbook();
 
 
 const login = async (req,res) => {
@@ -27,7 +26,7 @@ const login = async (req,res) => {
           });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).send('Internal Server Error',error);
     }
 };
 
