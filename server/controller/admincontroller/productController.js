@@ -1,5 +1,5 @@
-const fs=require('fs')
-const path=require('path')
+const fs = require('fs')
+const path = require('path')
 const productModel = require('../../model/productModel')
 const categoryModel = require('../../model/categoryModel')
 const subcatModel = require('../../model/subcatModel')
@@ -37,15 +37,15 @@ const newproduct = async (req, res) => {
 
 const addproduct = async (req, res) => {
     try {
-        const processedImages=req.processedImages
-        const { productName,parentCategory, subCategory, images, s6, s7, s8, s9,price, description } = req.body
+        const processedImages = req.processedImages
+        const { productName, parentCategory, subCategory, images, s6, s7, s8, s9, price, description } = req.body
         const newproduct = new productModel({
             name: productName,
             category: parentCategory,
             sub_category: subCategory,
             price: price,
             images: processedImages,
-            stock:[{
+            stock: [{
                 size: "6",
                 quantity: s6,
             },
@@ -110,8 +110,8 @@ const updatepro = async (req, res) => {
 const updateproduct = async (req, res) => {
     try {
         const id = req.params.id
-        const { productName,s6, s7, s8, s9,productprice,description } = req.body
-        const product=await productModel.findOne({_id:id})
+        const { productName, s6, s7, s8, s9, productprice, description } = req.body
+        const product = await productModel.findOne({ _id: id })
         product.name = productName;
         product.price = productprice;
         product.stock = [
@@ -132,57 +132,56 @@ const updateproduct = async (req, res) => {
 const editimg = async (req, res) => {
     try {
         const id = req.params.id
-        const product=await productModel.findOne({_id:id})
+        const product = await productModel.findOne({ _id: id })
         res.render('admin/editimg', { product: product })
     } catch (err) {
         console.log(err);
         res.send("Error Occured")
     }
 }
-const updateimg=async(req,res)=>{
-    try{
-     const id=req.params.id
-     const newimg=req.files.map(file => file.path)
-     const product=await productModel.findOne({_id:id})
-     product.images.push(...newimg)
-     product.save()
-     res.redirect('/admin/products')
+const updateimg = async (req, res) => {
+    try {
+        const id = req.params.id
+        const newimg = req.files.map(file => file.path)
+        const product = await productModel.findOne({ _id: id })
+        product.images.push(...newimg)
+        product.save()
+        res.redirect('/admin/products')
     }
     catch (err) {
         console.log(err);
         res.send("Error while adding images")
     }
 }
-const deleteimg=async(req,res)=>{
-    try{
-        const pid=req.query.pid
-        const filename=req.query.filename
-        const imagePath=path.join('uploads',filename)
+const deleteimg = async (req, res) => {
+    try {
+        const pid = req.query.pid
+        const filename = req.query.filename
+        const imagePath = path.join('uploads', filename)
 
-        if(fs.existsSync(filename))
-        {
+        if (fs.existsSync(filename)) {
 
-        
-        try{
-            fs.unlinkSync(filename)
-            console.log("Image deleted");
-            res.redirect('/admin/products')
 
-            await productModel.updateOne(
-                { _id: pid },
-                { $pull: { images: filename } } 
-              );
+            try {
+                fs.unlinkSync(filename)
+                console.log("Image deleted");
+                res.redirect('/admin/products')
+
+                await productModel.updateOne(
+                    { _id: pid },
+                    { $pull: { images: filename } }
+                );
+            }
+            catch (err) {
+                console.log("error deleting image:", err);
+                res.status(500).send('Internal Server Error');
+            }
+
         }
-        catch(err){
-            console.log("error deleting image:",err);
-            res.status(500).send('Internal Server Error');
+        else {
+            console.log("Image not found");
         }
-
     }
-    else{
-        console.log("Image not found");
-    }
-}
     catch (err) {
         console.log(err);
         res.send("Error Occured")

@@ -1,9 +1,9 @@
 require('dotenv').config()
 const express = require('express')
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 const session = require('express-session')
 const flash = require('express-flash')
-const Razorpay =require('razorpay')
+const Razorpay = require('razorpay')
 const nocache = require('nocache')
 const path = require('path')
 const middleware = require('./middleware.js')
@@ -54,9 +54,9 @@ app.get('*', (req, res) => {
 });
 
 mongoose
-  .connect(process.env.MONGODB_URL)
-  .then(() => {
-    app.listen(port, () => { console.log(`Server running on http://localhost:${port}`) })
-  })
-  .catch((err) => console.error('Error connecting to the database:', err));
+    .connect(process.env.MONGODB_URL)
+    .then(() => {
+        app.listen(port, () => { console.log(`Server running on http://localhost:${port}`) })
+    })
+    .catch((err) => console.error('Error connecting to the database:', err));
 

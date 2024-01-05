@@ -1,54 +1,54 @@
-const mongoose=require('mongoose')
-const bcyrpt= require('bcrypt')
+const mongoose = require('mongoose')
+const bcyrpt = require('bcrypt')
 
 
 // mongoose.connect('mongodb://127.0.0.1/stepEras')
 
-const schema=new mongoose.Schema({
-    f_name:{
-        type:String,
-        required:true,
+const schema = new mongoose.Schema({
+    f_name: {
+        type: String,
+        required: true,
     },
-    l_name:{
-        type:String,
+    l_name: {
+        type: String,
         // required:true
     },
-    email:{
-        type:String,
-        required:true,
-        unique:true,
+    email: {
+        type: String,
+        required: true,
+        unique: true,
     },
-    phone_no:{
-        type:Number,
-        required:true,
+    phone_no: {
+        type: Number,
+        required: true,
     },
-    password:{
-        type:String,
-        required:true
+    password: {
+        type: String,
+        required: true
     },
-    isAdmin:{
-        type:Boolean,
-        default:false,
-        required:true
+    isAdmin: {
+        type: Boolean,
+        default: false,
+        required: true
     },
-    session:{
-        type:String,
+    session: {
+        type: String,
     },
-    status:{
-        type:Boolean,
-        default:false,
-        required:true
+    status: {
+        type: Boolean,
+        default: false,
+        required: true
     },
-    wallet:{
-        type:Number,
-        default:0,
+    wallet: {
+        type: Number,
+        default: 0,
     },
-    code:{
-        type:String,
-        required:true,
+    code: {
+        type: String,
+        required: true,
     }
 })
 
-const userModel=new mongoose.model("users",schema)
+const userModel = new mongoose.model("users", schema)
 
-module.exports=userModel
+module.exports = userModel

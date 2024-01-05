@@ -1,45 +1,45 @@
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
 
-const schema=new mongoose.Schema({
-    userId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'users'
+const schema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users'
     },
-    sessionId:String,
-    item:[{
-        productId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'products',
-        required:true,
+    sessionId: String,
+    item: [{
+        productId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'products',
+            required: true,
         },
-        stock:{
-            type:String,
-            required:true,
+        stock: {
+            type: String,
+            required: true,
         },
-        size:{
-            type:String,
-            required:true,
+        size: {
+            type: String,
+            required: true,
         },
-        quantity:{
-            type:Number,
-            required:true,
+        quantity: {
+            type: Number,
+            required: true,
         },
-        price:{
-            type:Number,
-            required:true
+        price: {
+            type: Number,
+            required: true
         },
-        total:{
-            type:Number,
-            required:true
+        total: {
+            type: Number,
+            required: true
         }
     },
     ],
-    total:Number
+    total: Number
 }, { strictPopulate: false });
 
 
-const cartModel=new mongoose.model("cart",schema)
+const cartModel = new mongoose.model("cart", schema)
 
-module.exports=cartModel
+module.exports = cartModel

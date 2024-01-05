@@ -3,16 +3,33 @@
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>UrbanSole</title>
-    <link rel="stylesheet" href="/admin_assets/assets/vendors/mdi/css/materialdesignicons.min.css" />
-    <link rel="stylesheet" href="/admin_assets/assets/vendors/flag-icon-css/css/flag-icon.min.css" />
-    <link rel="stylesheet" href="/admin_assets/assets/vendors/css/vendor.bundle.base.css" />
-    <link rel="stylesheet" href="/admin_assets/assets/vendors/font-awesome/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/admin_assets/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css" />
+    <link
+      rel="stylesheet"
+      href="/admin_assets/assets/vendors/mdi/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/admin_assets/assets/vendors/flag-icon-css/css/flag-icon.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/admin_assets/assets/vendors/css/vendor.bundle.base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/admin_assets/assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/admin_assets/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css"
+    />
     <link rel="stylesheet" href="/admin_assets/assets/css/style.css" />
     <link rel="shortcut icon" href="/admin_assets/assets/images/favicon.png" />
-    
   </head>
   <body>
     <div class="container-scroller">
@@ -22,10 +39,12 @@
           <i class="settings-close mdi mdi-close"></i>
           <p class="settings-heading">SIDEBAR SKINS</p>
           <div class="sidebar-bg-options selected" id="sidebar-default-theme">
-            <div class="img-ss rounded-circle bg-light border mr-3"></div> Default
+            <div class="img-ss rounded-circle bg-light border mr-3"></div>
+            Default
           </div>
           <div class="sidebar-bg-options" id="sidebar-dark-theme">
-            <div class="img-ss rounded-circle bg-dark border mr-3"></div> Dark
+            <div class="img-ss rounded-circle bg-dark border mr-3"></div>
+            Dark
           </div>
           <p class="settings-heading mt-2">HEADER SKINS</p>
           <div class="color-tiles mx-0 px-4">
@@ -35,28 +54,43 @@
         </div>
         <%- include('partials/nav')%>
         <div class="main-panel">
-         
-            <div class="container form-container">
-                <h1 class="mb-4">Update Category</h1>
-        
-                <form action="/admin/update-category/<%= itemcat._id %>" method="post">
-                    <div class="mb-3">
-                        <label for="categoryName" class="form-label">Category Name:</label>
-                        <input type="text" class="form-control" id="categoryName" name="categoryName" value="<%= itemcat.name %>" required>
-                    </div>
-        
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description:</label>
-                        <textarea class="form-control" id="description" name="description" rows="4" required><%= itemcat.description%></textarea>
-                    </div>
-        
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </form>
-            </div>
-          
+          <div class="container form-container">
+            <h1 class="mb-4">Update Category</h1>
 
+            <form
+              action="/admin/update-category/<%= itemcat._id %>"
+              method="post"
+            >
+              <div class="mb-3">
+                <label for="categoryName" class="form-label"
+                  >Category Name:</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="categoryName"
+                  name="categoryName"
+                  value="<%= itemcat.name %>"
+                  required
+                />
+              </div>
 
-         
+              <div class="mb-3">
+                <label for="description" class="form-label">Description:</label>
+                <textarea
+                  class="form-control"
+                  id="description"
+                  name="description"
+                  rows="4"
+                  required
+                >
+<%= itemcat.description%></textarea
+                >
+              </div>
+
+              <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+          </div>
         </div>
         <!-- main-panel ends -->
       </div>
@@ -64,7 +98,7 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
-    
+
     <script src="/admin_assets/assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->

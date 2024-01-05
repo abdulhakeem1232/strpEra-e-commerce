@@ -1,118 +1,185 @@
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
-
-<head>
-	<!-- Mobile Specific Meta -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<!-- Favicon-->
-	<link rel="shortcut icon" href="img/fav.png">
-	<!-- Author Meta -->
-	<meta name="author" content="CodePixar">
-	<!-- Meta Description -->
-	<meta name="description" content="">
-	<!-- Meta Keyword -->
-	<meta name="keywords" content="">
-	<!-- meta character set -->
-	<meta charset="UTF-8">
-	<!-- Site Title -->
-	<title>Karma Shop</title>
-	<!--
+  <head>
+    <!-- Mobile Specific Meta -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/fav.png" />
+    <!-- Author Meta -->
+    <meta name="author" content="CodePixar" />
+    <!-- Meta Description -->
+    <meta name="description" content="" />
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="" />
+    <!-- meta character set -->
+    <meta charset="UTF-8" />
+    <!-- Site Title -->
+    <title>Karma Shop</title>
+    <!--
 		CSS
 		============================================= -->
-	
-    
-</head>
+  </head>
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico">
-    <style>
-  
-  @import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Roboto:wght@300;400&family=Russo+One&display=swap');
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Pacifico"
+  />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Lilita+One&family=Roboto:wght@300;400&family=Russo+One&display=swap");
 
-
-        .logo-text {
-            font-family: 'Lilita One', sans-serif;
-font-family: 'Roboto', sans-serif;
-font-family: 'Russo One', sans-serif;
-            font-size: 38px;
-            font-weight: 400;
-            color: orange;
-            /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); */
-        }
-    </style>
-    <body>
+    .logo-text {
+      font-family: "Lilita One", sans-serif;
+      font-family: "Roboto", sans-serif;
+      font-family: "Russo One", sans-serif;
+      font-size: 38px;
+      font-weight: 400;
+      color: orange;
+      /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); */
+    }
+  </style>
+  <body>
     <header class="header_area sticky-header">
-    <div class="main_menu">
+      <div class="main_menu">
         <nav class="navbar navbar-expand-lg navbar-light main_box">
-            <div class="container">
-                <div class="logo-text">UrbanSole</div>
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <!-- <a class="navbar-brand logo_h" href="index.html"><img src="img/logo.png" alt=""></a> -->
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
-                    <ul class="nav navbar-nav menu_nav ml-auto">
-                        <form action="/search" method="post">
-                        <li><input type="text" name="search" placeholder="  Search" style="width: 250px;"><button style="margin-top: 10px; color: white;background-color: orange;margin-right: 120px;">search</button></li>
-                    </form>
-                        <li class="nav-item active "><a class="nav-link" href="/">Home</a></li>
-                        <li class="nav-item submenu dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                               aria-expanded="false">Shop</a>
-                            <ul class="dropdown-menu">
-                                <% categories.forEach(category => { %>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/shop/<%= category._id %>">
-                                            <%= category.name %>
-                                        </a>
-                                    </li>
-                                <% }); %>
-                            </ul>
-                        </li>
-                        <li class="nav-item"><a class="nav-link" href="/showcart" class="cart"><span class="fa fa-shopping-cart "></span></a></li>
-                        
-                    </ul>
-                   
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="nav-item"><a class="nav-link" href="#" class="cart"></a></li>
-                        
-                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="ti-user"></span> My Profile
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="profileDropdown" id="profileDropdownContent">
-                                <% if (isAuth) { %>
-                                    <a class="dropdown-item" href="/profile">My Account</a>
-                                    <a class="dropdown-item" href="/fav">My Wish List</a>
-                                    <a class="dropdown-item" href="/orderhistory">My Orders</a>
-                                    <a class="dropdown-item" href="/wallet">My Wallet</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" id="loginOrLogoutButton1" href="/logout">Logout</a>
-                                <% } else { %>
-                                    <a class="dropdown-item" id="loginOrLogoutButton2" href="/login">Login</a>
-                                    <a class="dropdown-item" id="loginOrLogoutButton3" href="/reg">Sign Up</a>
-                                <% } %>
-                            </div>
-                        </li> 
-                        
-                    </ul>
-                </div>
+          <div class="container">
+            <div class="logo-text">UrbanSole</div>
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <!-- <a class="navbar-brand logo_h" href="index.html"><img src="img/logo.png" alt=""></a> -->
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div
+              class="collapse navbar-collapse offset"
+              id="navbarSupportedContent"
+            >
+              <ul class="nav navbar-nav menu_nav ml-auto">
+                <form action="/search" method="post">
+                  <li>
+                    <input
+                      type="text"
+                      name="search"
+                      placeholder="  Search"
+                      style="width: 250px"
+                    /><button
+                      style="
+                        margin-top: 10px;
+                        color: white;
+                        background-color: orange;
+                        margin-right: 120px;
+                      "
+                    >
+                      search
+                    </button>
+                  </li>
+                </form>
+                <li class="nav-item active">
+                  <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item submenu dropdown">
+                  <a
+                    href="#"
+                    class="nav-link dropdown-toggle"
+                    data-toggle="dropdown"
+                    role="button"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    >Shop</a
+                  >
+                  <ul class="dropdown-menu">
+                    <% categories.forEach(category => { %>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/shop/<%= category._id %>">
+                        <%= category.name %>
+                      </a>
+                    </li>
+                    <% }); %>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/showcart" class="cart"
+                    ><span class="fa fa-shopping-cart"></span
+                  ></a>
+                </li>
+              </ul>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item">
+                  <a class="nav-link" href="#" class="cart"></a>
+                </li>
+
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    id="profileDropdown"
+                    role="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <span class="ti-user"></span> My Profile
+                  </a>
+                  <div
+                    class="dropdown-menu"
+                    aria-labelledby="profileDropdown"
+                    id="profileDropdownContent"
+                  >
+                    <% if (isAuth) { %>
+                    <a class="dropdown-item" href="/profile">My Account</a>
+                    <a class="dropdown-item" href="/fav">My Wish List</a>
+                    <a class="dropdown-item" href="/orderhistory">My Orders</a>
+                    <a class="dropdown-item" href="/wallet">My Wallet</a>
+                    <div class="dropdown-divider"></div>
+                    <a
+                      class="dropdown-item"
+                      id="loginOrLogoutButton1"
+                      href="/logout"
+                      >Logout</a
+                    >
+                    <% } else { %>
+                    <a
+                      class="dropdown-item"
+                      id="loginOrLogoutButton2"
+                      href="/login"
+                      >Login</a
+                    >
+                    <a
+                      class="dropdown-item"
+                      id="loginOrLogoutButton3"
+                      href="/reg"
+                      >Sign Up</a
+                    >
+                    <% } %>
+                  </div>
+                </li>
+              </ul>
             </div>
+          </div>
         </nav>
-    </div>
-   
-</header>
-<script>
-    document.getElementById('loginOrLogoutButton1').addEventListener('click', function() {
-        
-        localStorage.removeItem('token');
-    });
-</script>
-<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+      </div>
+    </header>
+    <script>
+      document
+        .getElementById("loginOrLogoutButton1")
+        .addEventListener("click", function () {
+          localStorage.removeItem("token");
+        });
+    </script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
   $(document).ready(function () {
     $(document).on('click', '.dropdown-toggle', function (e) {
@@ -125,3 +192,5 @@ font-family: 'Russo One', sans-serif;
     });
   });
 </script> -->
+  </body>
+</html>

@@ -1,79 +1,78 @@
 <style>
-  
-  @import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Roboto:wght@300;400&family=Russo+One&display=swap');
+  @import url("https://fonts.googleapis.com/css2?family=Lilita+One&family=Roboto:wght@300;400&family=Russo+One&display=swap");
 
-
-        .logo-text {
-            font-family: 'Lilita One', sans-serif;
-            font-family: 'Roboto', sans-serif;
-            font-family: 'Russo One', sans-serif;
-            font-size: 38px;
-            font-weight: 400;
-            color: rgb(85, 103, 203);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-    </style>
+  .logo-text {
+    font-family: "Lilita One", sans-serif;
+    font-family: "Roboto", sans-serif;
+    font-family: "Russo One", sans-serif;
+    font-size: 38px;
+    font-weight: 400;
+    color: rgb(85, 103, 203);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+</style>
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <div class="logo-text">UrbanSole</div>
-    <ul class="nav">
-     
-      <li class="nav-item">
-        <a class="nav-link" href="/admin/dashboard">
-          <i class="mdi mdi-home menu-icon"></i>
-          <span class="menu-title">Dashboard</span>
-        </a>
-      </li>
-      
-      <li class="nav-item">
-        <a class="nav-link" href="/admin/products">
-          <i class="mdi mdi-alpha-p-circle menu-icon"></i>
-          <span class="menu-title">Products</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/admin/order">
-          <i class="mdi mdi-cart-outline menu-icon"></i>
-          <span class="menu-title">Orders</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="collapse" href="#category-menu" aria-expanded="false" aria-controls="category-menu">
-            <i class="mdi mdi-chart-bar menu-icon"></i>
-            <span class="menu-title">Category</span>
-            <i class="menu-arrow"></i>
-        </a>
-        <div class="collapse" id="category-menu">
-            <ul class="nav flex-column sub-menu">
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/category">Main Categories</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/subcategory">Subcategories</a>
-                </li>
-                
-            </ul>
-        </div>
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link" href="/admin/dashboard">
+        <i class="mdi mdi-home menu-icon"></i>
+        <span class="menu-title">Dashboard</span>
+      </a>
     </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/admin/customer">
-          <i class="mdi mdi-contacts menu-icon"></i>
-          <span class="menu-title">Customer</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/admin/coupan">
-          <i class="mdi mdi-ticket-percent menu-icon"></i>
-          <span class="menu-title">Coupons</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/admin/banner">
-          <i class="mdi mdi-alpha-b-box menu-icon"></i>
-          <span class="menu-title">Banners</span>
-        </a>
-      </li>
-     
-     
-     
-    </ul>
-  </nav>
+
+    <li class="nav-item">
+      <a class="nav-link" href="/admin/products">
+        <i class="mdi mdi-alpha-p-circle menu-icon"></i>
+        <span class="menu-title">Products</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/admin/order">
+        <i class="mdi mdi-cart-outline menu-icon"></i>
+        <span class="menu-title">Orders</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        data-toggle="collapse"
+        href="#category-menu"
+        aria-expanded="false"
+        aria-controls="category-menu"
+      >
+        <i class="mdi mdi-chart-bar menu-icon"></i>
+        <span class="menu-title">Category</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="category-menu">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/category">Main Categories</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/subcategory">Subcategories</a>
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/admin/customer">
+        <i class="mdi mdi-contacts menu-icon"></i>
+        <span class="menu-title">Customer</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/admin/coupan">
+        <i class="mdi mdi-ticket-percent menu-icon"></i>
+        <span class="menu-title">Coupons</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/admin/banner">
+        <i class="mdi mdi-alpha-b-box menu-icon"></i>
+        <span class="menu-title">Banners</span>
+      </a>
+    </li>
+  </ul>
+</nav>

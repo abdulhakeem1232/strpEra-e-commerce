@@ -3,31 +3,48 @@
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>UrbanSole</title>
-    <link rel="stylesheet" href="/admin_assets/assets/vendors/mdi/css/materialdesignicons.min.css" />
-    <link rel="stylesheet" href="/admin_assets/assets/vendors/flag-icon-css/css/flag-icon.min.css" />
-    <link rel="stylesheet" href="/admin_assets/assets/vendors/css/vendor.bundle.base.css" />
-    <link rel="stylesheet" href="/admin_assets/assets/vendors/font-awesome/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/admin_assets/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css" />
+    <link
+      rel="stylesheet"
+      href="/admin_assets/assets/vendors/mdi/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/admin_assets/assets/vendors/flag-icon-css/css/flag-icon.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/admin_assets/assets/vendors/css/vendor.bundle.base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/admin_assets/assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/admin_assets/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css"
+    />
     <link rel="stylesheet" href="/admin_assets/assets/css/style.css" />
     <link rel="shortcut icon" href="/admin_assets/assets/images/favicon.png" />
-
-    
   </head>
   <body>
     <div class="container-scroller">
-      
       <%- include('partials/sidebar')%>
       <div class="container-fluid page-body-wrapper">
         <div id="theme-settings" class="settings-panel">
           <i class="settings-close mdi mdi-close"></i>
           <p class="settings-heading">SIDEBAR SKINS</p>
           <div class="sidebar-bg-options selected" id="sidebar-default-theme">
-            <div class="img-ss rounded-circle bg-light border mr-3"></div> Default
+            <div class="img-ss rounded-circle bg-light border mr-3"></div>
+            Default
           </div>
           <div class="sidebar-bg-options" id="sidebar-dark-theme">
-            <div class="img-ss rounded-circle bg-dark border mr-3"></div> Dark
+            <div class="img-ss rounded-circle bg-dark border mr-3"></div>
+            Dark
           </div>
           <p class="settings-heading mt-2">HEADER SKINS</p>
           <div class="color-tiles mx-0 px-4">
@@ -38,50 +55,77 @@
         <%- include('partials/nav')%>
 
         <div class="main-panel">
-         
-            <div class="container form-container">
-                <h1 class="mb-4">Add Banner</h1>
-        
-                <form action="/admin/addbanner" method="post" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="productName" class="form-label">Banner Title:</label>
-                        <input type="text" class="form-control" id="title" name="title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="productName" class="form-label">Banner Sub-Title:</label>
-                        <input type="text" class="form-control" id="subtitle" name="subtitle" required>
-                    </div>
+          <div class="container form-container">
+            <h1 class="mb-4">Add Banner</h1>
 
-                    <div class="mb-3">
-                      <label for="type" class="form-label">Type:</label>
-                      <select class="form-select" id="type" name="type"  onchange="loadurl()" required>
-                        <option value="" disabled selected>Select Banner Type</option>
-                            <option value="coupon">Coupon</option>
-                            <option value="referal">Referal</option>
-                            <option value="category">category</option>
-                    </select>
-                  </div>
+            <form
+              action="/admin/addbanner"
+              method="post"
+              enctype="multipart/form-data"
+            >
+              <div class="mb-3">
+                <label for="productName" class="form-label"
+                  >Banner Title:</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  name="title"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="productName" class="form-label"
+                  >Banner Sub-Title:</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="subtitle"
+                  name="subtitle"
+                  required
+                />
+              </div>
 
-                  <div class="mb-3">
-                    <label for="type" class="form-label">Url:</label>
-                    <select class="form-select" id="url" name="url"   required>
-                      <option value="" disabled selected>Select Url</option>
-                  </select> 
-                </div>
-                 
-                  <div class="mb-3">
-                    <label for="images" class="form-label">Images:</label>
-                    <input type="file" class="form-control" id="images" name="images" accept="image/*" required>
-                </div>
+              <div class="mb-3">
+                <label for="type" class="form-label">Type:</label>
+                <select
+                  class="form-select"
+                  id="type"
+                  name="type"
+                  onchange="loadurl()"
+                  required
+                >
+                  <option value="" disabled selected>Select Banner Type</option>
+                  <option value="coupon">Coupon</option>
+                  <option value="referal">Referal</option>
+                  <option value="category">category</option>
+                </select>
+              </div>
 
-        
-                    <button type="submit" class="btn btn-primary">Add Banner</button>
-                </form>
-            </div>
-          
+              <div class="mb-3">
+                <label for="type" class="form-label">Url:</label>
+                <select class="form-select" id="url" name="url" required>
+                  <option value="" disabled selected>Select Url</option>
+                </select>
+              </div>
 
+              <div class="mb-3">
+                <label for="images" class="form-label">Images:</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="images"
+                  name="images"
+                  accept="image/*"
+                  required
+                />
+              </div>
 
-         
+              <button type="submit" class="btn btn-primary">Add Banner</button>
+            </form>
+          </div>
         </div>
         <!-- main-panel ends -->
       </div>
@@ -91,39 +135,42 @@
     <!-- plugins:js -->
     <script>
       function loadurl() {
-        console.log('hfhfhfh');
+        console.log("hfhfhfh");
         var type = document.getElementById("type").value;
-        var url=document.getElementById('url')
-        var cat = ' <%= JSON.stringify(category) %>'.replace(/&#34;/g, '"');
+        var url = document.getElementById("url");
+        var cat = " <%= JSON.stringify(category) %>".replace(/&#34;/g, '"');
         const category = JSON.parse(cat);
         console.log(category);
         console.log(type);
-        url.innerHTML = '<option value="" disabled selected>Select Url</option>';
-        if(type=='coupon'){
-          console.log('8888');
+        url.innerHTML =
+          '<option value="" disabled selected>Select Url</option>';
+        if (type == "coupon") {
+          console.log("8888");
           var option = document.createElement("option");
-              option.value = '/profile'
-              option.textContent = 'Coupon';
-              url.appendChild(option);
+          option.value = "/profile";
+          option.textContent = "Coupon";
+          url.appendChild(option);
         }
-        if(type=='referal'){
+        if (type == "referal") {
           var option = document.createElement("option");
-              option.value = '/profile'
-              option.textContent = 'Referal';
-              url.appendChild(option);
+          option.value = "/profile";
+          option.textContent = "Referal";
+          url.appendChild(option);
         }
-        if(type=='category'){
-          console.log('kkk');
-          url.innerHTML = '<option value="" disabled selected>Select Url</option>';
-          category.forEach(function(item) {
-              var option = document.createElement("option");
-              option.value =`/shop/${item._id}`
-              option.textContent = item.name;
-              url.appendChild(option);
+        if (type == "category") {
+          console.log("kkk");
+          url.innerHTML =
+            '<option value="" disabled selected>Select Url</option>';
+          category.forEach(function (item) {
+            var option = document.createElement("option");
+            option.value = `/shop/${item._id}`;
+            option.textContent = item.name;
+            url.appendChild(option);
           });
         }
-      }</script>
-    
+      }
+    </script>
+
     <script src="/admin_assets/assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
@@ -146,6 +193,5 @@
     <!-- Custom js for this page -->
     <script src="/admin_assets/assets/js/dashboard.js"></script>
     <!-- End custom js for this page -->
-   
   </body>
 </html>

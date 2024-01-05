@@ -19,7 +19,7 @@ const processImage = async (req, res, next) => {
                 const { width, height } = await sharp(file.path).metadata();
                 const size = Math.min(width, height);
 
-                const cropSize = Math.floor(size * 0.7); 
+                const cropSize = Math.floor(size * 0.7);
                 const left = Math.floor((width - cropSize) / 2);
                 const top = Math.floor((height - cropSize) / 2);
 

@@ -8,14 +8,14 @@ const coupanModel = require('../../model/coupanModel');
 const userModel = require('../../model/userModel');
 const walletModel = require('../../model/walletModel');
 const easyinvoice = require('easyinvoice');
-const fs=require('fs');
-const puppeteer=require('puppeteer')
-const path=require('path')
-const os=require('os');
+const fs = require('fs');
+const puppeteer = require('puppeteer')
+const path = require('path')
+const os = require('os');
 const { log } = require('console');
-const PDFDocument=require('pdfkit')
+const PDFDocument = require('pdfkit')
 
-var instance = new Razorpay({ key_id:process.env.key_id, key_secret: process.env.key_secret })
+var instance = new Razorpay({ key_id: process.env.key_id, key_secret: process.env.key_secret })
 
 
 const checkout = async (req, res) => {
@@ -29,17 +29,20 @@ const checkout = async (req, res) => {
 
         for (const cartItem of data.item || []) {
             const pro = cartItem.productId;
-            const product=await productModel.findOne({_id:pro._id})
+            const product = await productModel.findOne({ _id: pro._id })
             const size = product.stock.findIndex(s => s.size == cartItem.size);
-    
+
             if (product.stock[size].quantity < cartItem.quantity) {
                 console.log('Selected quantity exceeds available stock for productId:', product._id);
-                return res.redirect('/showcart'); 
+                return res.redirect('/showcart');
             }
         }
+        if (data.item.length == 0) {
+            return res.redirect('/showcart')
+        }
 
-        const coupon =await coupanModel.find({minprice:{$lte:data.total}})
-        res.render('user/checkout', { data: data, address: address,coupon:coupon })
+        const coupon = await coupanModel.find({ minprice: { $lte: data.total } })
+        res.render('user/checkout', { data: data, address: address, coupon: coupon })
     }
     catch (err) {
         res.redirect('/error')
@@ -48,8 +51,8 @@ const checkout = async (req, res) => {
 }
 const order = async (req, res) => {
     try {
-        const { address,pay,amount,wallet} = req.body
-        console.log("jjj",wallet);
+        const { address, pay, amount, wallet } = req.body
+        console.log("jjj", wallet);
         const userId = req.session.userId
         const cart = await cartModel.findOne({ userId: userId })
         const useraddress = await addressModel.findOne({ userId: userId })
@@ -73,7 +76,7 @@ const order = async (req, res) => {
             userId: userId,
             items: items,
             amount: amount,
-            wallet:wallet,
+            wallet: wallet,
             payment: pay,
             address: selectedaddress,
             createdAt: new Date(),
@@ -81,14 +84,16 @@ const order = async (req, res) => {
         })
         cart.item = []
         cart.total = 0
-        if(wallet>0){
-            const userWallet=await walletModel.findOne({userId:userId})
-            userWallet.history.push({transaction:"Debited",
-            amount:wallet,
-            date:new Date()})
+        if (wallet > 0) {
+            const userWallet = await walletModel.findOne({ userId: userId })
+            userWallet.history.push({
+                transaction: "Debited",
+                amount: wallet,
+                date: new Date()
+            })
             await userWallet.save();
-            const user=await userModel.findOne({_id:userId})
-            user.wallet-=wallet;
+            const user = await userModel.findOne({ _id: userId })
+            user.wallet -= wallet;
             await user.save();
 
         }
@@ -110,7 +115,7 @@ const order = async (req, res) => {
 const orders = async (req, res) => {
     try {
         const userId = req.session.userId;
-        const order = await orderModel.find({ userId: userId }).sort({createdAt:-1}).populate({
+        const order = await orderModel.find({ userId: userId }).sort({ createdAt: -1 }).populate({
             path: 'items.productId',
             select: 'name images ratings'
         })
@@ -130,33 +135,37 @@ const orders = async (req, res) => {
 const ordercancelling = async (req, res) => {
     try {
         const id = req.params.id
-        const update = await orderModel.updateOne({ _id: id }, { status: "Cancelled",updated:new Date() })
+        const update = await orderModel.updateOne({ _id: id }, { status: "Cancelled", updated: new Date() })
         const result = await orderModel.findOne({ _id: id })
 
-       if(result.payment=='upi'|| result.payment=='wallet'){
-        const userId=req.session.userId
-        const user=await userModel.findOne({_id:userId})
-        user.wallet +=result.amount
-        await user.save()
+        if (result.payment == 'upi' || result.payment == 'wallet') {
+            const userId = req.session.userId
+            const user = await userModel.findOne({ _id: userId })
+            user.wallet += result.amount
+            await user.save()
 
-        const wallet=await walletModel.findOne({userId:userId})
-        if(!wallet){
-            const newWallet=new walletModel({
-                userId:userId,
-                history:[
-                    {transaction:"Credited",
-                    amount:result.amount,
-                    date:new Date()}
-                ]
-            })
-            await newWallet.save();
-        }else{
-            wallet.history.push({transaction:"Credited",
-            amount:result.amount,
-            date:new Date()})
-            await wallet.save();
+            const wallet = await walletModel.findOne({ userId: userId })
+            if (!wallet) {
+                const newWallet = new walletModel({
+                    userId: userId,
+                    history: [
+                        {
+                            transaction: "Credited",
+                            amount: result.amount,
+                            date: new Date()
+                        }
+                    ]
+                })
+                await newWallet.save();
+            } else {
+                wallet.history.push({
+                    transaction: "Credited",
+                    amount: result.amount,
+                    date: new Date()
+                })
+                await wallet.save();
+            }
         }
-       }
 
         const items = result.items.map(item => ({
             productId: item.productId,
@@ -184,33 +193,37 @@ const ordercancelling = async (req, res) => {
 const orderreturning = async (req, res) => {
     try {
         const id = req.params.id
-        const update = await orderModel.updateOne({ _id: id }, { status: "returned",updated:new Date() })
+        const update = await orderModel.updateOne({ _id: id }, { status: "returned", updated: new Date() })
         const result = await orderModel.findOne({ _id: id })
 
-        const userId=req.session.userId
-        const user=await userModel.findOne({_id:userId})
-        user.wallet +=result.amount
+        const userId = req.session.userId
+        const user = await userModel.findOne({ _id: userId })
+        user.wallet += result.amount
         await user.save()
 
-        const wallet=await walletModel.findOne({userId:userId})
-        if(!wallet){
-            const newWallet=new walletModel({
-                userId:userId,
-                history:[
-                    {transaction:"Credited",
-                    amount:result.amount,
-                    date:new Date()}
+        const wallet = await walletModel.findOne({ userId: userId })
+        if (!wallet) {
+            const newWallet = new walletModel({
+                userId: userId,
+                history: [
+                    {
+                        transaction: "Credited",
+                        amount: result.amount,
+                        date: new Date()
+                    }
                 ]
             })
             await newWallet.save();
-        }else{
-            wallet.history.push({transaction:"Credited",
-            amount:result.amount,
-            date:new Date()})
+        } else {
+            wallet.history.push({
+                transaction: "Credited",
+                amount: result.amount,
+                date: new Date()
+            })
             await wallet.save();
         }
-       
-       
+
+
         const items = result.items.map(item => ({
             productId: item.productId,
             quantity: item.quantity,
@@ -253,7 +266,7 @@ const addToFav = async (req, res) => {
         const fav = await favModel.findOne({ userId: userId });
 
         if (!fav) {
-            
+
             const newFav = new favModel({
                 userId: userId,
                 item: [{ productId: pid }],
@@ -311,16 +324,16 @@ const removeFav = async (req, res) => {
 
 const applycoupon = async (req, res) => {
     try {
-       const {code,amount}=req.body
-       const coupon=await coupanModel.findOne({coupancode:code})
-       if(coupon && coupon.expirydate > new Date() && coupon.minprice <= amount){
-        const dicprice=(amount*coupon.discountpercentage)/100
-        const price=amount-dicprice;
-        res.json({success:true,price,dicprice})
-       }
-       else{
-        res.json({success:false,message:"Invalid Coupon"})
-       }
+        const { code, amount } = req.body
+        const coupon = await coupanModel.findOne({ coupancode: code })
+        if (coupon && coupon.expirydate > new Date() && coupon.minprice <= amount) {
+            const dicprice = (amount * coupon.discountpercentage) / 100
+            const price = amount - dicprice;
+            res.json({ success: true, price, dicprice })
+        }
+        else {
+            res.json({ success: false, message: "Invalid Coupon" })
+        }
     } catch (err) {
         console.error(err);
         res.redirect('/error')
@@ -329,14 +342,14 @@ const applycoupon = async (req, res) => {
 
 const wallet = async (req, res) => {
     try {
-       const amount=req.body.amount
-       const user=await userModel.findOne({_id:req.session.userId})
-       if(user.wallet>=amount){
-        res.json({success:true})
-       }
-       else{
-        res.json({success:false,amount:user.wallet})
-       }
+        const amount = req.body.amount
+        const user = await userModel.findOne({ _id: req.session.userId })
+        if (user.wallet >= amount) {
+            res.json({ success: true })
+        }
+        else {
+            res.json({ success: false, amount: user.wallet })
+        }
     } catch (err) {
         console.error(err);
         res.redirect('/error')
@@ -345,14 +358,14 @@ const wallet = async (req, res) => {
 
 const ordertracking = async (req, res) => {
     try {
-       const id=req.params.id
-       const order = await orderModel.find({ _id:id }).populate({
-        path: 'items.productId',
-        select: 'name images'
-    })
-    console.log('kkk',order,'jjjj');
-       res.render('user/ordertracking',{order:order})
-       
+        const id = req.params.id
+        const order = await orderModel.find({ _id: id }).populate({
+            path: 'items.productId',
+            select: 'name images'
+        })
+        console.log('kkk', order, 'jjjj');
+        res.render('user/ordertracking', { order: order })
+
     } catch (err) {
         console.error(err);
         res.redirect('/error')
@@ -363,25 +376,25 @@ const pdfmaker = async (req, res) => {
     try {
         const orderId = req.params.id;
         const order = await orderModel.findOne({ _id: orderId }).populate({
-          path: 'items.productId',
-          select: 'name',
+            path: 'items.productId',
+            select: 'name',
         });
-    
-    
+
+
         const pdfBuffer = await generateInvoice(order);
-    
+
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=invoice-${order.orderId}.pdf`);
         res.send(pdfBuffer);
-      } catch (error) {
+    } catch (error) {
         console.error(error);
         res.redirect('/error')
-      }
-  }
+    }
+}
 
-  const generateInvoice = async (order) => {
+const generateInvoice = async (order) => {
     try {
-        let totalAmount=order.amount;
+        let totalAmount = order.amount;
         const data = {
             documentTitle: 'Invoice',
             currency: 'INR',
@@ -390,44 +403,44 @@ const pdfmaker = async (req, res) => {
             marginLeft: 25,
             marginBottom: 25,
             sender: {
-              company: 'UrbanSole',
-              address: '123 Main Street, Banglore, India',
-              zip: '651323',
-              city: 'Banglore',
-              country: 'INDIA',
-              phone: '9876543210',
-              email: 'urbansole@gmail.com',
-              website: 'www.urbansole.tech',
+                company: 'UrbanSole',
+                address: '123 Main Street, Banglore, India',
+                zip: '651323',
+                city: 'Banglore',
+                country: 'INDIA',
+                phone: '9876543210',
+                email: 'urbansole@gmail.com',
+                website: 'www.urbansole.tech',
             },
             invoiceNumber: `INV-${order.orderId}`,
             invoiceDate: new Date().toJSON(),
             products: order.items.map(item => ({
-              quantity: item.quantity,
-              description: item.productId.name,
-              price: item.price,
+                quantity: item.quantity,
+                description: item.productId.name,
+                price: item.price,
             })),
-            total: `₹${totalAmount.toFixed(2)}`, 
+            total: `₹${totalAmount.toFixed(2)}`,
             tax: 0,
             bottomNotice: 'Thank you for shopping at UrbanSole!',
-          };
-  
-      const result = await easyinvoice.createInvoice(data);
-      const pdfBuffer = Buffer.from(result.pdf, 'base64');
-  
-      return pdfBuffer;
+        };
+
+        const result = await easyinvoice.createInvoice(data);
+        const pdfBuffer = Buffer.from(result.pdf, 'base64');
+
+        return pdfBuffer;
     } catch (error) {
         console.error(error);
         res.redirect('/error')
     }
-  };
-  
-  
+};
+
+
 const addratings = async (req, res) => {
     try {
-       const {orderId,productId,rating,review}=req.body
-       const product=await productModel.findOne({_id:productId})
-       product.ratings.push({userId:req.session.userId,orderId:orderId,ratings:rating,reviews:review})
-       await product.save();
+        const { orderId, productId, rating, review } = req.body
+        const product = await productModel.findOne({ _id: productId })
+        product.ratings.push({ userId: req.session.userId, orderId: orderId, ratings: rating, reviews: review })
+        await product.save();
         res.redirect('/orderhistory')
     } catch (err) {
         console.error(err);

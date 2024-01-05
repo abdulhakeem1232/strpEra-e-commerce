@@ -1,39 +1,39 @@
 const bcrypt = require('bcrypt')
 const otpGenerator = require('otp-generator')
 const nodemailer = require('nodemailer')
-const flash=require('express-flash')
+const flash = require('express-flash')
 const userModel = require('../../model/userModel.js')
 const userotp = require('../../model/userotpModel.js')
-const productModel=require('../../model/productModel.js')
+const productModel = require('../../model/productModel.js')
 const { nameValid, emailValid, phoneValid, passwordValid, confirmpasswordValid } = require("../../../utils/validators/signupValidators.js")
 const subcategoryModel = require('../../model/subcatModel.js')
-const addressModel=require('./../../model/addressModel.js')
+const addressModel = require('./../../model/addressModel.js')
 const walletModel = require('../../model/walletModel.js')
-const bannerModel=require('../../model/bannerModel.js')
-const Razorpay=require('razorpay')
-const uuid=require('uuid')
+const bannerModel = require('../../model/bannerModel.js')
+const Razorpay = require('razorpay')
+const uuid = require('uuid')
 
 
-const error=async(req,res)=>{
+const error = async (req, res) => {
     res.render('user/error')
 }
 
 const index = async (req, res) => {
     const isAuth = req.session.isAuth || false;
-    const banner=await bannerModel.find({active:true})
-    const product=await productModel.find().sort({created:-1}).limit(12)
-    const product2=await productModel.find().sort({price:-1}).limit(12)
-    res.render('user/index.ejs',{ isAuth,banner:banner,product:product,product2:product2})
+    const banner = await bannerModel.find({ active: true })
+    const product = await productModel.find().sort({ created: -1 }).limit(12)
+    const product2 = await productModel.find().sort({ price: -1 }).limit(12)
+    res.render('user/index.ejs', { isAuth, banner: banner, product: product, product2: product2 })
 }
 
 const login = async (req, res) => {
     try {
         res.render('user/login.ejs', {
             expressFlash: {
-              passworderror: req.flash('passworderror'),
-              emailerror: req.flash('emailerror')
+                passworderror: req.flash('passworderror'),
+                emailerror: req.flash('emailerror')
             }
-          })
+        })
     }
     catch {
         res.redirect('/error')
@@ -41,25 +41,25 @@ const login = async (req, res) => {
     }
 }
 
-const loginpost=async(req,res)=> {
-    try{
-        const email=req.body.email
-        const user=await userModel.findOne({email:email})
-        const passwordmatch=await bcrypt.compare(req.body.password,user.password)
-        if(passwordmatch && !user.status){
-            user.session=req.session.id
-           await user.save()
+const loginpost = async (req, res) => {
+    try {
+        const email = req.body.email
+        const user = await userModel.findOne({ email: email })
+        const passwordmatch = await bcrypt.compare(req.body.password, user.password)
+        if (passwordmatch && !user.status) {
+            user.session = req.session.id
+            await user.save()
             req.session.isAuth = true;
             req.session.userId = user._id;
             res.redirect('/');
         }
-        else{
-            req.flash('passworderror','invalid password Or you are Blocked')
+        else {
+            req.flash('passworderror', 'invalid password Or you are Blocked')
             res.redirect('/login')
         }
     }
-    catch(err){
-        req.flash('emailerror','invalid e-mail')
+    catch (err) {
+        req.flash('emailerror', 'invalid e-mail')
         console.log(err);
         res.redirect('/login')
     }
@@ -67,7 +67,7 @@ const loginpost=async(req,res)=> {
 
 const signup = async (req, res) => {
     try {
-        res.render('user/signup.ejs',{
+        res.render('user/signup.ejs', {
             expressFlash: {
                 emailerror: req.flash('emailerror'),
                 nameerror: req.flash('nameerror'),
@@ -75,7 +75,7 @@ const signup = async (req, res) => {
                 passworderror: req.flash('passworderror'),
                 cpassworderror: req.flash('cpassworderror')
             }
-          })
+        })
     }
     catch {
         res.redirect('/error')
@@ -99,8 +99,8 @@ const sendmail = async (email, otp) => {
             text: 'Your OTP is:' + otp
         };
 
-         transporter.sendMail(mailOptions);
-         console.log("E-mail sent sucessfully");
+        transporter.sendMail(mailOptions);
+        console.log("E-mail sent sucessfully");
     }
     catch (err) {
         console.log("error in sending mail:", err);
@@ -130,32 +130,32 @@ const regpost = async (req, res) => {
 
         const emailExist = await userModel.findOne({ email: email })
         if (emailExist) {
-            req.flash('emailerror','E-mail already Exist')
+            req.flash('emailerror', 'E-mail already Exist')
             res.redirect('/reg')
         }
         else if (!isEmailValid) {
-            req.flash('emailerror','Enter a valid E-mail')
+            req.flash('emailerror', 'Enter a valid E-mail')
             res.redirect('/reg')
         }
         else if (!isNameValid) {
-            req.flash('nameerror','Enter a valid Name')
+            req.flash('nameerror', 'Enter a valid Name')
             res.redirect('/reg')
         }
         else if (!isPhoneValid) {
-            req.flash('phoneerror','Enter a valid Phone Number')
+            req.flash('phoneerror', 'Enter a valid Phone Number')
             res.redirect('/reg')
         }
         else if (!ispasswordValid) {
-            req.flash('passworderror','Password should contain one uppercase,one lowercase,one number,one special charecter')
+            req.flash('passworderror', 'Password should contain one uppercase,one lowercase,one number,one special charecter')
             res.redirect('/reg')
         }
         else if (!iscpasswordValid) {
-            req.flash('cpassworderror','Password and Confirm password should be match')
+            req.flash('cpassworderror', 'Password and Confirm password should be match')
             res.redirect('/reg')
         }
         else {
             const hashedpassword = await bcrypt.hash(password, 10)
-            const user = new userModel({ f_name: fname, l_name: lname, email: email, phone_no: phone, password: hashedpassword,code:uuid.v4() })
+            const user = new userModel({ f_name: fname, l_name: lname, email: email, phone_no: phone, password: hashedpassword, code: uuid.v4() })
             req.session.user = user
             req.session.signup = true
             req.session.forgot = false
@@ -164,13 +164,13 @@ const regpost = async (req, res) => {
             const currentTimestamp = Date.now();
             const expiryTimestamp = currentTimestamp + 60 * 1000;
             await userotp.create({ email: email, otp: otp, expiry: new Date(expiryTimestamp) })
-            req.session.email=email;
-            const reference=await userModel.findOne({code:code.trim()})
-            console.log(reference,'0000');
-            console.log(code,'coooo');
-            if(reference){
-            req.session.reference=reference._id
-            console.log(req.session.reference,'fff');
+            req.session.email = email;
+            const reference = await userModel.findOne({ code: code.trim() })
+            console.log(reference, '0000');
+            console.log(code, 'coooo');
+            if (reference) {
+                req.session.reference = reference._id
+                console.log(req.session.reference, 'fff');
             }
             await sendmail(email, otp)
             res.redirect('/otp')
@@ -184,14 +184,14 @@ const regpost = async (req, res) => {
 
 const otp = async (req, res) => {
     try {
-        const otp=await userotp.findOne({email:req.session.email}) 
+        const otp = await userotp.findOne({ email: req.session.email })
         req.session.otpExpiration = new Date().getTime() + 45 * 1000;
-        res.render('user/otp.ejs',{
+        res.render('user/otp.ejs', {
             expressFlash: {
-              otperror: req.flash('otperror'),
+                otperror: req.flash('otperror'),
             },
-            otp:otp
-         })
+            otp: otp
+        })
     }
     catch {
         res.redirect('/error')
@@ -214,29 +214,31 @@ const verifyotp = async (req, res) => {
 
             user.isVerified = true;
             try {
-                if(req.session.signup){
-                await userModel.create(user)
-                req.session.isAuth = true;
-                req.session.signup=false
-                const reference=req.session.reference
-                console.log(reference,'yyyy');
-                const refer=await userModel.findOne({_id:reference})
-                if(refer){
-                refer.wallet+=100
-                console.log(refer,'dd');
-                const wallet= await walletModel.findOne({userId:refer._id})
-                console.log(wallet,'ppp');
-                wallet.history.push({transaction:"Credited",
-                amount:100,
-                date:new Date()})
-                await refer.save();
-                await wallet.save();
+                if (req.session.signup) {
+                    await userModel.create(user)
+                    req.session.isAuth = true;
+                    req.session.signup = false
+                    const reference = req.session.reference
+                    console.log(reference, 'yyyy');
+                    const refer = await userModel.findOne({ _id: reference })
+                    if (refer) {
+                        refer.wallet += 100
+                        console.log(refer, 'dd');
+                        const wallet = await walletModel.findOne({ userId: refer._id })
+                        console.log(wallet, 'ppp');
+                        wallet.history.push({
+                            transaction: "Credited",
+                            amount: 100,
+                            date: new Date()
+                        })
+                        await refer.save();
+                        await wallet.save();
+                    }
+                    req.session.userId = user._id;
+                    res.redirect('/')
                 }
-                req.session.userId = user._id;
-                res.redirect('/')
-                }
-               else if(req.session.forgot){
-                req.session.forgot=false;
+                else if (req.session.forgot) {
+                    req.session.forgot = false;
                     res.redirect('/newpassword')
                 }
             }
@@ -246,7 +248,7 @@ const verifyotp = async (req, res) => {
             }
         }
         else {
-            req.flash('otperror','Invalid OTP or Time Expired')
+            req.flash('otperror', 'Invalid OTP or Time Expired')
             res.redirect('/otp')
         }
     }
@@ -257,23 +259,23 @@ const verifyotp = async (req, res) => {
     }
 
 }
-const resendotp=async(req,res)=>{
-    try{
-    const email = req.session.user.email
-    const otp = otpgenerator()
-     console.log(otp);
-     const currentTimestamp = Date.now();
-     const expiryTimestamp = currentTimestamp + 60 * 1000;
-     await userotp.updateOne({ email: email },{otp:otp,expiry:new Date(expiryTimestamp)})
-     await sendmail(email, otp)
+const resendotp = async (req, res) => {
+    try {
+        const email = req.session.user.email
+        const otp = otpgenerator()
+        console.log(otp);
+        const currentTimestamp = Date.now();
+        const expiryTimestamp = currentTimestamp + 60 * 1000;
+        await userotp.updateOne({ email: email }, { otp: otp, expiry: new Date(expiryTimestamp) })
+        await sendmail(email, otp)
     }
-    catch(err){
-       console.log(err);
-       res.redirect('/error')
+    catch (err) {
+        console.log(err);
+        res.redirect('/error')
     }
 
 }
-const forgotpassword=async (req, res) => {
+const forgotpassword = async (req, res) => {
     try {
         res.render('user/forgot.ejs')
     }
@@ -283,15 +285,16 @@ const forgotpassword=async (req, res) => {
     }
 }
 
-const forgotpasswordpost=async (req, res) => {
+const forgotpasswordpost = async (req, res) => {
     try {
-        const email=req.body.email
-        const emailexist= await userModel.findOne({email:email})
-        req.session.id=emailexist._id
+        const email = req.body.email
+        req.session.email=email
+        const emailexist = await userModel.findOne({ email: email })
         console.log(emailexist);
-        if(emailexist){
-            req.session.forgot=true
-            req.session.signup=false
+        req.session.forgot = true
+        req.session.signup = false
+        if (emailexist) {
+            req.session.id = emailexist._id
             req.session.user = { email: email };
             const otp = otpgenerator()
             console.log(otp);
@@ -302,11 +305,11 @@ const forgotpasswordpost=async (req, res) => {
             await sendmail(email, otp)
             res.redirect('/otp')
         }
-        else{
-           res.render('user/forgot.ejs',{email:"E-Mail Not Exist"})
+        else {
+            res.render('user/forgot.ejs', { email: "E-Mail Not Exist in Registration" })
         }
     }
-    catch(err) {
+    catch (err) {
         res.redirect('/error')
         console.log(err);
 
@@ -314,9 +317,9 @@ const forgotpasswordpost=async (req, res) => {
 }
 const newpassword = async (req, res) => {
     try {
-        res.render('user/newpassword.ejs',{
-            perror:req.flash('perror'),
-            cperror:req.flash('cperror')
+        res.render('user/newpassword.ejs', {
+            perror: req.flash('perror'),
+            cperror: req.flash('cperror')
         })
     }
     catch {
@@ -332,18 +335,18 @@ const resetpassword = async (req, res) => {
         const ispasswordValid = passwordValid(password)
         const iscpasswordValid = confirmpasswordValid(cpassword, password)
 
-         if (!ispasswordValid) {
-            req.flash('perror','Password should contain one uppercase,one lowercase,one number,one special charecter')
+        if (!ispasswordValid) {
+            req.flash('perror', 'Password should contain one uppercase,one lowercase,one number,one special charecter')
             res.redirect('/newpassword')
         }
         else if (!iscpasswordValid) {
-         req.flash('cperror','Password and Confirm password should be match')
+            req.flash('cperror', 'Password and Confirm password should be match')
             res.redirect('/newpassword')
         }
-        else{
+        else {
             const hashedpassword = await bcrypt.hash(password, 10)
             const email = req.session.user.email;
-            await userModel.updateOne({email:email},{password:hashedpassword})
+            await userModel.updateOne({ email: email }, { password: hashedpassword })
             res.redirect('/login')
 
         }
@@ -354,65 +357,65 @@ const resetpassword = async (req, res) => {
     }
 }
 
-const logout=async(req,res)=>{
-    req.session.isAuth=false;
+const logout = async (req, res) => {
+    req.session.isAuth = false;
     req.session.userId = null;
     req.session.destroy();
     res.redirect('/')
 }
 
-const profile=async(req,res)=>{
-    try{
-        const userId=req.session.userId
-        const data=await userModel.findOne({_id:userId})
-        res.render('user/profile',{userData:data,expressFlash: req.flash('success')} )
+const profile = async (req, res) => {
+    try {
+        const userId = req.session.userId
+        const data = await userModel.findOne({ _id: userId })
+        res.render('user/profile', { userData: data, expressFlash: req.flash('success') })
     }
-    catch(err){
+    catch (err) {
         res.redirect('/error')
         console.log(err);
     }
 }
-const profileEdit=async(req,res)=>{
-    try{
-        const userId=req.session.userId
-        const data=await userModel.findOne({_id:userId})
-        res.render('user/editProfile',{userData:data})
+const profileEdit = async (req, res) => {
+    try {
+        const userId = req.session.userId
+        const data = await userModel.findOne({ _id: userId })
+        res.render('user/editProfile', { userData: data })
     }
-    catch(err){
+    catch (err) {
         res.redirect('/error')
         console.log(err);
     }
 }
-const profileUpdate=async(req,res)=>{
-    try{
-        const {fname,lname,phone_no}=req.body
-        const userId=req.session.userId
-        const data=await userModel.updateOne({_id:userId},{f_name:fname,l_name:lname,phone_no:phone_no})
+const profileUpdate = async (req, res) => {
+    try {
+        const { fname, lname, phone_no } = req.body
+        const userId = req.session.userId
+        const data = await userModel.updateOne({ _id: userId }, { f_name: fname, l_name: lname, phone_no: phone_no })
         res.redirect('/profile')
     }
-    catch(err){
+    catch (err) {
         res.redirect('/error')
         console.log(err);
     }
 }
 
-const address=async(req,res)=>{
-    try{
-        const userId=req.session.userId
-        const data=await addressModel.findOne({userId:userId})
-        res.render('user/address',{userData:data})
+const address = async (req, res) => {
+    try {
+        const userId = req.session.userId
+        const data = await addressModel.findOne({ userId: userId })
+        res.render('user/address', { userData: data })
     }
-    catch(err){
+    catch (err) {
         res.redirect('/error')
         console.log(err);
     }
 }
 
-const newAddress=async(req,res)=>{
-    try{
-        res.render('user/newAddress',{expressFlash: req.flash('address') })
+const newAddress = async (req, res) => {
+    try {
+        res.render('user/newAddress', { expressFlash: req.flash('address') })
     }
-    catch(err){
+    catch (err) {
         res.redirect('/error')
         console.log(err);
     }
@@ -420,7 +423,7 @@ const newAddress=async(req,res)=>{
 
 const addressUpdate = async (req, res) => {
     try {
-        const { name,mobile,email,housename,street, city, state, country,pincode,saveas } = req.body;
+        const { name, mobile, email, housename, street, city, state, country, pincode, saveas } = req.body;
         const userId = req.session.userId;
         const existingUser = await addressModel.findOne({ userId: userId });
 
@@ -436,7 +439,7 @@ const addressUpdate = async (req, res) => {
                 'address.state': state,
                 'address.country': country,
                 'address.pincode': pincode,
-                'address.save_as':saveas
+                'address.save_as': saveas
             });
 
             if (existingAddress) {
@@ -445,16 +448,16 @@ const addressUpdate = async (req, res) => {
             }
 
             existingUser.address.push({
-                name:name,
-                mobile:mobile,
-                email:email,
-                houseName:housename,
+                name: name,
+                mobile: mobile,
+                email: email,
+                houseName: housename,
                 street: street,
                 city: city,
                 state: state,
-                country:country,
+                country: country,
                 pincode: pincode,
-                save_as:saveas
+                save_as: saveas
             });
 
             await existingUser.save();
@@ -465,16 +468,16 @@ const addressUpdate = async (req, res) => {
         const newAddress = await addressModel.create({
             userId: userId,
             address: {
-                name:name,
-                mobile:mobile,
-                email:email,
-                houseName:housename,
+                name: name,
+                mobile: mobile,
+                email: email,
+                houseName: housename,
                 street: street,
                 city: city,
                 state: state,
-                country:country,
+                country: country,
                 pincode: pincode,
-                save_as:saveas,
+                save_as: saveas,
             },
         });
 
@@ -486,58 +489,58 @@ const addressUpdate = async (req, res) => {
 };
 
 
-const changepassword=async(req,res)=>{
-    try{
-        res.render('user/changePassword',{expressFlash: req.flash('pass','npass','cpass')})
+const changepassword = async (req, res) => {
+    try {
+        res.render('user/changePassword', { expressFlash: req.flash('pass', 'npass', 'cpass') })
     }
-    catch(err){
+    catch (err) {
         res.redirect('/error')
         console.log(err);
     }
 }
 
-const passwordUpdate=async(req,res)=>{
-    try{
-       const {pass,npass,cpass}=req.body
-       const userId=req.session.userId
-       const user=await userModel.findOne({_id:userId})
-       const passwordmatch=await bcrypt.compare(pass,user.password)
-       if(passwordmatch){
-        const ispasswordValid = passwordValid(npass)
-        const iscpasswordValid = confirmpasswordValid(cpass, npass)
-        
-        if(!ispasswordValid){
-            req.flash("npass", "Password should contain one uppercase,one lowercase,one number,one special charecter");
-                return res.redirect('/changepassword');
-        }
-        if(!iscpasswordValid){
-            req.flash("cpass", "New Password and Confirm Password shold be match");
-                return res.redirect('/changepassword');
-        }
+const passwordUpdate = async (req, res) => {
+    try {
+        const { pass, npass, cpass } = req.body
+        const userId = req.session.userId
+        const user = await userModel.findOne({ _id: userId })
+        const passwordmatch = await bcrypt.compare(pass, user.password)
+        if (passwordmatch) {
+            const ispasswordValid = passwordValid(npass)
+            const iscpasswordValid = confirmpasswordValid(cpass, npass)
 
-        const hashedpassword = await bcrypt.hash(npass, 10)
-        const newuser=await userModel.updateOne({_id:userId},{password:hashedpassword})
-        console.log("password updated");
-        req.flash("success", "Password updated successfully!");
-        return res.redirect('/profile')
-
-       }
-       else{
-        req.flash("pass", "Invalid Password");
+            if (!ispasswordValid) {
+                req.flash("npass", "Password should contain one uppercase,one lowercase,one number,one special charecter");
                 return res.redirect('/changepassword');
-       }
+            }
+            if (!iscpasswordValid) {
+                req.flash("cpass", "New Password and Confirm Password shold be match");
+                return res.redirect('/changepassword');
+            }
+
+            const hashedpassword = await bcrypt.hash(npass, 10)
+            const newuser = await userModel.updateOne({ _id: userId }, { password: hashedpassword })
+            console.log("password updated");
+            req.flash("success", "Password updated successfully!");
+            return res.redirect('/profile')
+
+        }
+        else {
+            req.flash("pass", "Invalid Password");
+            return res.redirect('/changepassword');
+        }
 
     }
-    catch(err){
+    catch (err) {
         res.redirect('/error')
         console.log(err);
     }
 }
 
-const deleteAddress=async(req,res)=>{
-    try{
-        const userId=req.session.userId;
-        const id=req.params.id;
+const deleteAddress = async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        const id = req.params.id;
         const result = await addressModel.updateOne(
             { userId: userId, 'address._id': id },
             { $pull: { address: { _id: id } } }
@@ -549,40 +552,40 @@ const deleteAddress=async(req,res)=>{
 
 
     }
-    catch(err){
+    catch (err) {
         res.redirect('/error')
         console.log(err);
     }
 }
 
-const editAddress=async(req,res)=>{
-    try{
-        const userId=req.session.userId
-        const id=req.params.id
-        const address=await addressModel.findOne({userId:userId,'address._id':id})
-        res.render('user/editAddress',{adress:address})
-    }
-    catch(err){
-        res.redirect('/error')
-        console.log(err);
-    }
-}
-
-const addressPost=async(req,res)=>{
+const editAddress = async (req, res) => {
     try {
-        const { name,mobile,housename,street,city,state,country,pincode,saveas } = req.body;
-        const addressId=req.params.id
+        const userId = req.session.userId
+        const id = req.params.id
+        const address = await addressModel.findOne({ userId: userId, 'address._id': id })
+        res.render('user/editAddress', { adress: address })
+    }
+    catch (err) {
+        res.redirect('/error')
+        console.log(err);
+    }
+}
+
+const addressPost = async (req, res) => {
+    try {
+        const { name, mobile, housename, street, city, state, country, pincode, saveas } = req.body;
+        const addressId = req.params.id
         const userId = req.session.userId;
 
         const isAddressExists = await addressModel.findOne({
             'userId': userId,
             'address': {
                 $elemMatch: {
-                    '_id': { $ne: addressId }, 
+                    '_id': { $ne: addressId },
                     'save_as': saveas,
                     'name': name,
                     'mobile': mobile,
-                    'housename':housename,
+                    'housename': housename,
                     'street': street,
                     'pincode': pincode,
                     'city': city,
@@ -609,12 +612,12 @@ const addressPost=async(req,res)=>{
                     'address.$.city': city,
                     'address.$.state': state,
                     'address.$.country': country,
-                    
+
                 }
             }
         );
-        
-            res.redirect('/address');
+
+        res.redirect('/address');
     } catch (err) {
         res.redirect('/error')
         console.log(err);
@@ -622,53 +625,55 @@ const addressPost=async(req,res)=>{
 
 }
 
-const wallet=async(req,res)=>{
-    try{
-        const userId=req.session.userId;
-        const user=await userModel.findOne({_id:userId})
-        const wallet=await walletModel.findOne({userId:userId})
-        res.render('user/wallet',{wallet:wallet,user:user})
+const wallet = async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        const user = await userModel.findOne({ _id: userId })
+        const wallet = await walletModel.findOne({ userId: userId })
+        res.render('user/wallet', { wallet: wallet, user: user })
     }
-    catch(err){
+    catch (err) {
         res.redirect('/error')
         console.log(err);
     }
 }
 
-const instance=new Razorpay({key_id:process.env.key_id,key_secret:process.env.key_secret})
+const instance = new Razorpay({ key_id: process.env.key_id, key_secret: process.env.key_secret })
 
 const walletupi = async (req, res) => {
-  var options = {
-      amount: 500,
-      currency: "INR",
-      receipt: "order_rcpt"
-  };
-  instance.orders.create(options, function (err, order) {
-      res.send({ orderId: order.id })
-    })
+    var options = {
+        amount: 500,
+        currency: "INR",
+        receipt: "order_rcpt"
+    };
+    instance.orders.create(options, function (err, order) {
+        res.send({ orderId: order.id })
+    })
 }
 
-  
-  
-const walletTopup= async(req,res)=>{
+
+
+const walletTopup = async (req, res) => {
     try {
         const userId = req.session.userId;
-        const user=await userModel.findOne({_id:userId})
+        const user = await userModel.findOne({ _id: userId })
         const { razorpay_payment_id, razorpay_order_id } = req.body;
-        const Amount=parseFloat(req.body.Amount)
-        const wallet = await walletModel.findOne({ userId :userId});
+        const Amount = parseFloat(req.body.Amount)
+        const wallet = await walletModel.findOne({ userId: userId });
         user.wallet += Amount;
-        wallet.history.push({transaction:"Credited",
-        amount:Amount,
-        date:new Date()});
+        wallet.history.push({
+            transaction: "Credited",
+            amount: Amount,
+            date: new Date()
+        });
 
         await wallet.save();
         await user.save();
         res.redirect("/wallet")
-      } catch (error) {
+    } catch (error) {
         console.error('Error handling Razorpay callback:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-      }
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
 
 
