@@ -75,7 +75,13 @@
                                     <h5>Order ID: <%= order.orderId %></h5>
                                     <p>Amount: ₹<%= order.amount %></p>
                                     <p>Status: <%= order.status %></p>
-                                    <p>Delivery Address: <%= order.address[0].save_as %>, <%= order.address[0].houseName %>, <%= order.address[0].city %>, <%= order.address[0].pincode %></p>
+                                    <% if (order.address ) { %>
+                                        <% order.address.forEach(address => { %>
+                                            <p>Delivery Address: <%= address.save_as %>, <%= address.houseName %>, <%= address.city %>, <%= address.pincode %></p>
+                                            <% }); %>
+                                    <% } else { %>
+                                        <p>Delivery Address: N/A</p>
+                                    <% } %>
                                 </div>
                                 <div>
                                     <% if (order.status !== 'Cancelled' && order.status !== 'delivered') { %>

@@ -35,6 +35,7 @@ router.get('/deletcart/:id/:size', middleware.islogged, middleware.userStatus, c
 router.post('/update-cart-quantity/:productId/:size', middleware.islogged, middleware.userStatus, cartController.updatecart)
 
 router.get('/profile', middleware.islogged, middleware.userStatus, controller.profile)
+router.post('/sendreferral', middleware.islogged, middleware.userStatus, controller.referral)
 router.get('/editProfile', middleware.islogged, middleware.userStatus, controller.profileEdit)
 router.post('/profileUpdating', middleware.islogged, middleware.userStatus, controller.profileUpdate)
 router.get('/address', middleware.islogged, middleware.userStatus, controller.address)

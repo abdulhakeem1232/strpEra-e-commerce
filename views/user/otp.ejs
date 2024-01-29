@@ -27,10 +27,21 @@
 	<link rel="stylesheet" href="css/nouislider.min.css">
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/main.css">
+	<style>
+	.logo-text {
+		font-family: "Lilita One", sans-serif;
+		font-family: "Roboto", sans-serif;
+		font-family: "Russo One", sans-serif;
+		font-size: 38px;
+		font-weight: 400;
+		color: orange;
+	  }
+	</style>
 </head>
 
 <body class="bg-light d-flex align-items-center justify-content-center" style="height: 100vh;">
     <div class="container p-4 bg-white rounded shadow-lg text-center" style="width:  25vw;">
+		<h1 class="mb-4 logo-text">UrbanSole</h2>
         <h2 class="mb-4">Enter OTP</h2>
 
         <!-- Form for Verify OTP -->
@@ -43,7 +54,7 @@
 
 			<%}%>
 
-            <button type="submit" class="btn btn-success btn-block">Verify OTP</button>
+            <button type="submit" class="btn btn-success btn-block" id="verify">Verify OTP</button>
         </form>
 
         <!-- Form for Resend OTP and Cancel Button -->
@@ -51,6 +62,7 @@
         <form action="/resendotp" method="post" class="mb-3">
             <button type="submit" id="resendBtn" class="btn btn-primary btn-block" style="display: none;">Resend OTP</button>
         </form>
+		<p id="timeexceed" style="display: none;" class="text-md-start text-danger"> Time Exceeded...</p>
         <a href="/reg" class="btn btn-danger btn-block">Cancel</a>
     </div>
 
@@ -59,10 +71,7 @@
 			var expiryTime = '<%= otp.expiry.getTime() %>';
 			var currentTime = new Date().getTime();
 			var timeLeft = Math.round((expiryTime - currentTime)/1000);
-	
-			console.log('Expiry Time:', expiryTime);
-			console.log('Current Time:', currentTime);
-	
+			var timeexceed=new Date(expiryTime + 45 * 1000).getTime();
 			document.getElementById('timer').innerHTML = 'OTP Expires in: ' + timeLeft + ' sec';
 	
 			if (timeLeft < 0) {
@@ -70,7 +79,13 @@
 				document.getElementById('timer').innerHTML = '';
 				document.getElementById('resendBtn').style.display = 'block';
 			} 
+			if (currentTime > timeexceed) {
+				document.getElementById('resendbtn').style.display = 'none';
+				document.getElementById('verify').style.display = 'none';
+				document.getElementById('timeexceed').style.display = 'block';
+			} 
 		}, 1000);
+
 	</script>
 	
 <script src="/js/vendor/jquery-2.2.4.min.js"></script>

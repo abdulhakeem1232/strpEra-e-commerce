@@ -67,6 +67,9 @@ const loginpost = async (req, res) => {
 
 const signup = async (req, res) => {
     try {
+        const referralCode = req.query.code;
+        console.log(referralCode,'ddff');
+        req.session.code=referralCode
         res.render('user/signup.ejs', {
             expressFlash: {
                 emailerror: req.flash('emailerror'),
@@ -81,9 +84,52 @@ const signup = async (req, res) => {
         res.redirect('/error')
     }
 }
+const sendReferral = async (email,user) => {
+    try {
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD
+            }
+        });
+
+        var mailOptions = {
+            from: `${user.f_name} <${user.email}>`,
+            to: email,
+            subject: 'Invitation',
+            text: `Hi,We hope this message finds you well! 🌟
+
+            Great news! You've been invited to join our exclusive online shop UrbanSole by tour friend ${user.f_name}
+            Click the Link to register https://urbansole.tech/reg?code=${user.code}`
+        };
+
+        transporter.sendMail(mailOptions);
+        console.log("E-mail sent sucgdgdessfully");
+    }
+    catch (err) {
+        console.log("error in sending mail:", err);
+    }
+}
+const referral = async (req, res) => {
+    try {
+        console.log('ll');
+        const user=await userModel.findOne({_id:req.session.userId})
+        const email = req.body.email
+        await sendReferral(email,user)
+        console.log(email,'kk');
+            res.redirect('/profile')
+    }
+    catch (err) {
+        res.redirect('/error')
+        console.log(err);
+    }
+}
+
 
 const sendmail = async (email, otp) => {
     try {
+        
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -120,7 +166,6 @@ const regpost = async (req, res) => {
         const phone = req.body.phone
         const password = req.body.password
         const cpassword = req.body.confirm_password
-        const code = req.body.code
 
         const isNameValid = nameValid(fname)
         const isEmailValid = emailValid(email)
@@ -165,9 +210,12 @@ const regpost = async (req, res) => {
             const expiryTimestamp = currentTimestamp + 60 * 1000;
             await userotp.create({ email: email, otp: otp, expiry: new Date(expiryTimestamp) })
             req.session.email = email;
-            const reference = await userModel.findOne({ code: code.trim() })
-            console.log(reference, '0000');
-            console.log(code, 'coooo');
+            console.log(req.session.code);
+            if(req.session.code){
+                console.log('klkl99');
+            var reference = await userModel.findOne({ code: req.session.code.trim() })
+            }
+            console.log(reference, '00eqa00');
             if (reference) {
                 req.session.reference = reference._id
                 console.log(req.session.reference, 'fff');
@@ -268,6 +316,7 @@ const resendotp = async (req, res) => {
         const expiryTimestamp = currentTimestamp + 60 * 1000;
         await userotp.updateOne({ email: email }, { otp: otp, expiry: new Date(expiryTimestamp) })
         await sendmail(email, otp)
+        res.redirect('/otp')
     }
     catch (err) {
         console.log(err);
@@ -686,6 +735,7 @@ module.exports = {
     regpost,
     otp,
     verifyotp,
+    referral,
     resendotp,
     forgotpassword,
     forgotpasswordpost,

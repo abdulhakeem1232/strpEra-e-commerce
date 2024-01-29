@@ -124,6 +124,8 @@ const orders = async (req, res) => {
                 console.log('Ratings for item', item.productId.name, ':', item.productId.ratings);
             });
         });
+        console.log('kkll',order);
+        console.log('kfkfk',order.address);
         res.render('user/orderHistory', { orders: order })
     }
     catch (err) {

@@ -114,22 +114,38 @@
 						<div class="row">
 							<% product.forEach(product=> { %>
 								
-								<div class="col-md-3"> <!-- Assuming you're using Bootstrap for grid layout -->
-									<a href="/singleproduct/<%= product._id %>">
-									<div class="card" style="border: none;">
-										<img src="/<%= product.images[0] %>" class="card-img-top"
-											alt="<%= product.name %>"
-											style="width: 175px; height: 175px; object-fit: cover;">
-										<div class="card-body">
-											<h5 class="card-title">
-												<%= product.name %>
-											</h5>
-											<p class="card-text">Price:₹ <%= product.price %>
-											</p>
+								<div class="col-lg-3 col-md-6 col-sm-6">
+									<div class="single-product">
+									  <a href="/singleproduct/<%= product._id %>">
+										<img class="img-fluid" src="/<%= product.images[0] %>" alt="<%= product.name %>"
+										style="width: 175px; height: 175px; object-fit: cover; ">
+									  </a>
+									  <div class="product-details">
+										<h6><%= product.name %></h6>
+										<div class="price">
+										  <h6>Price: ₹<%= product.price %></h6>
 										</div>
+										<div class="prd-bottom">
+										  <!-- <a href="#" class="social-info">
+											<span class="ti-bag"></span>
+											<p class="hover-text">Add to Bag</p>
+										  </a> -->
+										  <a href="/wishlist/<%= product._id %>" class="social-info">
+											<span class="lnr lnr-heart"></span>
+											<p class="hover-text">Wishlist</p>
+										  </a>
+										  <!-- <a href="#" class="social-info">
+											<span class="lnr lnr-sync"></span>
+											<p class="hover-text">Compare</p>
+										  </a> -->
+										  <a href="/singleproduct/<%= product._id %>" class="social-info">
+											<span class="lnr lnr-move"></span>
+											<p class="hover-text">View More</p>
+										  </a>
+										</div>
+									  </div>
 									</div>
-								</a>
-								</div>
+								  </div>
 							
 								<% }); %>
 
