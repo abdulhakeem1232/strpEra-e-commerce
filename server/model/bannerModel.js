@@ -26,14 +26,11 @@ const schema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-
-
-
 })
 
 
 
 
-const bannerModel = new mongoose.model("banner", schema)
+const bannerModel = new mongoose.model("banner", schema);
 
 module.exports = bannerModel

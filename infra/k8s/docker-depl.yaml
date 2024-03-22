@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: urbansole-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: urbansole 
+  template:
+    metadata: 
+      labels:
+        app: urbansole 
+    spec:
+      containers:
+        - name: urbansole
+          image: abdulhakeem1/urbansole:latest
+          imagePullPolicy: Always
