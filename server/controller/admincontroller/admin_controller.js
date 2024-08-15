@@ -63,9 +63,9 @@ const dashboard = async (req, res) => {
             }
         ])
 
-        const users = await userModel.find().count()
-        const pro = await productModel.find().count()
-        const orders = await orderModel.find().count()
+        const users = await userModel.find().countDocuments()
+        const pro = await productModel.find().countDocuments()
+        const orders = await orderModel.find().countDocuments()
 
         res.render("admin/dashboard", { revenue: total, users, orders, pro })
     }
@@ -337,11 +337,11 @@ const downloadsales = async (req, res) => {
 </html>
 
     `;
-       
-    const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
+
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
         const page = await browser.newPage();
 
         await page.setContent(htmlContent);
