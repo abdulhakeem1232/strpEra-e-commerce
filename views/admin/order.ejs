@@ -79,24 +79,24 @@
                     <% if(locals.order) { %>
                     <% order.forEach(function(data) { %>
                     <tr>
-                        <td><%= data.orderId %></td>
-                        <td><%= data.userId %></td>
-                        <td><% data.items.forEach(function(items){ %>
-                          <%= items.productId.name %>
-                          <%= items.quantity %>
+                        <td><%= data?.orderId %></td>
+                        <td><%= data?.userId %></td>
+                        <td><% data?.items?.forEach(function(items){ %>
+                          <%= items?.productId?.name %>
+                          <%= items?.quantity %>
                           <br>
                           <% }); %>
                         </td>
                         <td>
-                          <%= data.address[0].save_as %>
-                          ,<%= data.address[0].houseName %>,
+                          <%= data?.address[0]?.save_as %>
+                          ,<%= data?.address[0]?.houseName %>,
                           <br>
-                          <%= data.address[0].city %>
-                          ,<%= data.address[0].pincode %>
+                          <%= data?.address[0]?.?city %>
+                          ,<%= data?.address[0]?.pincode %>
                         </td>
 
-                        <td><%= data.payment %></td>
-                        <td><%= data.amount %></td>
+                        <td><%= data?.payment %></td>
+                        <td><%= data?.amount %></td>
                         
                         <td>
                             <form action="/admin/updateOrderStatus" method="post" id="orderStatusForm_<%= data._id %>">
