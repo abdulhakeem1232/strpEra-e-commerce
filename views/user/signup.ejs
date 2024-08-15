@@ -85,10 +85,9 @@
 											<%}%>
 										</div>
 										<div class="col-md-12 form-group">
-											<input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
+											<input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number" required maxlength="10" oninput="validatePhone(this)">
 											<% if(expressFlash.phoneerror){%>
-												<div class="alter text-danger text-start"><%= expressFlash.phoneerror%></div>
-								
+												<div class="alert text-danger text-start"><%= expressFlash.phoneerror%></div>
 											<%}%>
 										</div>
 										<div class="col-md-12 form-group">
@@ -209,6 +208,15 @@
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
 	<script src="js/gmaps.min.js"></script>
 	<script src="js/main.js"></script>
+	<script>
+		function validatePhone(input) {
+			const value = input.value;
+			if (value.length > 10) {
+				input.value = value.slice(0, 10);
+				alert("Phone number Cannot be more than 10 Digits")
+			}
+		}
+		</script>
 </body>
 
 </ht
