@@ -158,27 +158,29 @@
                         </p>
                       </div>
                       <div class="col-sm-5 text-md-right">
-                        <form action="/admin/downloadsales" method="post">
+                        <form id="salesReportForm" action="/admin/downloadsales" method="post">
                           <input
                             type="date"
                             id="startDate"
-                            placeholder="Star tDate"
                             name="startDate"
+                            placeholder="Start Date"
                             required
+                            max=""
                           />
                           <input
                             type="date"
                             id="endDate"
-                            placeholder="End Date"
                             name="endDate"
+                            placeholder="End Date"
                             required
+                            max=""
                           />
                           <button
                             type="submit"
                             class="btn btn-icon-text mb-3 mt-2 mb-sm-0 btn-inverse-primary font-weight-normal"
                           >
-                            <i class="mdi mdi-email btn-icon-prepend"></i
-                            >Download Report
+                            <i class="mdi mdi-email btn-icon-prepend"></i>
+                            Download Report
                           </button>
                         </form>
                       </div>
@@ -341,6 +343,32 @@
       }
     </script>
 
+<script>
+  function setMaxDate() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('startDate').setAttribute('max', today);
+    document.getElementById('endDate').setAttribute('max', today);
+  }
+
+  function validateDates() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+      alert('Start Date cannot be greater than End Date.');
+      return false;
+    }
+    return true;
+  }
+
+  setMaxDate();
+
+  document.getElementById('salesReportForm').addEventListener('submit', function(event) {
+    if (!validateDates()) {
+      event.preventDefault(); 
+    }
+  });
+</script>
     <script src="/admin_assets/assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
