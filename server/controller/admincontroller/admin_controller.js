@@ -226,7 +226,6 @@ const chartData = async (req, res) => {
 
 }
 
-
 const downloadsales = async (req, res) => {
     try {
         const { startDate, endDate } = req.body;
@@ -290,7 +289,6 @@ const downloadsales = async (req, res) => {
             },
         ]);
 
-        // Safely access totalOrders and totalAmount
         const totalOrders = salesData[0]?.totalOrders || 0;
         const totalAmount = salesData[0]?.totalAmount || 0;
 
@@ -302,55 +300,67 @@ const downloadsales = async (req, res) => {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Order Details</title>
             <style>
-            body{
-                margin-left:20px
-            }
+                body {
+                    margin-left: 20px;
+                    font-family: Arial, sans-serif;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    border: 1px solid #000;
+                    padding: 8px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f2f2f2;
+                }
             </style>
         </head>
         <body>
-       <h2 align="center"> Sales Report</h2>
-       Start Date:${startDate}<br>
-       End Date:${endDate}<br>
-       <center>
-    <table style="border-collapse: collapse;">
-        <thead>
-            <tr>
-            <th style="border: 1px solid #000; padding: 8px;">Sl N0</th>
-            <th style="border: 1px solid #000; padding: 8px;">Product Name</th>
-            <th style="border: 1px solid #000; padding: 8px;">Quantity Sold</th>
-            </tr>
-        </thead>
-        <tbody>
-            ${products.map((item, index) => `
-                <tr>
-                    <td style="border: 1px solid #000; padding: 8px;">${index + 1}</td>
-                    <td style="border: 1px solid #000; padding: 8px;">${item.productName}</td>
-                    <td style="border: 1px solid #000; padding: 8px;">${item.totalSold}</td>
-                </tr>`).join('')}
-                <tr>
-                <td style="border: 1px solid #000; padding: 8px;"></td>
-                <td style="border: 1px solid #000; padding: 8px;">Total No of Orders</td>
-                <td style="border: 1px solid #000; padding: 8px;">${totalOrders}</td>
-            </tr>
-            <tr>
-                <td style="border: 1px solid #000; padding: 8px;"></td>
-                <td style="border: 1px solid #000; padding: 8px;">Total Revenue</td>
-                <td style="border: 1px solid #000; padding: 8px;">${totalAmount}</td>
-            </tr>
-   
-</body>
-</html>
-
-    `;
+            <h2 align="center">Sales Report</h2>
+            <p>Start Date: ${startDate}</p>
+            <p>End Date: ${endDate}</p>
+            <center>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Product Name</th>
+                            <th>Quantity Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${products.map((item, index) => `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.productName}</td>
+                                <td>${item.totalSold}</td>
+                            </tr>
+                        `).join('')}
+                        <tr>
+                            <td colspan="2">Total No of Orders</td>
+                            <td>${totalOrders}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Total Revenue</td>
+                            <td>${totalAmount}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </center>
+        </body>
+        </html>
+        `;
 
         const browser = await puppeteer.launch({
             headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
         });
         const page = await browser.newPage();
-
         await page.setContent(htmlContent);
-        const pdfBuffer = await page.pdf();
+        const pdfBuffer = await page.pdf({ format: 'A4' });
         await browser.close();
 
         const downloadsPath = path.join(os.homedir(), 'Downloads');
@@ -361,12 +371,11 @@ const downloadsales = async (req, res) => {
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename=sales.pdf');
         res.status(200).end(pdfBuffer);
+    } catch (err) {
+        console.log('Error generating sales report PDF:', err);
+        res.status(500).send('Error Occurred');
     }
-    catch (err) {
-        console.log(err);
-        res.send("Error Occurred");
-    }
-}
+};
 
 const logout = async (req, res) => {
     req.session.adminAuth = false;
