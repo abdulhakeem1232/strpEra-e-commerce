@@ -11,6 +11,7 @@ const { passwordValid, confirmpasswordValid } = require('../../../utils/validato
 const orderModel = require('../../model/orderModel.js')
 const ExcelJS = require('exceljs')
 const { jsPDF } = require('jspdf');
+require('jspdf-autotable');
 const productModel = require('../../model/productModel.js')
 const puppeteer = require('puppeteer')
 const path = require('path')
@@ -227,6 +228,8 @@ const chartData = async (req, res) => {
     }
 
 }
+
+
 const downloadsales = async (req, res) => {
     try {
         const { startDate, endDate } = req.body;
@@ -293,44 +296,46 @@ const downloadsales = async (req, res) => {
         const totalOrders = salesData[0]?.totalOrders || 0;
         const totalAmount = salesData[0]?.totalAmount || 0;
 
-        // Create a new jsPDF instance
         const doc = new jsPDF();
 
-        // Add title and date
-        doc.setFontSize(20);
-        doc.text('Sales Report', 105, 20, null, null, 'center');
+        // Add title
+        doc.text('Sales Report', 14, 20);
+        doc.text(`Start Date: ${startDate}`, 14, 30);
+        doc.text(`End Date: ${endDate}`, 14, 40);
 
-        doc.setFontSize(12);
-        doc.text(`Start Date: ${startDate}`, 10, 30);
-        doc.text(`End Date: ${endDate}`, 10, 40);
+        // Prepare the data for the table
+        const tableData = products.map((item, index) => [
+            index + 1,
+            item.productName,
+            item.totalSold,
+        ]);
 
-        // Add table headers
+        // Add the table
         doc.autoTable({
-            startY: 50,
             head: [['Sl No', 'Product Name', 'Quantity Sold']],
-            body: products.map((item, index) => [
-                index + 1,
-                item.productName,
-                item.totalSold,
-            ]),
+            body: tableData,
         });
 
-        // Add totals
-        doc.text(`Total No of Orders: ${totalOrders}`, 10, doc.lastAutoTable.finalY + 10);
-        doc.text(`Total Revenue: ${totalAmount}`, 10, doc.lastAutoTable.finalY + 20);
+        // Add the total orders and revenue
+        doc.autoTable({
+            body: [
+                ['Total No of Orders', '', totalOrders],
+                ['Total Revenue', '', totalAmount],
+            ],
+        });
 
-        // Output the PDF
         const pdfBuffer = doc.output('arraybuffer');
 
         res.setHeader('Content-Length', pdfBuffer.byteLength);
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename=sales.pdf');
-        res.status(200).end(Buffer.from(pdfBuffer));
+        res.status(200).send(Buffer.from(pdfBuffer));
     } catch (err) {
         console.log('Error generating sales report PDF:', err);
         res.status(500).send('Error Occurred');
     }
 };
+
 
 const logout = async (req, res) => {
     req.session.adminAuth = false;
