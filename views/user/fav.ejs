@@ -65,23 +65,23 @@
 
         <div class="col-md-3">
           <!-- Assuming you're using Bootstrap for grid layout -->
-          <a href="/singleproduct/<%= product._id %>">
+          <a href="/singleproduct/<%= product?._id %>">
             <div class="card" style="border: none">
               <img
-                src="/<%= product.productId.images[0] %>"
+                src="/<%= product?.productId?.images[0] %>"
                 class="card-img-top"
-                alt="<%= product.productId.name %>"
+                alt="<%= product.productId?.name %>"
                 style="width: 200px; height: 200px; object-fit: cover"
               />
               <div class="card-body">
-                <h5 class="card-title"><%= product.productId.name %></h5>
+                <h5 class="card-title"><%= product?.productId?.name %></h5>
                 <form
-                  action="/add-to-cart/<%= product.productId._id %>"
+                  action="/add-to-cart/<%= product.productId?._id %>"
                   method="post"
                 >
                   <button class="btn btn-dark">🛒</button>
                   <a
-                    href="/removefromfavorites/<%= product.productId._id %>"
+                    href="/removefromfavorites/<%= product.productId?._id %>"
                     class="btn btn-danger ml-5"
                     >♥</a
                   >
