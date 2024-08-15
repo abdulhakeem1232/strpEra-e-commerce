@@ -68,8 +68,8 @@ const loginpost = async (req, res) => {
 const signup = async (req, res) => {
     try {
         const referralCode = req.query.code;
-        console.log(referralCode,'ddff');
-        req.session.code=referralCode
+        console.log(referralCode, 'ddff');
+        req.session.code = referralCode
         res.render('user/signup.ejs', {
             expressFlash: {
                 emailerror: req.flash('emailerror'),
@@ -84,7 +84,7 @@ const signup = async (req, res) => {
         res.redirect('/error')
     }
 }
-const sendReferral = async (email,user) => {
+const sendReferral = async (email, user) => {
     try {
         var transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -114,11 +114,11 @@ const sendReferral = async (email,user) => {
 const referral = async (req, res) => {
     try {
         console.log('ll');
-        const user=await userModel.findOne({_id:req.session.userId})
+        const user = await userModel.findOne({ _id: req.session.userId })
         const email = req.body.email
-        await sendReferral(email,user)
-        console.log(email,'kk');
-            res.redirect('/profile')
+        await sendReferral(email, user)
+        console.log(email, 'kk');
+        res.redirect('/profile')
     }
     catch (err) {
         res.redirect('/error')
@@ -129,7 +129,7 @@ const referral = async (req, res) => {
 
 const sendmail = async (email, otp) => {
     try {
-        
+
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -211,9 +211,9 @@ const regpost = async (req, res) => {
             await userotp.create({ email: email, otp: otp, expiry: new Date(expiryTimestamp) })
             req.session.email = email;
             console.log(req.session.code);
-            if(req.session.code){
+            if (req.session.code) {
                 console.log('klkl99');
-            var reference = await userModel.findOne({ code: req.session.code.trim() })
+                var reference = await userModel.findOne({ code: req.session.code.trim() })
             }
             console.log(reference, '00eqa00');
             if (reference) {
@@ -337,7 +337,7 @@ const forgotpassword = async (req, res) => {
 const forgotpasswordpost = async (req, res) => {
     try {
         const email = req.body.email
-        req.session.email=email
+        req.session.email = email
         const emailexist = await userModel.findOne({ email: email })
         console.log(emailexist);
         req.session.forgot = true
@@ -701,29 +701,41 @@ const walletupi = async (req, res) => {
 }
 
 
-
 const walletTopup = async (req, res) => {
     try {
         const userId = req.session.userId;
-        const user = await userModel.findOne({ _id: userId })
+        const user = await userModel.findOne({ _id: userId });
         const { razorpay_payment_id, razorpay_order_id } = req.body;
-        const Amount = parseFloat(req.body.Amount)
-        const wallet = await walletModel.findOne({ userId: userId });
+        const Amount = parseFloat(req.body.Amount);
+
+        let wallet = await walletModel.findOne({ userId: userId });
+
+        if (!wallet) {
+
+            wallet = new walletModel({
+                userId: userId,
+                history: [],
+            });
+        }
+
         user.wallet += Amount;
+
         wallet.history.push({
             transaction: "Credited",
             amount: Amount,
-            date: new Date()
+            date: new Date(),
         });
 
         await wallet.save();
         await user.save();
-        res.redirect("/wallet")
+
+        res.redirect("/wallet");
     } catch (error) {
         console.error('Error handling Razorpay callback:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-}
+};
+
 
 
 
