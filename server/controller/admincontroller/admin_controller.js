@@ -226,9 +226,10 @@ const chartData = async (req, res) => {
 
 }
 
+
 const downloadsales = async (req, res) => {
     try {
-        const { startDate, endDate } = req.body
+        const { startDate, endDate } = req.body;
 
         const salesData = await orderModel.aggregate([
             {
@@ -247,6 +248,7 @@ const downloadsales = async (req, res) => {
                 },
             },
         ]);
+
         const products = await orderModel.aggregate([
             {
                 $match: {
@@ -287,8 +289,11 @@ const downloadsales = async (req, res) => {
                 $sort: { totalSold: -1 },
             },
         ]);
-        console.log('hghg', products);
-        console.log(salesData, 'ddd');
+
+        // Safely access totalOrders and totalAmount
+        const totalOrders = salesData[0]?.totalOrders || 0;
+        const totalAmount = salesData[0]?.totalAmount || 0;
+
         const htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
@@ -325,12 +330,12 @@ const downloadsales = async (req, res) => {
                 <tr>
                 <td style="border: 1px solid #000; padding: 8px;"></td>
                 <td style="border: 1px solid #000; padding: 8px;">Total No of Orders</td>
-                <td style="border: 1px solid #000; padding: 8px;">${salesData[0].totalOrders}</td>
+                <td style="border: 1px solid #000; padding: 8px;">${totalOrders}</td>
             </tr>
             <tr>
                 <td style="border: 1px solid #000; padding: 8px;"></td>
-                <td style="border: 1px solid #000; padding: 8px;">Total Revunue</td>
-                <td style="border: 1px solid #000; padding: 8px;">${salesData[0].totalAmount}</td>
+                <td style="border: 1px solid #000; padding: 8px;">Total Revenue</td>
+                <td style="border: 1px solid #000; padding: 8px;">${totalAmount}</td>
             </tr>
    
 </body>
@@ -352,7 +357,6 @@ const downloadsales = async (req, res) => {
         const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
         fs.writeFileSync(pdfFilePath, pdfBuffer);
 
-
         res.setHeader('Content-Length', pdfBuffer.length);
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename=sales.pdf');
@@ -360,9 +364,8 @@ const downloadsales = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        res.send("Error Occured")
+        res.send("Error Occurred");
     }
-
 }
 
 const logout = async (req, res) => {
