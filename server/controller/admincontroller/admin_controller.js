@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const otpGenerator = require('otp-generator')
 const nodemailer = require('nodemailer')
+const { chromium } = require('playwright');
 const flash = require('express-flash')
 const userModel = require('../../model/userModel.js')
 const categoryModel = require('../../model/categoryModel.js')
@@ -225,7 +226,6 @@ const chartData = async (req, res) => {
     }
 
 }
-
 const downloadsales = async (req, res) => {
     try {
         const { startDate, endDate } = req.body;
@@ -354,10 +354,7 @@ const downloadsales = async (req, res) => {
         </html>
         `;
 
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        });
+        const browser = await chromium.launch({ headless: true });
         const page = await browser.newPage();
         await page.setContent(htmlContent);
         const pdfBuffer = await page.pdf({ format: 'A4' });
