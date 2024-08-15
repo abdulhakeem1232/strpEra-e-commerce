@@ -124,8 +124,8 @@ const orders = async (req, res) => {
                 console.log('Ratings for item', item.productId.name, ':', item.productId.ratings);
             });
         });
-        console.log('kkll',order);
-        console.log('kfkfk',order.address);
+        console.log('kkll', order);
+        console.log('kfkfk', order.address);
         res.render('user/orderHistory', { orders: order })
     }
     catch (err) {
@@ -299,6 +299,9 @@ const viewFav = async (req, res) => {
             path: 'item.productId',
             select: "_id name images"
         })
+        if (!fav) {
+            return res.render('user/fav', { fav: { item: [] } });
+        }
         res.render('user/fav', { fav: fav })
     } catch (err) {
         console.error(err);

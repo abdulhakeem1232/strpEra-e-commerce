@@ -61,40 +61,35 @@
 
     <div class="container mt-4">
       <div class="row justify-content-center">
-        <% fav.item.forEach(product=> { %>
-
-        <div class="col-md-3">
-          <!-- Assuming you're using Bootstrap for grid layout -->
-          <a href="/singleproduct/<%= product?._id %>">
-            <div class="card" style="border: none">
-              <img
-                src="/<%= product?.productId?.images[0] %>"
-                class="card-img-top"
-                alt="<%= product.productId?.name %>"
-                style="width: 200px; height: 200px; object-fit: cover"
-              />
-              <div class="card-body">
-                <h5 class="card-title"><%= product?.productId?.name %></h5>
-                <form
-                  action="/add-to-cart/<%= product.productId?._id %>"
-                  method="post"
-                >
-                  <button class="btn btn-dark">🛒</button>
-                  <a
-                    href="/removefromfavorites/<%= product.productId?._id %>"
-                    class="btn btn-danger ml-5"
-                    >♥</a
-                  >
-                  <input type="hidden" name="size" value="6" />
-                </form>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <% }); %>
+          <% if (fav && fav.item && fav.item.length) { %>
+              <% fav.item.forEach(product => { %>
+                  <div class="col-md-3">
+                      <a href="/singleproduct/<%= product?._id %>">
+                          <div class="card" style="border: none">
+                              <img
+                                  src="/<%= product?.productId?.images[0] %>"
+                                  class="card-img-top"
+                                  alt="<%= product.productId?.name %>"
+                                  style="width: 200px; height: 200px; object-fit: cover"
+                              />
+                              <div class="card-body">
+                                  <h5 class="card-title"><%= product?.productId?.name %></h5>
+                                  <form action="/add-to-cart/<%= product.productId?._id %>" method="post">
+                                      <button class="btn btn-dark">🛒</button>
+                                      <a href="/removefromfavorites/<%= product.productId?._id %>" class="btn btn-danger ml-5">♥</a>
+                                      <input type="hidden" name="size" value="6" />
+                                  </form>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+              <% }); %>
+          <% } else { %>
+              <p>No favorite products found.</p>
+          <% } %>
       </div>
-    </div>
+  </div>
+  
 
     <footer class="footer-area section_gap">
       <div class="container">
