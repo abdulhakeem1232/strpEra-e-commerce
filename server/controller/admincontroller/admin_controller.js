@@ -10,6 +10,7 @@ const userotp = require('../../model/userotpModel.js')
 const { passwordValid, confirmpasswordValid } = require('../../../utils/validators/signupValidators.js')
 const orderModel = require('../../model/orderModel.js')
 const ExcelJS = require('exceljs')
+const { jsPDF } = require('jspdf');
 const productModel = require('../../model/productModel.js')
 const puppeteer = require('puppeteer')
 const path = require('path')
@@ -292,82 +293,39 @@ const downloadsales = async (req, res) => {
         const totalOrders = salesData[0]?.totalOrders || 0;
         const totalAmount = salesData[0]?.totalAmount || 0;
 
-        const htmlContent = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Order Details</title>
-            <style>
-                body {
-                    margin-left: 20px;
-                    font-family: Arial, sans-serif;
-                }
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                }
-                th, td {
-                    border: 1px solid #000;
-                    padding: 8px;
-                    text-align: left;
-                }
-                th {
-                    background-color: #f2f2f2;
-                }
-            </style>
-        </head>
-        <body>
-            <h2 align="center">Sales Report</h2>
-            <p>Start Date: ${startDate}</p>
-            <p>End Date: ${endDate}</p>
-            <center>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Sl No</th>
-                            <th>Product Name</th>
-                            <th>Quantity Sold</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${products.map((item, index) => `
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td>${item.productName}</td>
-                                <td>${item.totalSold}</td>
-                            </tr>
-                        `).join('')}
-                        <tr>
-                            <td colspan="2">Total No of Orders</td>
-                            <td>${totalOrders}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Total Revenue</td>
-                            <td>${totalAmount}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </center>
-        </body>
-        </html>
-        `;
+        // Create a new jsPDF instance
+        const doc = new jsPDF();
 
-        const browser = await chromium.launch({ headless: true });
-        const page = await browser.newPage();
-        await page.setContent(htmlContent);
-        const pdfBuffer = await page.pdf({ format: 'A4' });
-        await browser.close();
+        // Add title and date
+        doc.setFontSize(20);
+        doc.text('Sales Report', 105, 20, null, null, 'center');
 
-        const downloadsPath = path.join(os.homedir(), 'Downloads');
-        const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
-        fs.writeFileSync(pdfFilePath, pdfBuffer);
+        doc.setFontSize(12);
+        doc.text(`Start Date: ${startDate}`, 10, 30);
+        doc.text(`End Date: ${endDate}`, 10, 40);
 
-        res.setHeader('Content-Length', pdfBuffer.length);
+        // Add table headers
+        doc.autoTable({
+            startY: 50,
+            head: [['Sl No', 'Product Name', 'Quantity Sold']],
+            body: products.map((item, index) => [
+                index + 1,
+                item.productName,
+                item.totalSold,
+            ]),
+        });
+
+        // Add totals
+        doc.text(`Total No of Orders: ${totalOrders}`, 10, doc.lastAutoTable.finalY + 10);
+        doc.text(`Total Revenue: ${totalAmount}`, 10, doc.lastAutoTable.finalY + 20);
+
+        // Output the PDF
+        const pdfBuffer = doc.output('arraybuffer');
+
+        res.setHeader('Content-Length', pdfBuffer.byteLength);
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename=sales.pdf');
-        res.status(200).end(pdfBuffer);
+        res.status(200).end(Buffer.from(pdfBuffer));
     } catch (err) {
         console.log('Error generating sales report PDF:', err);
         res.status(500).send('Error Occurred');
