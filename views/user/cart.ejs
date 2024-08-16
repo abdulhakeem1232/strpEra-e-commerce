@@ -293,6 +293,24 @@
                     try {
                         let quantityInput = document.getElementById(`sst${index}`);
                         let currentQuantity = parseInt(quantityInput.value);
+                        let newQuantity = count + currentQuantity;
+                        if (newQuantity > 5) {
+                Swal.fire({
+                    text: 'Quantity cannot exceed 5',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        title: 'text-danger',
+                        popup: 'swal2-popup-custom',
+                        confirmButton: 'btn btn-danger'
+                    },
+                    showCancelButton: false,
+                    showCloseButton: true,
+                    showLoaderOnConfirm: false,
+                    timer: 3000 
+                });
+                return; 
+            }
                         console.log("jjjj",cartId);
                         const response = await fetch(`/update-cart-quantity/${productId}/${size}`, {
                             method: 'POST',
